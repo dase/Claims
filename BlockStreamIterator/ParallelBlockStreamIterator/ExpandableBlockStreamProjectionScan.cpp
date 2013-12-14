@@ -61,6 +61,7 @@ bool ExpandableBlockStreamProjectionScan::open(const PartitionOffset& partition_
 }
 
 bool ExpandableBlockStreamProjectionScan::next(BlockStreamBase* block) {
+	lock_.acquire();
 	allocated_block allo_block_temp;
 	ChunkReaderIterator* chunk_reader_iterator;
 	if(atomicPopChunkReaderIterator(chunk_reader_iterator)){
@@ -68,6 +69,7 @@ bool ExpandableBlockStreamProjectionScan::next(BlockStreamBase* block) {
 		if(chunk_reader_iterator->nextBlock(block)){
 			/* there is still unread block*/
 			atomicPushChunkReaderIterator(chunk_reader_iterator);
+			lock_.release();
 			return true;
 		}
 		else{
@@ -80,9 +82,11 @@ bool ExpandableBlockStreamProjectionScan::next(BlockStreamBase* block) {
 	 * so we create new one*/
 	if((chunk_reader_iterator=partition_reader_iterator_->nextChunk())!=0){
 		atomicPushChunkReaderIterator(chunk_reader_iterator);
+		lock_.release();
 		return next(block);
 	}
 	else{
+		lock_.release();
 		return false;
 	}
 }

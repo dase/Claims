@@ -111,6 +111,7 @@ private:
 	std::list<BlockStreamBase *> ht_free_block_stream_list_;
 
 	semaphore sema_open_;
+	semaphore sema_open_tmp;
 	volatile bool open_finished_;
 	unsigned reached_end;
 	Lock lock_;
@@ -122,6 +123,10 @@ private:
 	unsigned consumed_tuples_from_left;
 	unsigned tuples_in_hashtable;
 	unsigned water_mark;
+	unsigned debug_count;
+	unsigned debug_count_temp;
+	unsigned tuple_in_right_child;
+	unsigned count;
 
 #ifdef TIME
 	unsigned long long timer;

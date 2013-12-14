@@ -44,7 +44,7 @@ bool BlockStreamPerformanceMonitorTop::next(BlockStreamBase*){
 //				printf("partition value:%d",state_.schema_->getcolumn(partition_index).operate->ge)
 //			}
 		}
-		tuplecount_+=block_->getTuplesInBlock();
+//		tuplecount_+=block_->getTuplesInBlock();
 		return true;
 	}
 	return false;

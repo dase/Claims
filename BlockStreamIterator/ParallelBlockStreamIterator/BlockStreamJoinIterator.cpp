@@ -10,13 +10,15 @@
 BlockStreamJoinIterator::BlockStreamJoinIterator(State state)
 :state_(state),hash(0),hashtable(0),open_finished_(false),reached_end(0){
 	sema_open_.set_value(1);
-	barrier_=new Barrier(3);
+	sema_open_tmp.set_value(1);
+	barrier_=new Barrier(6);
 }
 
 BlockStreamJoinIterator::BlockStreamJoinIterator()
 :hash(0),hashtable(0),open_finished_(false),reached_end(0){
 	sema_open_.set_value(1);
-	barrier_=new Barrier(3);
+	sema_open_tmp.set_value(1);
+	barrier_=new Barrier(6);
 }
 
 BlockStreamJoinIterator::~BlockStreamJoinIterator() {
@@ -56,12 +58,21 @@ bool BlockStreamJoinIterator::open(const PartitionOffset& partition_offset){
 #ifdef TIME
 	startTimer(&timer);
 #endif
+
 	state_.child_left->open(partition_offset);
 	AtomicPushFreeHtBlockStream(BlockStreamBase::createBlock(state_.input_schema_left,state_.block_size_));
 	AtomicPushFreeBlockStream(BlockStreamBase::createBlock(state_.input_schema_right,state_.block_size_));
 	cout<<"AtomicPushFreeBlockStream\n\n"<<endl;
 	cout<<"join open begin"<<endl;
 	if(sema_open_.try_wait()){
+		tuples_in_hashtable=0;
+		consumed_tuples_from_left=0;
+		produced_tuples=0;
+		consumed_tuples_from_right=0;
+		debug_count=0;
+		count=0;
+		debug_count_temp=0;
+		tuple_in_right_child=0;
 		unsigned output_index=0;
 		for(unsigned i=0;i<state_.joinIndex_left.size();i++){
 			joinIndex_left_to_output[i]=output_index;
@@ -99,7 +110,7 @@ bool BlockStreamJoinIterator::open(const PartitionOffset& partition_offset){
 	void *value_in_input;
 	void *value_in_hashtable;
 	BlockStreamBase *bsb=AtomicPopFreeHtBlockStream();
-	PartitionFunction* hash_test=PartitionFunctionFactory::createBoostHashFunction(4);
+	PartitionFunction* hash_test=PartitionFunctionFactory::createBoostHashFunction(8);
 	cout<<"in the hashtable build stage!"<<endl;
 //	consumed_tuples_from_left=0;
 	while(state_.child_left->next(bsb)){
@@ -107,7 +118,9 @@ bool BlockStreamJoinIterator::open(const PartitionOffset& partition_offset){
 
 		bsti->reset();
 		while(cur=bsti->nextTuple()){
+			lock_.acquire();
 			consumed_tuples_from_left++;
+			lock_.release();
 //
 //			if(state_.ht_schema->getncolumns()>20)
 //			state_.ht_schema->displayTuple(cur,"|B|"); ///for debug
@@ -116,13 +129,13 @@ bool BlockStreamJoinIterator::open(const PartitionOffset& partition_offset){
 //			bn=state_.input_schema_left->getcolumn(0).operate->getPartitionValue(state_.input_schema_left->getColumnAddess(state_.joinIndex_left[0],cur),hash);
 
 			bn=state_.input_schema_left->getcolumn(state_.joinIndex_left[0]).operate->getPartitionValue(state_.input_schema_left->getColumnAddess(state_.joinIndex_left[0],cur),hash);
-//			const unsigned test_bn=state_.input_schema_left->getcolumn(state_.joinIndex_left[0]).operate->getPartitionValue(state_.input_schema_left->getColumnAddess(state_.joinIndex_left[0],cur),hash_test);
+			const unsigned test_bn=state_.input_schema_left->getcolumn(state_.joinIndex_left[0]).operate->getPartitionValue(state_.input_schema_left->getColumnAddess(state_.joinIndex_left[0],cur),hash_test);
 //			if(rand()%10000<3){
 //				printf("key:%d\n",test_bn);
 //			}
 //			hashtable->placeIterator(tmp_it,bn);
 
-//			lock_.acquire();
+			lock_.acquire();
 			tuple_in_hashtable=hashtable->atomicAllocate(bn);
 			/* copy join index columns*/
 //			for(unsigned i=0;i<state_.joinIndex_left.size();i++){
@@ -138,33 +151,41 @@ bool BlockStreamJoinIterator::open(const PartitionOffset& partition_offset){
 //				state_.input_schema_left->getcolumn(state_.payload_left[i]).operate->assignment(value_in_input,value_in_hashtable);
 //			}
 			state_.input_schema_left->copyTuple(cur,tuple_in_hashtable);
+			lock_.release();
 
-//			lock_.release();
+
+
 		}
 		bsb->setEmpty();
 	}
-//	printf("<<<<<<<<<<<<<<<<Join Open consumes %d tuples\n",consumed_tuples_from_left);
-	BasicHashTable::Iterator it=hashtable->CreateIterator();
-	unsigned tmp=0;
-	tuples_in_hashtable=0;
-//	PartitionFunction* hash_tmp=PartitionFunctionFactory::createGeneralModuloFunction(4);
-//	while(hashtable->placeIterator(it,tmp++)){
-//		void* tuple;
-//		while(tuple=it.readCurrent()){
-////			printf("join key:%s\n",(state_.input_schema_left->getcolumn(state_.joinIndex_left[0]).operate->toString(state_.input_schema_left->getColumnAddess(state_.joinIndex_left[0],tuple)).c_str()));
-//			tuples_in_hashtable++;
-//			unsigned bn=state_.input_schema_left->getcolumn(state_.joinIndex_left[0]).operate->getPartitionValue(state_.input_schema_left->getColumnAddess(state_.joinIndex_left[0],tuple),hash_tmp);
-//			if(rand()%1000<3)
-//			printf("partition key of left tuple:%d\n",bn);
-//			it.increase_cur_();
-//		}
-//	}
-//	cout<<"join open end"<<endl;
-	produced_tuples=0;
-	consumed_tuples_from_right=0;
-//	water_mark=0;
 	barrier_->Arrive();
 	cout<<"pass the arrive of barrier!!!"<<endl;
+//	printf("<<<<<<<<<<<<<<<<Join Open consumes %d tuples\n",consumed_tuples_from_left);
+
+	if(sema_open_tmp.try_wait()){
+		BasicHashTable::Iterator it=hashtable->CreateIterator();
+		unsigned tmp=0;
+		if(tuples_in_hashtable==0)
+		while(hashtable->placeIterator(it,tmp++)){
+			void* tuple;
+			while(tuple=it.readCurrent()){
+	//			printf("join key:%s\n",(state_.input_schema_left->getcolumn(state_.joinIndex_left[0]).operate->toString(state_.input_schema_left->getColumnAddess(state_.joinIndex_left[0],tuple)).c_str()));
+				tuples_in_hashtable++;
+	//			unsigned bn=state_.input_schema_left->getcolumn(state_.joinIndex_left[0]).operate->getPartitionValue(state_.input_schema_left->getColumnAddess(state_.joinIndex_left[0],tuple),hash_tmp);
+	//			if(rand()%1000<3)
+	//			printf("partition key of left tuple:%d\n",bn);
+				it.increase_cur_();
+			}
+		}
+		cout<<"join open end, the tuples in the hashtable is: "<<tuples_in_hashtable<<endl;
+	}else{
+		while (!open_finished_) {
+			usleep(1);
+		}
+	}
+//	water_mark=0;
+
+
 	state_.child_right->open(partition_offset);
 //	cout<<"PartitionOffset:"<<partition_offset<<endl;
 //	sleep(1);
@@ -184,11 +205,18 @@ bool BlockStreamJoinIterator::next(BlockStreamBase *block){
 
 	remaining_block rb;
 
-	PartitionFunction* hash_tmp=PartitionFunctionFactory::createGeneralModuloFunction(4);
+	PartitionFunction* hash_tmp=PartitionFunctionFactory::createGeneralModuloFunction(8);
 	while(true){
 		if(atomicPopRemainingBlock(rb)){
 			while((tuple_from_right_child=rb.blockstream_iterator->currentTuple())>0){
 				unsigned bn=state_.input_schema_right->getcolumn(state_.joinIndex_right[0]).operate->getPartitionValue(state_.input_schema_right->getColumnAddess(state_.joinIndex_right[0],tuple_from_right_child),hash_tmp);
+//				if(rand()%100000<3)
+//					cout<<"bn: "<<bn<<endl;
+				// 用每个right child 中的值去匹配hashtable中的值
+				lock_.acquire();
+				debug_count++;
+				lock_.release();
+				// 下面的这个循环，扫一个tuple of right child匹配了两次
 				while((tuple_in_hashtable=rb.hashtable_iterator_.readCurrent())>0){
 					key_exit=true;
 					for(unsigned i=0;i<state_.joinIndex_right.size();i++){
@@ -200,10 +228,15 @@ bool BlockStreamJoinIterator::next(BlockStreamBase *block){
 						}
 					}
 					if(key_exit){
+					lock_.acquire();
+					debug_count_temp++;
+					lock_.release();
 						if((result_tuple=block->allocateTuple(state_.output_schema->getTupleMaxSize()))>0){
+							lock_.acquire();
 							produced_tuples++;
 							const unsigned copyed_bytes=state_.input_schema_left->copyTuple(tuple_in_hashtable,result_tuple);
 							state_.input_schema_right->copyTuple(tuple_from_right_child,result_tuple+copyed_bytes);
+							lock_.release();
 						}
 						else{
 							atomicPushRemainingBlock(rb);
@@ -211,12 +244,13 @@ bool BlockStreamJoinIterator::next(BlockStreamBase *block){
 							return true;
 						}
 					}
-					BasicHashTable::Iterator tmp=rb.hashtable_iterator_;
+//					BasicHashTable::Iterator tmp=rb.hashtable_iterator_;
 					rb.hashtable_iterator_.increase_cur_();
 				}
 				rb.blockstream_iterator->increase_cur_();
+				lock_.acquire();
 				consumed_tuples_from_right++;
-
+				lock_.release();
 				if((tuple_from_right_child=rb.blockstream_iterator->currentTuple())){
 					bn=state_.input_schema_right->getcolumn(state_.joinIndex_right[0]).operate->getPartitionValue(state_.input_schema_right->getColumnAddess(state_.joinIndex_right[0],tuple_from_right_child),hash);
 					hashtable->placeIterator(rb.hashtable_iterator_,bn);
@@ -228,10 +262,19 @@ bool BlockStreamJoinIterator::next(BlockStreamBase *block){
 		rb.bsb_right_->setEmpty();
 		rb.hashtable_iterator_=hashtable->CreateIterator();
 		if(state_.child_right->next(rb.bsb_right_)==false){
+			rb.blockstream_iterator=rb.bsb_right_->createIterator();
+			while(rb.blockstream_iterator->currentTuple()>0){
+				lock_.acquire();
+				tuple_in_right_child++;
+				lock_.release();
+				rb.blockstream_iterator->increase_cur_();
+			}
+//			cout<<"***no tuple in the right child!***"<<endl;
 			if(block->Empty()==true){
 				AtomicPushFreeBlockStream(rb.bsb_right_);
 				free(joinedTuple);
 				printf("****join next produces %d tuples while consumed %d tuples from right child and %d tuples from left, hash table has %d tuples\n",produced_tuples,consumed_tuples_from_right,consumed_tuples_from_left,tuples_in_hashtable);
+				printf("----debug_count: %d,%d,%d\n",debug_count,debug_count_temp,tuple_in_right_child);
 				return false;
 			}
 			else{
@@ -240,14 +283,29 @@ bool BlockStreamJoinIterator::next(BlockStreamBase *block){
 				return true;
 			}
 		}
+		else{
+			rb.blockstream_iterator=rb.bsb_right_->createIterator();
+			lock_.acquire();
+			count++;
+			lock_.release();
+			while(rb.blockstream_iterator->currentTuple()>0){
+				lock_.acquire();
+				tuple_in_right_child++;
+				lock_.release();
+				rb.blockstream_iterator->increase_cur_();
+			}
+		}
 		rb.blockstream_iterator=rb.bsb_right_->createIterator();
+		// ---以上都是remaining block的成员，也就是
+		// ---以下为初始化
 		if((tuple_from_right_child=rb.blockstream_iterator->currentTuple())){
 			bn=state_.input_schema_right->getcolumn(state_.joinIndex_right[0]).operate->getPartitionValue(state_.input_schema_right->getColumnAddess(state_.joinIndex_right[0],tuple_from_right_child),hash);
 			hashtable->placeIterator(rb.hashtable_iterator_,bn);
 		}
+		// 保存现场
 		atomicPushRemainingBlock(rb);
 	}
-	return next(block);
+//	return true;
 }
 
 bool BlockStreamJoinIterator::close(){
@@ -258,14 +316,19 @@ bool BlockStreamJoinIterator::close(){
 	printf("time consuming: %lld, %f\n",timer,timer/(double)CPU_FRE);
 #endif
 	sema_open_.post();
+	sema_open_tmp.post();
 	open_finished_=false;
 //	barrier_->~Barrier();
 	free_block_stream_list_.clear();
 	ht_free_block_stream_list_.clear();
 	remaining_block_list_.clear();
-//	hash->~PartitionFunction();
+	hash->~PartitionFunction();
 	hashtable->~BasicHashTable();
 //	ht_schema->~Schema();
+	produced_tuples=0;
+	consumed_tuples_from_right=0;
+	consumed_tuples_from_left=0;
+	tuples_in_hashtable=0;
 	state_.child_left->close();
 	state_.child_right->close();
 	return true;
