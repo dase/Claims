@@ -16,6 +16,9 @@
  * needed by blockstreamjoiniterator
  * */
 #define BARRIER 1
+
+#define HISTOGRAM_SIZE 107
+
 /*
  * block in hdfs and sublock in block
  * */

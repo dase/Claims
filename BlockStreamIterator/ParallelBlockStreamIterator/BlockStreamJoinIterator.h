@@ -111,8 +111,10 @@ private:
 	std::list<BlockStreamBase *> ht_free_block_stream_list_;
 
 	semaphore sema_open_;
+	semaphore sema_barrier_;
 	semaphore sema_open_tmp;
 	volatile bool open_finished_;
+	volatile bool barrier_finished_;
 	unsigned reached_end;
 	Lock lock_;
 	Barrier *barrier_;

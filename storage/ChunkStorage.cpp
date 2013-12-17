@@ -39,8 +39,8 @@ ChunkReaderIterator* ChunkStorage::createChunkReaderIterator(){
 				chunk_info.length=CHUNK_SIZE;
 				if(BlockManager::getInstance()->getMemoryChunkStore()->applyChunk(chunk_id_,chunk_info)){
 					/* there is enough memory storage space, so the storage level can be shifted.*/
-//					chunk_info.length=BlockManager::getInstance()->loadFromDisk(chunk_id_,chunk_info.hook,chunk_info.length);
-					chunk_info.length=BlockManager::getInstance()->loadFromHdfs(chunk_id_,chunk_info.hook,chunk_info.length);
+					chunk_info.length=BlockManager::getInstance()->loadFromDisk(chunk_id_,chunk_info.hook,chunk_info.length);
+//					chunk_info.length=BlockManager::getInstance()->loadFromHdfs(chunk_id_,chunk_info.hook,chunk_info.length);
 					if(chunk_info.length==-1){
 //						TODO:BlockManager::getInstance()->getMemoryChunkStore()->applyChunk()
 						return 0;
@@ -79,7 +79,8 @@ bool InMemoryChunkReaderItetaor::nextBlock(BlockStreamBase* &block){
 	}
 	/* calculate the block start address.*/
 	const char* block_start_address=(char*)start_+block_cur_*block_size_;
-
+	block_cur_++;
+	lock_.release();
 	/* Create a block, which will not free block_start_address when destructed.*/
 	Block temp_block(block_size_,block_start_address);
 
@@ -89,8 +90,7 @@ bool InMemoryChunkReaderItetaor::nextBlock(BlockStreamBase* &block){
 	 */
 	block->constructFromBlock(temp_block);
 
-	block_cur_++;
-	lock_.release();
+
 	return true;
 }
 InMemoryChunkReaderItetaor::~InMemoryChunkReaderItetaor(){
@@ -192,8 +192,9 @@ HDFSChunkReaderIterator::~HDFSChunkReaderIterator(){
 	hdfsDisconnect(fs_);
 }
 bool HDFSChunkReaderIterator::nextBlock(BlockStreamBase*& block){
+	lock_.acquire();
 	if(cur_block_>=number_of_blocks_){
-		lock_.acquire();
+		lock_.release();
 		return false;
 	}
 	tSize bytes_num=hdfsPread(fs_,hdfs_fd_,cur_block_*block_size_,block_buffer_->getBlock(),CHUNK_SIZE);

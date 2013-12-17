@@ -8,15 +8,17 @@
 #include "BlockStreamJoinIterator.h"
 
 BlockStreamJoinIterator::BlockStreamJoinIterator(State state)
-:state_(state),hash(0),hashtable(0),open_finished_(false),reached_end(0){
+:state_(state),hash(0),hashtable(0),open_finished_(false),barrier_finished_(false),reached_end(0){
 	sema_open_.set_value(1);
+	sema_barrier_.set_value(1);
 	sema_open_tmp.set_value(1);
 	barrier_=new Barrier(6);
 }
 
 BlockStreamJoinIterator::BlockStreamJoinIterator()
-:hash(0),hashtable(0),open_finished_(false),reached_end(0){
+:hash(0),hashtable(0),open_finished_(false),barrier_finished_(false),reached_end(0){
 	sema_open_.set_value(1);
+	sema_barrier_.set_value(1);
 	sema_open_tmp.set_value(1);
 	barrier_=new Barrier(6);
 }
@@ -158,7 +160,15 @@ bool BlockStreamJoinIterator::open(const PartitionOffset& partition_offset){
 		}
 		bsb->setEmpty();
 	}
-	barrier_->Arrive();
+	if(sema_barrier_.try_wait()){
+		usleep(10000);
+		barrier_finished_=true;
+	}else{
+		while(!barrier_finished_){
+			usleep(1);
+		}
+	}
+//	barrier_->Arrive();
 	cout<<"pass the arrive of barrier!!!"<<endl;
 //	printf("<<<<<<<<<<<<<<<<Join Open consumes %d tuples\n",consumed_tuples_from_left);
 
@@ -213,9 +223,9 @@ bool BlockStreamJoinIterator::next(BlockStreamBase *block){
 //				if(rand()%100000<3)
 //					cout<<"bn: "<<bn<<endl;
 				// 用每个right child 中的值去匹配hashtable中的值
-				lock_.acquire();
+//				lock_.acquire();
 				debug_count++;
-				lock_.release();
+//				lock_.release();
 				// 下面的这个循环，扫一个tuple of right child匹配了两次
 				while((tuple_in_hashtable=rb.hashtable_iterator_.readCurrent())>0){
 					key_exit=true;
@@ -228,15 +238,15 @@ bool BlockStreamJoinIterator::next(BlockStreamBase *block){
 						}
 					}
 					if(key_exit){
-					lock_.acquire();
+//					lock_.acquire();
 					debug_count_temp++;
-					lock_.release();
+//					lock_.release();
 						if((result_tuple=block->allocateTuple(state_.output_schema->getTupleMaxSize()))>0){
-							lock_.acquire();
+//							lock_.acquire();
 							produced_tuples++;
 							const unsigned copyed_bytes=state_.input_schema_left->copyTuple(tuple_in_hashtable,result_tuple);
 							state_.input_schema_right->copyTuple(tuple_from_right_child,result_tuple+copyed_bytes);
-							lock_.release();
+//							lock_.release();
 						}
 						else{
 							atomicPushRemainingBlock(rb);
@@ -248,9 +258,9 @@ bool BlockStreamJoinIterator::next(BlockStreamBase *block){
 					rb.hashtable_iterator_.increase_cur_();
 				}
 				rb.blockstream_iterator->increase_cur_();
-				lock_.acquire();
+//				lock_.acquire();
 				consumed_tuples_from_right++;
-				lock_.release();
+//				lock_.release();
 				if((tuple_from_right_child=rb.blockstream_iterator->currentTuple())){
 					bn=state_.input_schema_right->getcolumn(state_.joinIndex_right[0]).operate->getPartitionValue(state_.input_schema_right->getColumnAddess(state_.joinIndex_right[0],tuple_from_right_child),hash);
 					hashtable->placeIterator(rb.hashtable_iterator_,bn);
@@ -264,9 +274,9 @@ bool BlockStreamJoinIterator::next(BlockStreamBase *block){
 		if(state_.child_right->next(rb.bsb_right_)==false){
 			rb.blockstream_iterator=rb.bsb_right_->createIterator();
 			while(rb.blockstream_iterator->currentTuple()>0){
-				lock_.acquire();
+//				lock_.acquire();
 				tuple_in_right_child++;
-				lock_.release();
+//				lock_.release();
 				rb.blockstream_iterator->increase_cur_();
 			}
 //			cout<<"***no tuple in the right child!***"<<endl;
@@ -285,13 +295,13 @@ bool BlockStreamJoinIterator::next(BlockStreamBase *block){
 		}
 		else{
 			rb.blockstream_iterator=rb.bsb_right_->createIterator();
-			lock_.acquire();
+//			lock_.acquire();
 			count++;
-			lock_.release();
+//			lock_.release();
 			while(rb.blockstream_iterator->currentTuple()>0){
-				lock_.acquire();
+//				lock_.acquire();
 				tuple_in_right_child++;
-				lock_.release();
+//				lock_.release();
 				rb.blockstream_iterator->increase_cur_();
 			}
 		}
@@ -316,7 +326,9 @@ bool BlockStreamJoinIterator::close(){
 	printf("time consuming: %lld, %f\n",timer,timer/(double)CPU_FRE);
 #endif
 	sema_open_.post();
+	sema_barrier_.post();
 	sema_open_tmp.post();
+	barrier_finished_=false;
 	open_finished_=false;
 //	barrier_->~Barrier();
 	free_block_stream_list_.clear();

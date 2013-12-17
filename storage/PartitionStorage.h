@@ -26,6 +26,7 @@ public:
 	protected:
 		PartitionStorage* ps;
 		unsigned chunk_cur_;
+		Lock lock_;
 	};
 	class AtomicPartitionReaderIterator:public PartitionReaderItetaor{
 	public:
@@ -48,6 +49,7 @@ protected:
 	unsigned number_of_chunks_;
 	std::vector<ChunkStorage*> chunk_list_;
 	StorageLevel desirable_storage_level_;
+
 };
 
 #endif /* PARTITIONSTORAGE_H_ */

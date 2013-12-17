@@ -45,10 +45,14 @@ PartitionStorage::PartitionReaderItetaor::~PartitionReaderItetaor(){
 
 }
 ChunkReaderIterator* PartitionStorage::PartitionReaderItetaor::nextChunk(){
+	ChunkReaderIterator* ret;
+	lock_.acquire();
 	if(chunk_cur_<ps->number_of_chunks_)
-		return ps->chunk_list_[chunk_cur_++]->createChunkReaderIterator();
+		ret=ps->chunk_list_[chunk_cur_++]->createChunkReaderIterator();
 	else
-		return 0;
+		ret=0;
+	lock_.release();
+	return ret;
 }
 PartitionStorage::AtomicPartitionReaderIterator::AtomicPartitionReaderIterator():PartitionReaderItetaor(){
 
