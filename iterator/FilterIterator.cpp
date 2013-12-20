@@ -6,7 +6,7 @@
  */
 #include <malloc.h>
 #include "FilterIterator.h"
-#include "../configure.h"
+#include "../utils/configure.h"
 #include "../Serialization/RegisterDerivedClass.h"
 
 

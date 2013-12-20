@@ -9,7 +9,7 @@
 #include <stdlib.h>
 
 #include "../TableManager.h"
-#include "../rdtsc.h"
+#include "../utils/rdtsc.h"
 #include "../Schema/SchemaFix.h"
 #include "../iterator/SingleColumnScanIterator.h"
 #include "../iterator/FilterIterator.h"

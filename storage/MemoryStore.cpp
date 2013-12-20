@@ -9,7 +9,7 @@
 #include <memory.h>
 #include "MemoryStore.h"
 #include "../BufferManager/BufferManager.h"
-#include "../configure.h"
+#include "../utils/configure.h"
 using namespace std;
 MemoryChunkStore* MemoryChunkStore::instance_=0;
 MemoryChunkStore::MemoryChunkStore(){

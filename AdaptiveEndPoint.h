@@ -10,7 +10,7 @@
 #include <Theron/Theron.h>
 #include <string>
 #include "Message.h"
-#include "Logging.h"
+#include "utils/Logging.h"
 class AdaptiveEndPoint:public Theron::EndPoint {
 public:
 	AdaptiveEndPoint(const char* name, std::string ip, std::string port);

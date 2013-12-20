@@ -29,7 +29,7 @@ using namespace std;
 #include "BlockManagerId.h"
 #include "../ids.h"
 #include "PartitionStorage.h"
-#include "../Logging.h"
+#include "../utils/Logging.h"
 #include "../Block/synch.h"
 struct ChunkInfo{
 	ChunkID chunkId;

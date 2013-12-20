@@ -9,15 +9,15 @@
 
 
 #include <malloc.h>
-#include "../../configure.h"
+#include "../../utils/configure.h"
 
 #include "../../Block/BlockWritableFix.h"
 #include "../../Block/BlockReadable.h"
 #include "../../rename.h"
-#include "../../Logging.h"
+#include "../../utils/Logging.h"
 #include "../../Executor/ExchangeTracker.h"
 #include "../../Environment.h"
-#include "../../Logging.h"
+#include "../../utils/Logging.h"
 ExpandableBlockStreamExchangeLowerEfficient::ExpandableBlockStreamExchangeLowerEfficient(State state)
 :state(state){
 	// TODO Auto-generated constructor stub
@@ -109,6 +109,7 @@ bool ExpandableBlockStreamExchangeLowerEfficient::next(BlockStreamBase*){
 			while(!(tuple_in_cur_block_stream=cur_block_stream_list_[partition_id]->allocateTuple(bytes))){
 //				printf("cur_block_stream_list:%d",cur_block_stream_list_[partition_id]->getTuplesInBlock());
 				cur_block_stream_list_[partition_id]->serialize(*block_for_inserting_to_buffer_);
+				//serialize的过程就是有多少个tuple还有是不是最后一个块，最后两个字段在序列化的时候加进去
 //				printf("tuple count in [block_for_inserting_to_buffer_] =%d\n",*(int*)((char*)block_for_inserting_to_buffer_->getBlock()+65532));
 				buffer->insertBlockToPartitionedList(block_for_inserting_to_buffer_,partition_id);
 				cur_block_stream_list_[partition_id]->setEmpty();

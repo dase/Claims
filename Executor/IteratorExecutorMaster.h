@@ -16,7 +16,7 @@
 #include "../Message.h"
 #include "../iterator.hpp"
 #include "../BlockStreamIterator/BlockStreamIteratorBase.h"
-#include "../Logging.h"
+#include "../utils/Logging.h"
 class IteratorExecutorMaster {
 public:
 	IteratorExecutorMaster();

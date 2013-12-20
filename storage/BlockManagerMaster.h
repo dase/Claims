@@ -20,7 +20,7 @@
 #include "AllBlockInfo.h"
 #include "BlanceMatcher.h"
 #include "../Message.h"
-#include "../Logging.h"
+#include "../utils/Logging.h"
 using namespace std;
 
 class BlockManagerMaster {

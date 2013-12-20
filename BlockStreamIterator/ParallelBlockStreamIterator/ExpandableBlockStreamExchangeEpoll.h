@@ -29,7 +29,7 @@
 #include "../../Block/PartitionedBlockBuffer.h"
 #include "../../Block/BlockStream.h"
 #include "../../Block/BlockStreamBuffer.h"
-#include "../../Logging.h"
+#include "../../utils/Logging.h"
 class ExpandableBlockStreamExchangeEpoll:public BlockStreamIteratorBase {
 public:
 	struct State{

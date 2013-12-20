@@ -10,15 +10,15 @@
 #define BROADCAST 1
 
 #include <malloc.h>
-#include "../../configure.h"
+#include "../../utils/configure.h"
 
 #include "../../Block/BlockWritableFix.h"
 #include "../../Block/BlockReadable.h"
 #include "../../rename.h"
-#include "../../Logging.h"
+#include "../../utils/Logging.h"
 #include "../../Executor/ExchangeTracker.h"
 #include "../../Environment.h"
-#include "../../Logging.h"
+#include "../../utils/Logging.h"
 
 BlockStreamExchangeLowerBroadcast::BlockStreamExchangeLowerBroadcast(State state)
 :state_(state),BlockStreamExchangeLowerBase() {

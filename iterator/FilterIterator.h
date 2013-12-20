@@ -17,7 +17,7 @@
 #include "../iterator.hpp"
 #include "../Schema/Schema.h"
 #include "../Comparator.h"
-#include "../configure.h"
+#include "../utils/configure.h"
 
 class FilterIterator:public Iterator {
 public:

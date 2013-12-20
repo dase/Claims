@@ -13,7 +13,7 @@
 #include "Executor/IteratorExecutorSlave.h"
 #include "Executor/ExchangeTracker.h"
 #include "PortManager.h"
-#include "Logging.h"
+#include "utils/Logging.h"
 #include "storage/BlockManager.h"
 #include "storage/BlockManagerMaster.h"
 #include "Resource/ResourceManagerMaster.h"

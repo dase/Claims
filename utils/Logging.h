@@ -10,7 +10,7 @@
 #include <string>
 #include <stdarg.h>
 #include <stdio.h>
-#include "Debug.h"
+#include "../Debug.h"
 
 
 class Logging{

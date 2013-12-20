@@ -10,7 +10,7 @@
 
 #include <malloc.h>
 #include <memory.h>
-#include "../configure.h"
+#include "../utils/configure.h"
 #include "../Schema/SchemaFix.h"
 #include "../Block/Block.h"
 class BlockFix {

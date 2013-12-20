@@ -6,7 +6,7 @@
  */
 
 #include "BlockStreamPerformanceTest.h"
-#include "../rdtsc.h"
+#include "../utils/rdtsc.h"
 
 #include <fstream>
 using namespace std;

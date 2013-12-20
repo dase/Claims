@@ -9,8 +9,8 @@
 #include <malloc.h>
 
 #include <iostream>
-#include "../configure.h"
-#include "../rdtsc.h"
+#include "../utils/configure.h"
+#include "../utils/rdtsc.h"
 PerformanceIteratorTop::PerformanceIteratorTop(PerformanceIteratorTop::State state)
 :state(state),tuplecount(0){
 	// TODO Auto-generated constructor stub

@@ -5,7 +5,7 @@
  *      Author: wangli
  */
 #include <malloc.h>
-#include "../configure.h"
+#include "../utils/configure.h"
 #include "BlockStream.h"
 #include "BlockWritable.h"
 #include <assert.h>

@@ -23,12 +23,12 @@
 #include <netinet/tcp.h>
 #include "ExchangeIteratorEager.h"
 #include "../Block/BlockReadableFix.h"
-#include "../Logging.h"
+#include "../utils/Logging.h"
 #include "../PortManager.h"
 #include "../Environment.h"
 #include "../Executor/ExchangeTracker.h"
 #include "ExchangeIteratorEagerLower.h"
-#include "../configure.h"
+#include "../utils/configure.h"
 ExchangeIteratorEager::ExchangeIteratorEager(State state)
 :state(state){
 	curBlock=0;

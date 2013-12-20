@@ -12,7 +12,7 @@
 #include <libconfig.h++>
 #include <iostream>
 #include "../Message.h"
-#include "../Logging.h"
+#include "../utils/Logging.h"
 using namespace std;
 
 

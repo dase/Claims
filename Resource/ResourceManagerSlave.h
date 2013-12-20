@@ -9,7 +9,7 @@
 #define RESOURCEMANAGERSLAVE_H_
 #include <Theron/Theron.h>
 #include "../Message.h"
-#include "../Logging.h"
+#include "../utils/Logging.h"
 typedef int NodeID;
 class ResourceManagerSlave {
 public:

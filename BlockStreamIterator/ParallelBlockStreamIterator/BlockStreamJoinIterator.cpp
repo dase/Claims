@@ -6,6 +6,8 @@
  */
 
 #include "BlockStreamJoinIterator.h"
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
 
 BlockStreamJoinIterator::BlockStreamJoinIterator(State state)
 :state_(state),hash(0),hashtable(0),open_finished_(false),barrier_finished_(false),reached_end(0){
@@ -62,6 +64,7 @@ bool BlockStreamJoinIterator::open(const PartitionOffset& partition_offset){
 #endif
 
 	state_.child_left->open(partition_offset);
+	cout<<"the partition_offset is: "<<partition_offset<<endl;
 	AtomicPushFreeHtBlockStream(BlockStreamBase::createBlock(state_.input_schema_left,state_.block_size_));
 	AtomicPushFreeBlockStream(BlockStreamBase::createBlock(state_.input_schema_right,state_.block_size_));
 	cout<<"AtomicPushFreeBlockStream\n\n"<<endl;
@@ -395,10 +398,4 @@ void BlockStreamJoinIterator::AtomicPushFreeHtBlockStream(BlockStreamBase* block
 	ht_free_block_stream_list_.push_back(block);
 	lock_.release();
 }
-
-
-
-
-
-
 

@@ -14,7 +14,7 @@
 #include <stdio.h>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
-#include "hash.h"
+#include "utils/hash.h"
 enum data_type{t_int,t_float,t_string,t_double,t_u_long};
 typedef void (*fun)(void*,void*);
 

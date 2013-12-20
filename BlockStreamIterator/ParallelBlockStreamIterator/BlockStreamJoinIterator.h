@@ -10,9 +10,9 @@
 
 #include "../BlockStreamIteratorBase.h"
 #include "../../Debug.h"
-#include "../../rdtsc.h"
-#include "../../hash.h"
-#include "../../hashtable.h"
+#include "../../utils/rdtsc.h"
+#include "../../utils/hash.h"
+#include "../../utils/hashtable.h"
 #include "../../Block/synch.h"
 
 #include <iostream>

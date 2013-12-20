@@ -9,7 +9,7 @@
 #define BUFFERMANAGER_H_
 #include "../storage/MemoryStore.h"
 #include "../Block/synch.h"
-#include "../Logging.h"
+#include "../utils/Logging.h"
 class BufferManager {
 public:
 	static BufferManager* getInstance();

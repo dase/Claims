@@ -11,7 +11,7 @@
 #include <boost/unordered_map.hpp>
 #include <boost/get_pointer.hpp>
 
-#include "foreach.hpp"
+#include "../foreach.hpp"
 
 
 template <typename Key, typename Value>

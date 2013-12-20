@@ -8,7 +8,7 @@
 #include "ExchangeTracker.h"
 #include <string>
 #include <sstream>
-#include "../Logging.h"
+#include "../utils/Logging.h"
 #include "../Environment.h"
 #include "../TimeOutReceiver.h"
 ExchangeTracker::ExchangeTracker() {

@@ -8,7 +8,7 @@
 #include <malloc.h>
 
 #include "PrintIterator.h"
-#include "../configure.h"
+#include "../utils/configure.h"
 PrintIterator::PrintIterator(State state):state(state) {
 	// TODO Auto-generated constructor stub
 

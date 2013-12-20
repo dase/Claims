@@ -23,7 +23,6 @@
 #include <assert.h>
 
 #include "atomics.h"
-#include "lock.h"
 #include "configure.h"
 #include "lock.h"
 typedef void (*fun)(void*, void*);

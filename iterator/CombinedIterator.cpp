@@ -7,7 +7,7 @@
 #include <malloc.h>
 
 #include "CombinedIterator.h"
-#include "../configure.h"
+#include "../utils/configure.h"
 
 CombinedIterator::CombinedIterator(CombinedIterator::State state)
 :state(state)

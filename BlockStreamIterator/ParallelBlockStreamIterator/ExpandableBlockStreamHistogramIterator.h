@@ -9,10 +9,11 @@
 #define EXPANDABLEBLOCKSTREAMHISTOGRAMITERATOR_H_
 
 #include "../../Debug.h"
-#include "../../hashtable.h"
+#include "../../utils/hashtable.h"
 #include "../../Block/BlockStream.h"
 #include "../../Catalog/Catalog.h"
 #include "../../Catalog/Attribute.h"
+#include "../../BlockStreamIterator/BlockStreamIteratorBase.h"
 
 #include <vector>
 using namespace std;

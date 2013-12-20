@@ -7,15 +7,15 @@
 
 #include "ExchangeIteratorEagerLower.h"
 #include <malloc.h>
-#include "../configure.h"
+#include "../utils/configure.h"
 #include "ExchangeIteratorLowerWithWideDependency.h"
 #include "../Block/BlockWritableFix.h"
 #include "../Block/BlockReadable.h"
 #include "../rename.h"
-#include "../Logging.h"
+#include "../utils/Logging.h"
 #include "../Executor/ExchangeTracker.h"
 #include "../Environment.h"
-#include "../Logging.h"
+#include "../utils/Logging.h"
 ExchangeIteratorEagerLower::ExchangeIteratorEagerLower(State state)
 :state(state){
 	// TODO Auto-generated constructor stub
