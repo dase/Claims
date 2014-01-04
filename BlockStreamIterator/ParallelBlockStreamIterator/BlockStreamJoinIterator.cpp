@@ -14,7 +14,7 @@ BlockStreamJoinIterator::BlockStreamJoinIterator(State state)
 	sema_open_.set_value(1);
 	sema_barrier_.set_value(1);
 	sema_open_tmp.set_value(1);
-	barrier_=new Barrier(6);
+//	barrier_=new Barrier(6);
 }
 
 BlockStreamJoinIterator::BlockStreamJoinIterator()
@@ -22,7 +22,7 @@ BlockStreamJoinIterator::BlockStreamJoinIterator()
 	sema_open_.set_value(1);
 	sema_barrier_.set_value(1);
 	sema_open_tmp.set_value(1);
-	barrier_=new Barrier(6);
+//	barrier_=new Barrier(6);
 }
 
 BlockStreamJoinIterator::~BlockStreamJoinIterator() {
@@ -62,7 +62,7 @@ bool BlockStreamJoinIterator::open(const PartitionOffset& partition_offset){
 #ifdef TIME
 	startTimer(&timer);
 #endif
-
+	cout<<"in the join open!!!"<<endl;
 	state_.child_left->open(partition_offset);
 	cout<<"the partition_offset is: "<<partition_offset<<endl;
 	AtomicPushFreeHtBlockStream(BlockStreamBase::createBlock(state_.input_schema_left,state_.block_size_));

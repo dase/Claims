@@ -9,7 +9,7 @@
 #define BLOCKSTREAMFILTER_H_
 #include "BlockStreamIteratorBase.h"
 #include "../Schema/Schema.h"
-#include "../Comparator.h"
+#include "../utils/Comparator.h"
 #include "../iterator/FilterIterator.h"
 #include "../Block/BlockStream.h"
 class BlockStreamFilter:public BlockStreamIteratorBase {

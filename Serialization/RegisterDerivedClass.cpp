@@ -25,6 +25,8 @@
 #include "../BlockStreamIterator/ParallelBlockStreamIterator/ExpandableBlockStreamFilter.h"
 #include "../BlockStreamIterator/ParallelBlockStreamIterator/ExpandableBlockStreamExchange.h"
 #include "../BlockStreamIterator/ParallelBlockStreamIterator/ExpandableBlockStreamExchangeEpoll.h"
+#include "../BlockStreamIterator/ParallelBlockStreamIterator/EBSExchangeNRP.h"
+#include "../BlockStreamIterator/ParallelBlockStreamIterator/EBSExchangeNRPLower.h"
 #include "../BlockStreamIterator/ParallelBlockStreamIterator/ExpandableBlockStreamExchangeLower.h"
 #include "../BlockStreamIterator/ParallelBlockStreamIterator/ExpandableBlockStreamExchangeLowerEfficient.h"
 #include "../BlockStreamIterator/ParallelBlockStreamIterator/ExpandableBlockStreamExchangeLowerMaterialized.h"
@@ -79,6 +81,8 @@ void Register_Block_Stream_Iterator(Archive & ar){
 	ar.register_type(static_cast<ExpandableBlockStreamFilter*>(NULL));
 	ar.register_type(static_cast<ExpandableBlockStreamExchange*>(NULL));
 	ar.register_type(static_cast<ExpandableBlockStreamExchangeEpoll*>(NULL));
+	ar.register_type(static_cast<EBSExchangeNRP*>(NULL));
+	ar.register_type(static_cast<EBSExchangeNRPLower*>(NULL));
 	ar.register_type(static_cast<ExpandableBlockStreamExchangeLower*>(NULL));
 	ar.register_type(static_cast<ExpandableBlockStreamExchangeLowerEfficient*>(NULL));
 	ar.register_type(static_cast<ExpandableBlockStreamExchangeLowerMaterialized*>(NULL));

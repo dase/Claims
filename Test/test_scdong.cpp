@@ -22,7 +22,7 @@
 #include "../TableManager.h"
 #include "../utils/rdtsc.h"
 #include "../Environment.h"
-#include "../Comparator.h"
+#include "../utils/Comparator.h"
 #include "../Message.h"
 #include "../Schema/SchemaFix.h"
 #include "../PerformanceMonitor/PerformanceIteratorTop.h"

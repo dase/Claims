@@ -9,8 +9,6 @@
 #ifndef EXPANDABLEBLOCKSTREAMEXCHANGEEPOLL_H_
 #define EXPANDABLEBLOCKSTREAMEXCHANGEEPOLL_H_
 
-
-
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/serialization/vector.hpp>

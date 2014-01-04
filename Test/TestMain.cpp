@@ -8,8 +8,10 @@
 #include "../LogicalQueryPlan/Test/testGenerateIteratorTree.cpp"
 #include "../BlockStreamIterator/ParallelBlockStreamIterator/Test/projectionScan.cpp"
 #include "../Executor/Test/Executor.cpp"
+//#include "../Block/test/testBlockStreamVar.cpp"
 //#include "hashtable_test.cpp"
-int main(){
+int main1(){
+//	return testVar();
 	return testGenerateIteratorTree();
 //	return testProjectionScan();
 //	return testIteratorExecutor();

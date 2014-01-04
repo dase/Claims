@@ -24,6 +24,18 @@ typedef unsigned ChunkOffset;
 /*the following ids are based on the assumption that the TableOffset is globally unique.*/
 
 
+struct NodePair{
+	NodePair(const NodeID &a,const NodeID &b):first(a),second(b){};
+	NodePair(){}
+	NodeID first;
+	NodeID second;
+	friend class boost::serialization::access;
+	template<class Archive>
+	void serialize(Archive & ar, const unsigned int version){
+		ar & first & second;
+	}
+};
+
 /**
  * AttributeID: an attribute in a table has an unique AttributeID*/
 struct AttributeID{
@@ -116,7 +128,7 @@ struct PartitionID{
 	}
 	std::string getPathAndName()const{
 		std::ostringstream str;
-		str<<"/home/imdb/data/wangli/T"<<projection_id.table_id<<"G"<<projection_id.projection_off<<"P"<<partition_off;
+		str<<"/home/casa/storage/file/T"<<projection_id.table_id<<"G"<<projection_id.projection_off<<"P"<<partition_off;
 //		str<<"/home/imdb/data/wangli/T"<<partition_off;
 		return str.str();
 	}

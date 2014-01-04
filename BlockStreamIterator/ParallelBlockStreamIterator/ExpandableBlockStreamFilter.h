@@ -10,7 +10,7 @@
 #include <list>
 #include "../BlockStreamIteratorBase.h"
 #include "../../Schema/Schema.h"
-#include "../../Comparator.h"
+#include "../../utils/Comparator.h"
 #include "../../iterator/FilterIterator.h"
 #include "../../Block/BlockStream.h"
 #include "../../Block/synch.h"

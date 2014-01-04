@@ -13,12 +13,14 @@
 /**
  * describe how the data flow are partitioned and the partition property between them.
  */
+
 class DataflowPartitionDescriptor {
 public:
 	DataflowPartitionDescriptor():partition_function_(0){};
 	DataflowPartitionDescriptor(const Partitioner& partitoiner);
 	virtual ~DataflowPartitionDescriptor();
 	Attribute getPartitionKey()const;
+	vector<NodePair> getPartitionCompare(const DataflowPartitionDescriptor& target)const;
 	bool hasSamePartitionLocation(const DataflowPartitionDescriptor& target)const;
 	unsigned getAggregatedDatasize()const;
 	PartitionFunction::partition_fashion getPartitionFashion()const;

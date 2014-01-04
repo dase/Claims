@@ -75,7 +75,7 @@ ExchangeTracker::ExchangeTrackerActor::ExchangeTrackerActor(ExchangeTracker* et,
 
 void ExchangeTracker::ExchangeTrackerActor::AskForConnectionInfo(const unsigned long long int &exchange_id, const Theron::Address from){
 	et->logging_->log("%s is asking for the socket connecton info!",from.AsString());
-
+	cout<<"in the askForConnectionInfo!!!"<<endl;
 	if(et->id_to_port.find(exchange_id)!=et->id_to_port.end()){
 
 		NodeConnectionMessage myNCM(Environment::getInstance()->getIp(),et->id_to_port[exchange_id]);

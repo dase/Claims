@@ -16,7 +16,7 @@
 #include <boost/serialization/vector.hpp>
 #include "../iterator.hpp"
 #include "../Schema/Schema.h"
-#include "../Comparator.h"
+#include "../utils/Comparator.h"
 #include "../utils/configure.h"
 
 class FilterIterator:public Iterator {

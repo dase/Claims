@@ -10,13 +10,15 @@
 
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
-#include "../Schema/SchemaFix.h"
 
 #include "../Schema/SchemaFix.h"
+#include "../Schema/SchemaVar.h"
+
 template<class Archive>
 void Register_Schemas(Archive & ar)
 {
 	ar.register_type(static_cast<SchemaFix *>(NULL));
+	ar.register_type(static_cast<SchemaVar *>(NULL));
 }
 //template<class Archive>
 //inline void Register_Iterators_Except_For_SingleColumnScanIterator(Archive & ar)

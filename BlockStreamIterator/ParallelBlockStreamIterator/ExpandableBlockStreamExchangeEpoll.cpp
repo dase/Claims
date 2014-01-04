@@ -50,7 +50,7 @@ ExpandableBlockStreamExchangeEpoll::~ExpandableBlockStreamExchangeEpoll() {
 }
 
 bool ExpandableBlockStreamExchangeEpoll::open(const PartitionOffset& partition_offset){
-
+	cout<<"in the epoll!!!"<<endl;
 	if(sem_open_.try_wait()){
 
 		nexhausted_lowers=0;

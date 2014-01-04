@@ -11,7 +11,7 @@
 #include <boost/archive/text_oarchive.hpp>
 #include <map>
 
-#include "data_type.h"
+#include "../data_type.h"
 
 
 typedef bool (*comFun)(const void*,const void*);

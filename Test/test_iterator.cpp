@@ -17,7 +17,7 @@
 #include "../iterator/CombinedIterator.h"
 #include "../iterator/PrintIterator.h"
 #include "../iterator/AggregationIterator.h"
-#include "../Comparator.h"
+#include "../utils/Comparator.h"
 #include "../Message.h"
 struct int_float
 {
