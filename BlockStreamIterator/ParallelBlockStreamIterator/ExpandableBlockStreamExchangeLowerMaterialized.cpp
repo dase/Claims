@@ -19,15 +19,15 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 
-#include "../../configure.h"
+#include "../../utils/configure.h"
 
 #include "../../Block/BlockWritableFix.h"
 #include "../../Block/BlockReadable.h"
 #include "../../rename.h"
-#include "../../Logging.h"
+#include "../../utils/Logging.h"
 #include "../../Executor/ExchangeTracker.h"
 #include "../../Environment.h"
-#include "../../Logging.h"
+#include "../../utils/Logging.h"
 
 ExpandableBlockStreamExchangeLowerMaterialized::ExpandableBlockStreamExchangeLowerMaterialized(State state)
 :state_(state),BlockStreamExchangeLowerBase(){

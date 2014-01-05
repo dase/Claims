@@ -10,7 +10,7 @@
 #include <unistd.h>
 #include <sys/mman.h>
 #include "SingleColumnScanIterator.h"
-#include "../configure.h"
+#include "../utils/configure.h"
 #include "../rename.h"
 //typedef int (f)(const char*,int,...);
 //f *fileopen=open;

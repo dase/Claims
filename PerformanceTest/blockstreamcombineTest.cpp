@@ -14,7 +14,7 @@
 #include "../BlockStreamIterator/ParallelBlockStreamIterator/BlockStreamJoinIterator.h"
 #include "../Serialization/RegisterDerivedClass.h"
 #include "../Schema/SchemaFix.h"
-#include "../rdtsc.h"
+#include "../utils/rdtsc.h"
 
 //int main(int argc,const char** argv){
 int main_combine(int argc,const char** argv){

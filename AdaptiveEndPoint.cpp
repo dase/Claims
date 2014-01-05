@@ -12,7 +12,7 @@
 #include <arpa/inet.h>
 #include "AdaptiveEndPoint.h"
 #include "Debug.h"
-#include "Logging.h"
+#include "utils/Logging.h"
 AdaptiveEndPoint::AdaptiveEndPoint(const char* name,  std::string ip, std::string port)
 :Theron::EndPoint(name, ("tcp://"+ip+":"+port).c_str()){
 	logging_=new AdaptiveEndPointLogging();

@@ -64,6 +64,7 @@ private:
 	semaphore sema_open_finished_;
 
 	Lock cursor_lock_;
+	Lock lock_;
 
 	PartitionStorage::PartitionReaderItetaor* partition_reader_iterator_;
 	std::list<ChunkReaderIterator*> remaining_chunk_reader_iterator_list_;

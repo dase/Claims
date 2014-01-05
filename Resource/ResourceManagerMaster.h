@@ -10,10 +10,10 @@
 #include <string>
 #include <vector>
 #include <Theron/Theron.h>
-#include "../hashmap.hpp"
+#include "../utils/hashmap.hpp"
 #include "ResourceInfo.h"
 #include "NodeTracker.h"
-#include "../Logging.h"
+#include "../utils/Logging.h"
 #include "../Message.h"
 class ResourceManagerMaster {
 public:

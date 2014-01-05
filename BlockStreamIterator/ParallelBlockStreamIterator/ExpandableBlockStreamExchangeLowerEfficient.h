@@ -36,8 +36,8 @@
 #include "../../Block/BlockStream.h"
 #include "../../Block/BlockStreamBuffer.h"
 #include "../../Block/PartitionedBlockContainer.h"
-#include "../../hash.h"
-#include "../../Logging.h"
+#include "../../utils/hash.h"
+#include "../../utils/Logging.h"
 
 class ExpandableBlockStreamExchangeLowerEfficient:public BlockStreamIteratorBase {
 public:

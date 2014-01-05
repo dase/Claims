@@ -8,6 +8,7 @@
 #include "EqualJoin.h"
 #include "../BlockStreamIterator/ParallelBlockStreamIterator/BlockStreamJoinIterator.h"
 #include "../BlockStreamIterator/ParallelBlockStreamIterator/ExpandableBlockStreamExchangeEpoll.h"
+#include "../BlockStreamIterator/ParallelBlockStreamIterator/EBSExchangeNRP.h"
 #include "../IDsGenerator.h"
 #include "../BlockStreamIterator/ParallelBlockStreamIterator/BlockStreamExpander.h"
 EqualJoin::EqualJoin(std::vector<JoinPair> joinpair_list,LogicalOperator* left_input,LogicalOperator* right_input)
@@ -41,10 +42,16 @@ Dataflow EqualJoin::getDataflow(){
 	const Attribute right_partition_key=right_dataflow.property_.partitioner.getPartitionKey();
 	if(left_dataflow_key_partitioned&&right_dataflow_key_partitioned){
 		if(isEqualCondition(left_partition_key,right_partition_key)){
-			/** the best situation**/
+			/** the best situation, the two partitioned key is the exactly the join key**/
+
+			/* filter the partitions out to do remote no partition exchange, if all match, the
+			 * no partiton exchange will not exist, so there is a array to record which same partitions
+			 * are on the same nodes*/
+
 			if(left_dataflow.property_.partitioner.hasSamePartitionLocation(right_dataflow.property_.partitioner)){
+				cout<<"in the no repartition join switch!!"<<endl;
 				join_police_=no_repartition;
-//				join_police_=left_repartition;
+				nodeid_pair_list_=left_dataflow.property_.partitioner.getPartitionCompare(right_dataflow.property_.partitioner);
 
 			}
 			else{
@@ -238,9 +245,31 @@ BlockStreamIteratorBase* EqualJoin::getIteratorTree(const unsigned& block_size){
 
 	switch(join_police_){
 		case no_repartition:{
-			state.child_left=child_iterator_left;
-			state.child_right=child_iterator_right;
+			/*add the no-partition exchange*/
+//			BlockStreamExpander::State expander_state;
+//			expander_state.block_count_in_buffer_=10;
+//			expander_state.block_size_=block_size;
+//			expander_state.thread_count_=6;
+//			expander_state.child_=child_iterator_left;
+//			expander_state.schema_=getSchema(dataflow_left.attribute_list_);
+//			BlockStreamIteratorBase* expander=new BlockStreamExpander(expander_state);
 
+			EBSExchangeNRP::State exchangenp_state;
+			exchangenp_state.schema=getSchema(dataflow_left.attribute_list_);
+			exchangenp_state.block_size=block_size;
+			exchangenp_state.exchange_id=IDsGenerator::getInstance()->generateUniqueExchangeID();
+			std::vector<NodeID> upper_id_list=getInvolvedNodeID(dataflow_->property_.partitioner);
+			exchangenp_state.upper_ip_list=convertNodeIDListToNodeIPList(upper_id_list);
+			std::vector<NodeID> lower_id_list=getInvolvedNodeID(dataflow_left.property_.partitioner);
+			exchangenp_state.lower_ip_list=convertNodeIDListToNodeIPList(lower_id_list);
+			exchangenp_state.child=child_iterator_left;
+			exchangenp_state.node_pair_list=nodeid_pair_list_;
+			BlockStreamIteratorBase *exchangenp_iterator=new EBSExchangeNRP(exchangenp_state);
+			cout<<"in the join constructor!!"<<endl;
+			/*added the no-partition exchange*/
+
+			state.child_left=exchangenp_iterator;
+			state.child_right=child_iterator_right;
 			join_iterator=new BlockStreamJoinIterator(state);
 			break;
 		}
@@ -249,7 +278,7 @@ BlockStreamIteratorBase* EqualJoin::getIteratorTree(const unsigned& block_size){
 			BlockStreamExpander::State expander_state;
 			expander_state.block_count_in_buffer_=10;
 			expander_state.block_size_=block_size;
-			expander_state.thread_count_=3;
+			expander_state.thread_count_=6;
 			expander_state.child_=child_iterator_left;
 			expander_state.schema_=getSchema(dataflow_left.attribute_list_);
 			BlockStreamIteratorBase* expander=new BlockStreamExpander(expander_state);

@@ -8,10 +8,10 @@
 #include "ExchangeIteratorLowerWithWideDependency.h"
 #include "../Block/BlockWritableFixBuffer.h"
 #include "../rename.h"
-#include "../Logging.h"
+#include "../utils/Logging.h"
 #include "../Executor/ExchangeTracker.h"
 #include "../Environment.h"
-#include "../configure.h"
+#include "../utils/configure.h"
 #include <libconfig.h++>
 #include <stdlib.h>
 #include <error.h>

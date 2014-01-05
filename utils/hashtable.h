@@ -23,7 +23,6 @@
 #include <assert.h>
 
 #include "atomics.h"
-#include "lock.h"
 #include "configure.h"
 #include "lock.h"
 typedef void (*fun)(void*, void*);
@@ -57,6 +56,7 @@ public:
 			assert(ret!=0);
 			return ret;
 		}
+		mother_page_lock_.lock();
 		char* cur_mother_page=mother_page_list_.back();
 		if(bucksize_+cur_MP_>=pagesize_ )// the current mother page doesn't have enough space for the new buckets
 		{
@@ -75,6 +75,7 @@ public:
 		*new_buck_nextloc = data;
 
 		bucket_[offset]=ret;
+		mother_page_lock_.unlock();
 		return ret;
 	}
 	inline void* atomicAllocate(const unsigned& offset){
@@ -185,6 +186,7 @@ private:
 	int cur_MP_;
 	std::vector<char*> mother_page_list_;
 	SpineLock* lock_list_;
+	SpineLock mother_page_lock_;
 	unsigned * overflow_count_;
 };
 

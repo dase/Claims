@@ -11,7 +11,7 @@
 #include <sstream>
 #include <string>
 #include "Debug.h"
-#include "Logging.h"
+#include "utils/Logging.h"
 Environment* Environment::_instance=0;
 Environment::Environment(bool ismaster):ismaster_(ismaster) {
 	_instance=this;

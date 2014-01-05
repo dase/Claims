@@ -17,10 +17,10 @@
 #ifndef COPYBASEDFILTERITERATORBLOCKFIX_H_
 #define COPYBASEDFILTERITERATORBLOCKFIX_H_
 #include <malloc.h>
-#include "../configure.h"
+#include "../utils/configure.h"
 #include "BlockIteratorFix.h"
 #include "../Schema/SchemaFix.h"
-#include "../Comparator.h"
+#include "../utils/Comparator.h"
 #include "../Block/BlockFix.h"
 #include "../iterator/FilterIterator.h"
 class CopyBasedFilterIteratorBlockFix:public BlockIteratorFix {

@@ -24,12 +24,12 @@
 #include <assert.h>
 
 #include "../../Block/BlockReadableFix.h"
-#include "../../Logging.h"
+#include "../../utils/Logging.h"
 #include "../../PortManager.h"
 #include "../../Environment.h"
 #include "../../Executor/ExchangeTracker.h"
 
-#include "../../configure.h"
+#include "../../utils/configure.h"
 #include "../../rename.h"
 ExpandableBlockStreamExchange::ExpandableBlockStreamExchange(State state)
 :state(state){

@@ -9,7 +9,7 @@
 #include <stdlib.h>
 
 #include "../TableManager.h"
-#include "../rdtsc.h"
+#include "../utils/rdtsc.h"
 #include "../Schema/SchemaFix.h"
 #include "../iterator/SingleColumnScanIterator.h"
 #include "../iterator/FilterIterator.h"
@@ -17,7 +17,7 @@
 #include "../iterator/CombinedIterator.h"
 #include "../iterator/PrintIterator.h"
 #include "../iterator/AggregationIterator.h"
-#include "../Comparator.h"
+#include "../utils/Comparator.h"
 #include "../Message.h"
 struct int_float
 {

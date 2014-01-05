@@ -9,8 +9,8 @@
 #define CATALOG_H_
 #include <string>
 #include "table.h"
-#include "../hashmap.hpp"
-#include "../Logging.h"
+#include "../utils/hashmap.hpp"
+#include "../utils/Logging.h"
 #include "ProjectionBinding.h"
 struct TableIDAllocator{
 	TableIDAllocator(){

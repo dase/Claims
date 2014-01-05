@@ -414,7 +414,7 @@ static int testGenerateIteratorTree(){
 		filter_condition_1.add(table_1->getAttribute(1),FilterIterator::AttributeComparator::GEQ,&trade_date);
 		const int sec_code=600036;
 		filter_condition_1.add(table_1->getAttribute(3),FilterIterator::AttributeComparator::EQ,&sec_code);
-		const int order_type=10;
+		const int order_type=1;
 		filter_condition_1.add(table_1->getAttribute(5),FilterIterator::AttributeComparator::EQ,&order_type);
 		LogicalOperator* filter_1=new Filter(filter_condition_1,cj_join_key_scan);
 
@@ -448,7 +448,7 @@ static int testGenerateIteratorTree(){
 		sb_cj_join_pair_list.push_back(EqualJoin::JoinPair(table_1->getAttribute("trade_dir"),table_2->getAttribute("entry_dir")));
 //		sb_cj_join_pair_list.push_back(EqualJoin::JoinPair(table_1->getAttribute("row_id"),table_2->getAttribute("row_id")));
 //		LogicalOperator* sb_cj_join=new EqualJoin(sb_cj_join_pair_list,filter_1,filter_2);
-		LogicalOperator* sb_cj_join=new EqualJoin(sb_cj_join_pair_list,cj_join_key_scan,sb_join_key_scan);
+		LogicalOperator* sb_cj_join=new EqualJoin(sb_cj_join_pair_list,filter_1,filter_2);
 
 		std::vector<EqualJoin::JoinPair> cj_payload_join_pari_list;
 		cj_payload_join_pari_list.push_back(EqualJoin::JoinPair(table_1->getAttribute("row_id"),table_1->getAttribute("row_id")));
@@ -484,11 +484,11 @@ static int testGenerateIteratorTree(){
 //
 
 		const NodeID collector_node_id=0;
-		LogicalOperator* root=new LogicalQueryPlanRoot(collector_node_id,aggregation,LogicalQueryPlanRoot::PERFORMANCE);
+		LogicalOperator* root=new LogicalQueryPlanRoot(collector_node_id,sb_cj_join,LogicalQueryPlanRoot::PERFORMANCE);
 		root->getDataflow();
 		BlockStreamIteratorBase* executable_query_plan=root->getIteratorTree(1024*64-sizeof(unsigned));
 //		BlockStreamIteratorBase* executable_query_plan=root->getIteratorTree(1024-sizeof(unsigned));
-
+		cout<<"after get iterator tree!!"<<endl;
 		int c=1;
 		while(c==1){
 			IteratorExecutorMaster::getInstance()->ExecuteBlockStreamIteratorsOnSite(executable_query_plan,"10.11.1.199");

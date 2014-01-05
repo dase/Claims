@@ -9,6 +9,12 @@
 #define BLOCKSTREAM_H_
 #include "../Schema/Schema.h"
 #include "Block.h"
+#include <iostream>
+#include <stdio.h>
+#include <unistd.h>
+#include "../rename.h"
+using namespace std;
+
 class BlockStreamBase:public Block{
 public:
 
@@ -76,6 +82,10 @@ public:
 	};
 	BlockStreamBase(unsigned block_size):Block(block_size){};
 	static BlockStreamBase* createBlock(Schema* schema,unsigned block_size);
+	/*for debug*/
+	virtual void printSchema()=0;
+	virtual bool insert(void *dest,void *src,unsigned bytes)=0;
+	virtual void toDisk(BlockStreamBase *bsb)=0;
 protected:
 	virtual void* getTuple(unsigned offset) const =0;
 
@@ -117,6 +127,9 @@ public:
 	/* construct the BlockStream from a storage level block,
 	 * which last four bytes indicate the number of tuples in the block.*/
 	void constructFromBlock(const Block& block);
+	virtual void printSchema(){};
+	bool insert(void *dest,void *src,unsigned bytes){}
+	void toDisk(BlockStreamBase *bsb){};
 protected:
 //	char* data_;
 //	unsigned block_size_;
@@ -126,6 +139,97 @@ public:
 
 };
 
+/* only on the situation of tuple size is little than a block size*/
+class BlockStreamVar:public BlockStreamBase{
+public:
+	BlockStreamVar(unsigned block_size,Schema *schema);
+	virtual ~BlockStreamVar();
+
+	inline void* getTuple(unsigned offset) const {
+		// 首先通过offset得到第offset个tuple的起始地址
+		void *ret=start+BlockSize-4-(offset+1)*4;
+		return ret;
+	}
+public:
+//	void *getCurrentEnd(){
+//		// a member of class can be used to reduce computations
+//		return (char*)start+BlockSize-sizeof(int)*(cur_tuple_size_+1+attributes_);
+//	}
+//
+//	void *getCurrentFront(){
+//		unsigned begin=*(int*)((char*)start+BlockSize-sizeof(int)*(cur_tuple_size_+attributes_));
+//		unsigned varsize=0;
+//		for(unsigned i=0;i<var_attributes_;i++){
+//			varsize+=*(int *)(begin+i);
+//		}
+//		unsigned begin=(int*)((char*)start+begin);
+//		return (char *)(begin+varsize+4*var_attributes_);
+//	}
+
+	/* bytes is the length of the constructed tuple*/
+	inline void* allocateTuple(unsigned bytes){
+		if(free_front_+bytes<=free_end_){
+			void *ret=free_front_;
+			free_front_+=bytes;
+			return ret;
+		}
+		else{
+			cout<<"the allocateTuple is not success!!!"<<endl;
+			return 0;
+		}
+	}
+
+	bool insert(void *dest,void *src,unsigned bytes){
+		memcpy(dest,src,bytes);
+		int *free_end=(int*)free_end_;
+		*free_end=free_front_-start;
+		free_end_=free_end_-sizeof(int);
+		return true;
+	}
+
+	void setEmpty(){};
+
+	bool Empty() const{};
+	void* getBlockDataAddress(){};
+//	void setBlockDataAddress(void* addr);
+	bool switchBlock(BlockStreamBase& block){};
+	void copyBlock(void* addr, unsigned length){
+	};
+	bool serialize(Block & block) const{
+		*(int*)((char*)start+BlockSize-4)=cur_tuple_size_;
+	};
+	bool deserialize(Block * block){};
+	unsigned getSerializedBlockSize()const{};
+	unsigned getTuplesInBlock()const{};
+	void constructFromBlock(const Block& block){};
+	void toDisk(BlockStreamBase *bsb){
+		int filed;
+		filed=FileOpen("/home/casa/storage/file/file_01",O_WRONLY|O_CREAT);
+		write(filed,bsb->getBlock(),1024*64);
+	};
+
+	/*debug*/
+public:
+	void printSchema(){
+		int columns=schema_->getncolumns();
+		int* schema_info=(int*)((char*)start+BlockSize-sizeof(int)*(columns+1));
+		for(unsigned i=0;i<schema_->getncolumns();i++){
+			cout<<"the schema is:"<<*(schema_info+i)<<endl;
+		}
+		cout<<"the tuple count is:"<<*(schema_info+columns)<<endl;
+	}
+private:
+	// front can be added for less computing
+//	char *front_;
+	Schema *schema_;
+	char *free_front_;
+	/* can be in end directly*/
+	char *free_end_;
+	/* how many attributes in the tuple*/
+	unsigned attributes_;
+	unsigned var_attributes_;
+	unsigned cur_tuple_size_;
+};
 
 
 #endif /* BLOCKSTREAM_H_ */

@@ -13,7 +13,7 @@
 
 #include "../BlockStreamIteratorBase.h"
 #include "../../Schema/Schema.h"
-#include "../../configure.h"
+#include "../../utils/configure.h"
 #include "../../Block/synch.h"
 
 #include <list>

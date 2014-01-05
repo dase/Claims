@@ -9,7 +9,7 @@
 #include "../Executor/IteratorExecutorMaster.h"
 #include "../Block/BlockReadableFixBuffer.h"
 #include "../rename.h"
-#include "../Logging.h"
+#include "../utils/Logging.h"
 
 #include <libconfig.h++>
 #include <stdlib.h>

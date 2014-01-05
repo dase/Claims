@@ -14,7 +14,7 @@
 #include "../../Block/synch.h"
 #include "../BlockStreamIteratorBase.h"
 #include "../../Debug.h"
-#include "../../configure.h"
+#include "../../utils/configure.h"
 
 #include <string>
 #include <vector>

@@ -14,7 +14,7 @@
 #define EXCHANGETRACKER_H_
 #include <map>
 #include "../AdaptiveEndPoint.h"
-#include "../Logging.h"
+#include "../utils/Logging.h"
 #include "../Message.h"
 class ExchangeTracker {
 public:

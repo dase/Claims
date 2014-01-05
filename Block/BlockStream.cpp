@@ -5,16 +5,42 @@
  *      Author: wangli
  */
 #include <malloc.h>
-#include "../configure.h"
+#include "../utils/configure.h"
 #include "BlockStream.h"
 #include "BlockWritable.h"
 #include <assert.h>
+#include "../data_type.h"
+
 BlockStreamFix::BlockStreamFix(unsigned block_size,unsigned tuple_size)
 :BlockStreamBase(block_size),tuple_size_(tuple_size){
 	free_=start;
 }
 
 BlockStreamFix::~BlockStreamFix() {
+
+}
+
+BlockStreamVar::BlockStreamVar(unsigned block_size,Schema *schema)
+:BlockStreamBase(block_size),schema_(schema),cur_tuple_size_(0),var_attributes_(0){
+	attributes_=schema->getncolumns();
+	int* schema_info=(int*)((char*)start+block_size-sizeof(int)*(attributes_+1));
+	for(unsigned i=0;i<attributes_;i++){
+//		data_type type=schema->columns[i].type;
+		switch(schema->columns[i].type){
+			case t_int:*(schema_info+i)=1;break;
+			case t_float:*(schema_info+i)=2;break;
+			case t_double:*(schema_info+i)=3;break;
+			case t_u_long:*(schema_info+i)=4;break;
+			case t_string:*(schema_info+i)=5;var_attributes_++;break;
+			default:cout<<"no type!"<<endl;break;
+		}
+	}
+	free_front_=start;
+	free_end_=(char*)start+block_size-sizeof(int)*attributes_-sizeof(int)-sizeof(int);
+}
+
+BlockStreamVar::~BlockStreamVar(){
+
 }
 
 void BlockStreamFix::setEmpty(){

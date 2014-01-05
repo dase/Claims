@@ -26,19 +26,31 @@ Attribute DataflowPartitionDescriptor::getPartitionKey()const{
 	return partition_key_;
 }
 
+vector<NodePair> DataflowPartitionDescriptor::getPartitionCompare(const DataflowPartitionDescriptor& target)const{
+	vector<NodePair> v_p;
+	for(unsigned i=0;i<partition_list_.size();i++){
+		NodePair node_pair;
+		node_pair.first=partition_list_[i].location_;
+		node_pair.second=target.partition_list_[i].location_;
+		v_p.push_back(node_pair);
+	}
+	return v_p;
+}
+
 bool DataflowPartitionDescriptor::hasSamePartitionLocation(const DataflowPartitionDescriptor& target)const{
 	if(partition_list_.size()!=target.partition_list_.size())
 		return false;
-	for(unsigned i=0;i<partition_list_.size();i++){
-		if(partition_list_[i].isAvaliable()&&target.partition_list_[i].isAvaliable()){
-		/**
-		 * if no party is filtered.
-		 */
-			if(partition_list_[i].location_!=target.partition_list_[i].location_)
-				return false;
-		}
-	}
-	return true;
+//	for(unsigned i=0;i<partition_list_.size();i++){
+//		if(partition_list_[i].isAvaliable()&&target.partition_list_[i].isAvaliable()){
+//		/**
+//		 * if no party is filtered.
+//		 */
+//			if(partition_list_[i].location_!=target.partition_list_[i].location_)
+//				return false;
+//		}
+//	}
+	else
+		return true;
 }
 
 unsigned DataflowPartitionDescriptor::getAggregatedDatasize()const{

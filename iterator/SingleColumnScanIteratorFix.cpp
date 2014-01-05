@@ -11,7 +11,7 @@
 #include <sys/mman.h>
 #include <stdio.h>
 #include "SingleColumnScanIteratorFix.h"
-#include "../configure.h"
+#include "../utils/configure.h"
 #include "../rename.h"
 
 SingleColumnScanIteratorFix::SingleColumnScanIteratorFix(SingleColumnScanIteratorFix::State state)

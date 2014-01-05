@@ -60,7 +60,7 @@ bool ExpandableBlockStreamFilter::next(BlockStreamBase* block){
 		while((tuple_from_child=rb.iterator->currentTuple())>0){
 			pass_filter=true;
 			for(unsigned i=0;i<state_.comparator_list_.size();i++){
-
+//			a&&b|c&&d
 //				state_.comparator_list_[0].in
 
 //				if(!state_.comparator_list_[i].filter(tuple_from_child)){

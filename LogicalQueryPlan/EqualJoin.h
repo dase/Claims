@@ -10,6 +10,7 @@
 #include <vector>
 #include "LogicalOperator.h"
 #include "../Catalog/Attribute.h"
+#include "../ids.h"
 class EqualJoin:public LogicalOperator {
 public:
 	struct JoinPair{
@@ -54,6 +55,9 @@ private:
 	JoinPolice join_police_;
 	Dataflow* dataflow_;
 
+	/* add the vector<pair>*/
+	std::vector<NodePair> nodeid_pair_list_;
+	/* added the vector<pair>*/
 };
 
 #endif /* EQUALJOIN_H_ */

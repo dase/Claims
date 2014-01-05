@@ -11,7 +11,7 @@
 #include <Theron/Theron.h>
 #include <string>
 #include <vector>
-#include "../Logging.h"
+#include "../utils/Logging.h"
 
 class Coordinator {
 public:

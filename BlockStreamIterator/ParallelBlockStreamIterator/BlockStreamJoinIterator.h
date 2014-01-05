@@ -10,9 +10,9 @@
 
 #include "../BlockStreamIteratorBase.h"
 #include "../../Debug.h"
-#include "../../rdtsc.h"
-#include "../../hash.h"
-#include "../../hashtable.h"
+#include "../../utils/rdtsc.h"
+#include "../../utils/hash.h"
+#include "../../utils/hashtable.h"
 #include "../../Block/synch.h"
 
 #include <iostream>
@@ -111,7 +111,10 @@ private:
 	std::list<BlockStreamBase *> ht_free_block_stream_list_;
 
 	semaphore sema_open_;
+	semaphore sema_barrier_;
+	semaphore sema_open_tmp;
 	volatile bool open_finished_;
+	volatile bool barrier_finished_;
 	unsigned reached_end;
 	Lock lock_;
 	Barrier *barrier_;
@@ -122,6 +125,10 @@ private:
 	unsigned consumed_tuples_from_left;
 	unsigned tuples_in_hashtable;
 	unsigned water_mark;
+	unsigned debug_count;
+	unsigned debug_count_temp;
+	unsigned tuple_in_right_child;
+	unsigned count;
 
 #ifdef TIME
 	unsigned long long timer;

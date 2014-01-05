@@ -8,7 +8,7 @@
 #include "IteratorExecutorMaster.h"
 #include "../Environment.h"
 #include "../TimeOutReceiver.h"
-#include "../rdtsc.h"
+#include "../utils/rdtsc.h"
 IteratorExecutorMaster* IteratorExecutorMaster::_instance=0;
 
 
@@ -88,9 +88,7 @@ bool IteratorExecutorMaster::ExecuteBlockStreamIteratorsOnSites(BlockStreamItera
 }
 bool IteratorExecutorMaster::ExecuteBlockStreamIteratorsOnSite(BlockStreamIteratorBase* it,std::string target_ip){
 	IteratorMessage im(it);
-
 	Message4K str= IteratorMessage::serialize4K(im);
-
 	TimeOutReceiver receiver(endpoint);
 
 	Theron::Catcher<Message256> resultCatcher;

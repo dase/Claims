@@ -15,8 +15,8 @@ using namespace std;
 #include "../BlockStreamIteratorBase.h"
 #include "../../Schema/Schema.h"
 #include "../../Block/synch.h"
-#include "../../hashtable.h"
-#include "../../hash.h"
+#include "../../utils/hashtable.h"
+#include "../../utils/hash.h"
 #include "../../Debug.h"
 
 class BlockStreamAggregationIterator:public BlockStreamIteratorBase{

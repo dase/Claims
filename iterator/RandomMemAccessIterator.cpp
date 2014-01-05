@@ -13,7 +13,7 @@
 
 #include "../rename.h"
 #include "RandomMemAccessIterator.h"
-#include "../configure.h"
+#include "../utils/configure.h"
 RandomMemAccessIterator::RandomMemAccessIterator(RandomMemAccessIterator::State state)
 :Iterator(), state(state), base(NULL), length(0), fd(0), oid(0)
 {

@@ -21,7 +21,7 @@
 #include <assert.h>
 #include "ExchangeIteratorEager.h"
 #include "../Block/BlockReadableFix.h"
-#include "../Logging.h"
+#include "../utils/Logging.h"
 #include "../PortManager.h"
 #include "../Environment.h"
 #include "../Executor/ExchangeTracker.h"

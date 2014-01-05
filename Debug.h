@@ -8,14 +8,17 @@
 #ifndef DEBUG_H_
 #define DEBUG_H_
 
-#define COOR "/home/imdb/config/wangli/coor.conf"
-#define CONFIG "/home/imdb/config/wangli/config"
+#define COOR "/home/imdb/config/zhanglei/coor.conf"
+#define CONFIG "/home/imdb/config/zhanglei/config"
 //#define CONFIG_SAME "/home/imdb/config/config"
 
 /*
  * needed by blockstreamjoiniterator
  * */
 #define BARRIER 1
+
+#define HISTOGRAM_SIZE 107
+
 /*
  * block in hdfs and sublock in block
  * */
@@ -42,7 +45,7 @@
 //#define DEBUG_ExchangeIteratorEagerLower
 //
 //#define DEBUG_ExchangeRegister
-//#define DEBUG_ExchangeTracker
+#define DEBUG_ExchangeTracker
 //
 //#define DEBUG_PortManager
 //#define DEBUG_IteratorExecutorSlave

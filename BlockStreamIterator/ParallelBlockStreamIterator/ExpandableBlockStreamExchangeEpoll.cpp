@@ -26,13 +26,13 @@
 #include "ExpandableBlockStreamExchangeLower.h"
 #include "ExpandableBlockStreamExchangeLowerEfficient.h"
 #include "../../Block/BlockReadableFix.h"
-#include "../../Logging.h"
+#include "../../utils/Logging.h"
 #include "../../PortManager.h"
 #include "../../Environment.h"
 #include "../../Executor/ExchangeTracker.h"
-#include "../../configure.h"
+#include "../../utils/configure.h"
 #include "../../rename.h"
-#include "../../rdtsc.h"
+#include "../../utils/rdtsc.h"
 ExpandableBlockStreamExchangeEpoll::ExpandableBlockStreamExchangeEpoll(State state)
 :state(state){
 	sem_open_.set_value(1);
@@ -50,7 +50,7 @@ ExpandableBlockStreamExchangeEpoll::~ExpandableBlockStreamExchangeEpoll() {
 }
 
 bool ExpandableBlockStreamExchangeEpoll::open(const PartitionOffset& partition_offset){
-
+	cout<<"in the epoll!!!"<<endl;
 	if(sem_open_.try_wait()){
 
 		nexhausted_lowers=0;

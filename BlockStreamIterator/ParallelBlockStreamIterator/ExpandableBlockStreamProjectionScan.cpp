@@ -1,4 +1,4 @@
-/*
+                                                                                                                                                                                                                                               /*
  * ExpandableBlockStreamProjectionScan.cpp
  *
  *  Created on: Nov.14, 2013
@@ -61,17 +61,22 @@ bool ExpandableBlockStreamProjectionScan::open(const PartitionOffset& partition_
 }
 
 bool ExpandableBlockStreamProjectionScan::next(BlockStreamBase* block) {
+//
 	allocated_block allo_block_temp;
 	ChunkReaderIterator* chunk_reader_iterator;
 	if(atomicPopChunkReaderIterator(chunk_reader_iterator)){
 		/* there is unused ChunkReaderIterator*/
+//		lock_.acquire();
 		if(chunk_reader_iterator->nextBlock(block)){
+//			lock_.release();
 			/* there is still unread block*/
 			atomicPushChunkReaderIterator(chunk_reader_iterator);
+//			lock_.release();
 			return true;
 		}
 		else{
 			/* the ChunkReaderIterator is exhausted, so we destructe it.*/
+//			lock_.release();
 			chunk_reader_iterator->~ChunkReaderIterator();
 			printf("One Chunk is exhausted!\n");
 		}
@@ -80,9 +85,11 @@ bool ExpandableBlockStreamProjectionScan::next(BlockStreamBase* block) {
 	 * so we create new one*/
 	if((chunk_reader_iterator=partition_reader_iterator_->nextChunk())!=0){
 		atomicPushChunkReaderIterator(chunk_reader_iterator);
+//
 		return next(block);
 	}
 	else{
+//		lock_.release();
 		return false;
 	}
 }

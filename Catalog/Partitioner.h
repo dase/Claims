@@ -10,9 +10,9 @@
 #include <vector>
 #include <string>
 #include <map>
-#include "../hashmap.hpp"
+#include "../utils/hashmap.hpp"
 #include "Attribute.h"
-#include "../hash.h"
+#include "../utils/hash.h"
 
 #include "Partitioner.h"
 #include "../Resource/NodeTracker.h"

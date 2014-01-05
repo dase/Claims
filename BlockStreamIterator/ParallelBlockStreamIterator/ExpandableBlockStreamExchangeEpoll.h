@@ -9,8 +9,6 @@
 #ifndef EXPANDABLEBLOCKSTREAMEXCHANGEEPOLL_H_
 #define EXPANDABLEBLOCKSTREAMEXCHANGEEPOLL_H_
 
-
-
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/serialization/vector.hpp>
@@ -29,7 +27,7 @@
 #include "../../Block/PartitionedBlockBuffer.h"
 #include "../../Block/BlockStream.h"
 #include "../../Block/BlockStreamBuffer.h"
-#include "../../Logging.h"
+#include "../../utils/Logging.h"
 class ExpandableBlockStreamExchangeEpoll:public BlockStreamIteratorBase {
 public:
 	struct State{

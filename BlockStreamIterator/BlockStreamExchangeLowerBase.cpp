@@ -8,7 +8,7 @@
 #include <arpa/inet.h>
 #include "BlockStreamExchangeLowerBase.h"
 #include "../Environment.h"
-#include "../Logging.h"
+#include "../utils/Logging.h"
 BlockStreamExchangeLowerBase::BlockStreamExchangeLowerBase() {
 
 }

@@ -13,7 +13,7 @@
 #include "../Environment.h"
 #include "../Executor/ExchangeTracker.h"
 #include "../rename.h"
-#include "../Logging.h"
+#include "../utils/Logging.h"
 BlockStreamExchangeBase::BlockStreamExchangeBase(const std::vector<std::string> &upper_ip_list,const unsigned &nlowers)
 :upper_ip_list_(upper_ip_list),nlowers_(nlowers){
 	socket_fd_lower_list_=new int[nlowers_];
@@ -78,9 +78,11 @@ bool BlockStreamExchangeBase::RegisterExchange(unsigned long long int exchange_i
 	port_str<<socket_port_;
 	return et->RegisterExchange(exchange_id,port_str.str());
 }
+
 bool BlockStreamExchangeBase::isMaster(){
 	return Environment::getInstance()->getIp()==upper_ip_list_[0];
 }
+
 bool BlockStreamExchangeBase::WaitForConnectionFromLowerExchanges(){
 	//wait for the lower nodes send the connection information
 	socklen_t sin_size=sizeof(struct sockaddr_in);
@@ -101,6 +103,7 @@ bool BlockStreamExchangeBase::WaitForConnectionFromLowerExchanges(){
 
 	return true;
 }
+
 void BlockStreamExchangeBase::CloseTheSocket(){
 	/* colse the sockets of the lowers*/
 	for(unsigned i=0;i<nlowers_;i++){
@@ -113,6 +116,7 @@ void BlockStreamExchangeBase::CloseTheSocket(){
 	/* return the applied port to the port manager*/
 	PortManager::getInstance()->returnPort(socket_port_);
 }
+
 void BlockStreamExchangeBase::SendBlockBufferedNotification(int target_socket_fd){
 	char content='c';
 	if(send(target_socket_fd,&content,sizeof(char),0)==-1){
@@ -121,6 +125,7 @@ void BlockStreamExchangeBase::SendBlockBufferedNotification(int target_socket_fd
 	}
 
 }
+
 void BlockStreamExchangeBase::SendBlockAllConsumedNotification(int target_socket_fd){
 	char content='e';
 	if(send(target_socket_fd,&content,sizeof(char),MSG_WAITALL)==-1){

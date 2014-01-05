@@ -27,7 +27,7 @@
 #include <arpa/inet.h>
 #include <pthread.h>
 
-#include "../rdtsc.h"
+#include "../utils/rdtsc.h"
 
 #define MYPORT 1234    // the port users will be connecting to
 
