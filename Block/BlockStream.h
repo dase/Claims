@@ -180,12 +180,10 @@ public:
 	}
 
 	bool insert(void *dest,void *src,unsigned bytes){
-//		cout<<"error in insert"<<endl;
 		memcpy(dest,src,bytes);
 		int *free_end=(int*)free_end_;
 		*free_end=free_front_-start;
 		free_end_=free_end_-sizeof(int);
-//		cout<<"cur_tuple_size_:"<<cur_tuple_size_++<<endl;
 		return true;
 	}
 
