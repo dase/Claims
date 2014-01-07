@@ -74,13 +74,19 @@
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
 		<project id="OneToMany.null.600657059" name="OneToMany"/>
 	</storageModule>
-	<storageModule moduleId="scannerConfiguration">
-		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="refreshScope" versionNumber="2">
 		<configuration configurationName="Default">
 			<resource resourceType="PROJECT" workspacePath="/OneToMany"/>
 		</configuration>
+	</storageModule>
+	<storageModule moduleId="scannerConfiguration">
+		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.toolchain.gnu.base.1629078757;cdt.managedbuild.toolchain.gnu.base.1629078757.1210568603;cdt.managedbuild.tool.gnu.c.compiler.base.1865482296;cdt.managedbuild.tool.gnu.c.compiler.input.1374951020">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.toolchain.gnu.base.1629078757;cdt.managedbuild.toolchain.gnu.base.1629078757.1210568603;cdt.managedbuild.tool.gnu.cpp.compiler.base.2075641047;cdt.managedbuild.tool.gnu.cpp.compiler.input.80313415">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
 	</storageModule>
 </cproject>
