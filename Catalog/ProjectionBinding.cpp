@@ -18,25 +18,32 @@ ProjectionBinding::~ProjectionBinding() {
 }
 
 bool ProjectionBinding::BindingEntireProjection(Partitioner* part,const StorageLevel& desriable_storage_level){
+	cout<<"in the binding!!!"<<endl;
 	if(part->get_bing_mode_()==OneToOne){
+		cout<<"in the binding!!!"<<endl;
 		std::vector<std::pair<unsigned,NodeID> > partition_id_to_nodeid_list;
 		ResourceManagerMaster* rmm=Environment::getInstance()->getResourceManagerMaster();
 		std::vector<NodeID> node_id_list=rmm->getSlaveIDList();
+		cout<<"in the binding!!!++"<<endl;
 		unsigned allocate_cur=0;
 		allocate_cur=rand()%node_id_list.size();
+		cout<<"in the binding!!!++"<<endl;
 		for(unsigned i=0;i<part->getNumberOfPartitions();i++){
 			NodeID target=node_id_list[allocate_cur];
-
+			cout<<"in the binding!!!++"<<endl;
 			/*check whether target node has enough resource*/
 			bool check_passed=false;
 			unsigned buget=part->getPartitionDataSize(i);
 			unsigned failures=0;
+			cout<<"in the binding!!!++"<<endl;
 			while(!check_passed){
-				if(target==0){
-					allocate_cur=(allocate_cur+1)%node_id_list.size();
-					target=node_id_list[allocate_cur];
-					continue;
-				}
+				cout<<"in the binding!!!++ in the while"<<endl;
+//				if(target==0){
+//					allocate_cur=(allocate_cur+1)%node_id_list.size();
+//					target=node_id_list[allocate_cur];
+//					continue;
+//				}
+				cout<<"in the binding!!!++ in the while"<<endl;
 				switch(desriable_storage_level){
 					case MEMORY:{
 						if(rmm->ApplyMemoryBuget(target,buget)==true){
@@ -78,7 +85,7 @@ bool ProjectionBinding::BindingEntireProjection(Partitioner* part,const StorageL
 				}
 
 			}
-
+			cout<<"in the binding!!!++ after while"<<endl;
 			/* store the binding information in the list*/
 			partition_id_to_nodeid_list.push_back(std::pair<unsigned,NodeID>(i,target));
 
@@ -91,6 +98,8 @@ bool ProjectionBinding::BindingEntireProjection(Partitioner* part,const StorageL
 //
 //			BlockManagerMaster::getInstance()->SendBindingMessage(partition_id,number_of_chunks,MEMORY,target);
 		}
+
+		cout<<"in the binding!!!++"<<endl;
 		/* conduct the binding according to the bingding information list*/
 		for(unsigned i=0;i<partition_id_to_nodeid_list.size();i++){
 			const unsigned partition_off=partition_id_to_nodeid_list[i].first;

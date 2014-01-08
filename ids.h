@@ -12,6 +12,8 @@
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
 #include <sstream>
+#include <iostream>
+using namespace std;
 typedef int NodeID;
 
 typedef unsigned TableID;
@@ -129,6 +131,7 @@ struct PartitionID{
 	std::string getPathAndName()const{
 		std::ostringstream str;
 		str<<"/home/casa/storage/file/T"<<projection_id.table_id<<"G"<<projection_id.projection_off<<"P"<<partition_off;
+		std::cout<<str.str().c_str()<<endl;
 //		str<<"/home/imdb/data/wangli/T"<<partition_off;
 		return str.str();
 	}

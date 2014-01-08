@@ -142,29 +142,16 @@ public:
 /* only on the situation of tuple size is little than a block size*/
 class BlockStreamVar:public BlockStreamBase{
 public:
+	// BlockSize is 64k-4 because of the tuple_count is the member of the class
 	BlockStreamVar(unsigned block_size,Schema *schema);
 	virtual ~BlockStreamVar();
 
+	/* get the [offset]-th tuple of the block*/
 	inline void* getTuple(unsigned offset) const {
 		// 首先通过offset得到第offset个tuple的起始地址
 		void *ret=start+BlockSize-4-(offset+1)*4;
 		return ret;
 	}
-public:
-//	void *getCurrentEnd(){
-//		// a member of class can be used to reduce computations
-//		return (char*)start+BlockSize-sizeof(int)*(cur_tuple_size_+1+attributes_);
-//	}
-//
-//	void *getCurrentFront(){
-//		unsigned begin=*(int*)((char*)start+BlockSize-sizeof(int)*(cur_tuple_size_+attributes_));
-//		unsigned varsize=0;
-//		for(unsigned i=0;i<var_attributes_;i++){
-//			varsize+=*(int *)(begin+i);
-//		}
-//		unsigned begin=(int*)((char*)start+begin);
-//		return (char *)(begin+varsize+4*var_attributes_);
-//	}
 
 	/* bytes is the length of the constructed tuple*/
 	inline void* allocateTuple(unsigned bytes){
@@ -187,29 +174,43 @@ public:
 		return true;
 	}
 
-	void setEmpty(){};
+	/*set the block empty*/
+	void setEmpty(){
+		free_front_=start;
+		free_end_=start+BlockSize;
+	}
 
-	bool Empty() const{};
-	void* getBlockDataAddress(){};
-//	void setBlockDataAddress(void* addr);
-	bool switchBlock(BlockStreamBase& block){};
-	void copyBlock(void* addr, unsigned length){
-	};
 	bool serialize(Block & block) const{
-		*(int*)((char*)start+BlockSize-4)=cur_tuple_size_;
+		*(int*)((char*)start+BlockSize)=cur_tuple_size_;
 	};
+
+	void constructFromBlock(const Block& block){
+		/*set block size*/
+		assert(BlockSize==block.getsize()-sizeof(unsigned));
+
+		/* copy the content*/
+		memcpy(start,block.getBlock(),BlockSize);
+
+		/* the number of tuples*/
+		int* tuple_count=(int*)((char*)block.getBlock()+block.getsize()-sizeof(int));
+
+		if(*tuple_count*tuple_size_>BlockSize){
+			printf("tuple count=%d,tuple size=%d, BlockSize=%d in constructFromBlock()\n",*tuple_count,tuple_size_,BlockSize);
+			assert(false);
+		}
+
+		free_=(char*)start+(*tuple_count)*tuple_size_;
+	}
+
 	bool deserialize(Block * block){};
-	unsigned getSerializedBlockSize()const{};
-	unsigned getTuplesInBlock()const{};
-	void constructFromBlock(const Block& block){};
+
+	/* for debug*/
 	void toDisk(BlockStreamBase *bsb){
 		int filed;
 		filed=FileOpen("/home/casa/storage/file/file_01",O_WRONLY|O_CREAT);
 		write(filed,bsb->getBlock(),1024*64);
 	};
 
-	/*debug*/
-public:
 	void printSchema(){
 		int columns=schema_->getncolumns();
 		int* schema_info=(int*)((char*)start+BlockSize-sizeof(int)*(columns+1));
@@ -218,9 +219,22 @@ public:
 		}
 		cout<<"the tuple count is:"<<*(schema_info+columns)<<endl;
 	}
+
+	/* whether is empty, if empty, return true, not false */
+	bool Empty() const{
+		return free_front_==start;
+	};
+
+	void* getBlockDataAddress(){};
+	bool switchBlock(BlockStreamBase& block){};
+	void copyBlock(void* addr, unsigned length){
+	};
+	unsigned getSerializedBlockSize()const{};
+	unsigned getTuplesInBlock()const{};
+
 private:
 	// front can be added for less computing
-//	char *front_;
+    // char *front_;
 	Schema *schema_;
 	char *free_front_;
 	/* can be in end directly*/
@@ -228,6 +242,7 @@ private:
 	/* how many attributes in the tuple*/
 	unsigned attributes_;
 	unsigned var_attributes_;
+
 	unsigned cur_tuple_size_;
 };
 

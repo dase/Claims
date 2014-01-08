@@ -16,14 +16,20 @@ Environment* Environment::_instance=0;
 Environment::Environment(bool ismaster):ismaster_(ismaster) {
 	_instance=this;
 	logging_=new EnvironmentLogging();
+	cout<<"in the main !!@"<<endl;
 	Initialize();
+	cout<<"in the main !!@"<<endl;
 	portManager=PortManager::getInstance();
+	cout<<"in the main !!@"<<endl;
 	catalog_=Catalog::getInstance();
+	cout<<"in the main !!@"<<endl;
 	if(ismaster){
 		logging_->log("Initializing the Coordinator...");
 		InitializeCoordinator();
 
 	}
+
+	cout<<"in the main !!@"<<endl;
 
 	logging_->log("Initializing the AdaptiveEndPoint...");
 	InitializeEndPoint();
@@ -35,7 +41,7 @@ Environment::Environment(bool ismaster):ismaster_(ismaster) {
 
 	This is done in Aug.18 by Li :)
  */
-
+	cout<<"in the main !!@"<<endl;
 	/*Before initializing Resource Manager, the instance ip and port should be decided.*/
 	InitializeResourceManager();
 

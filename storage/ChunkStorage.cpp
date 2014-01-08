@@ -148,6 +148,7 @@ bool DiskChunkReaderIteraror::nextBlock(BlockStreamBase*& block){
 	if(bytes_num==block_size_){
 		cur_block_++;
 //		lseek(fd_,64*1024,SEEK_CUR);
+		// 将block_buffer_中的内容放在block中
 		block->constructFromBlock(*block_buffer_);
 		lock_.release();
 		return true;
