@@ -121,7 +121,7 @@ DiskChunkReaderIteraror::DiskChunkReaderIteraror(const ChunkID& chunk_id,unsigne
 			}
 			else{
 				number_of_blocks_=(length-start_pos)/block_size_;
-				printf("This chunk has only %d blocks!\n",number_of_blocks_);
+				printf("This chunk has only %d blocks! each has %d bytes\n",number_of_blocks_,block_size_);
 			}
 
 		}
@@ -133,6 +133,7 @@ DiskChunkReaderIteraror::~DiskChunkReaderIteraror(){
 }
 bool DiskChunkReaderIteraror::nextBlock(BlockStreamBase*& block){
 	lock_.acquire();
+	cout<<"I am in the chunk reader!!!"<<endl;
 	if(cur_block_>=number_of_blocks_){
 		lock_.release();
 		return false;
@@ -144,12 +145,20 @@ bool DiskChunkReaderIteraror::nextBlock(BlockStreamBase*& block){
 	 * the read function will automatically move the read position, so the lseek is not needed here.
 	 */
 	tSize bytes_num=read(fd_,block_buffer_->getBlock(),block_buffer_->getsize());
+	cout<<"I have read "<<block_buffer_->getsize()<<" bytes!!!"<<endl;
+	cout<<"bytes_num: "<<bytes_num<<" block_size_: "<<block_size_<<endl;
 //	printf("Tuple count=%d\n",*(int*)((char*)block_buffer_->getBlock()+65532));
 	if(bytes_num==block_size_){
 		cur_block_++;
 //		lseek(fd_,64*1024,SEEK_CUR);
 		// 将block_buffer_中的内容放在block中
+		cout<<"check the block: (BlockSize)"<<endl;
+		int filed;
+		filed=FileOpen("/home/casa/storage/file/file02",O_WRONLY|O_CREAT);
+		cout<<"print in the block: "<<*(int *)(block_buffer_->getBlock())<<endl;
+		write(filed,block_buffer_->getBlock(),1024*64-4);
 		block->constructFromBlock(*block_buffer_);
+		cout<<"check the block: (BlockSize)"<<block->getsize()<<endl;
 		lock_.release();
 		return true;
 	}

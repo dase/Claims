@@ -31,10 +31,12 @@ public:
 				ofs+=columns[i].get_length();
 			}
 			else{
-				ofs+=*(int *)(tuple+4*column_off);
+				ofs+=*(int *)(tuple+column_off*4);
 				column_off++;
 			}
 		}
+		ofs+=var_attributes_*4;
+		return ofs;
 	};
 
 	/*get the pointer of the tuple and get the value of the tuple offset*/
@@ -45,14 +47,21 @@ public:
 	inline virtual void* getColumnAddess(unsigned index,const void* const & column_start) const __attribute__((always_inline)){
 		unsigned ofs=0;
 		unsigned column_off=0;
-		for(unsigned i=0;i<index;i++){
-			if(columns[i].type!=t_string){
-				ofs+=columns[i].get_length();
+		void *ret;
+		if(index>0){
+			for(unsigned i=0;i<index;i++){
+				if(columns[i].type!=t_string){
+					ofs+=columns[i].get_length();
+				}
+				else{
+					ofs+=*(int *)(column_start+column_off*4);
+					column_off++;
+				}
 			}
-			else{
-				ofs+=*(int *)(column_start+4*column_off);
-				column_off++;
-			}
+			return (char *)column_start+ofs+var_attributes_*4;
+		}
+		else{
+			return (char *)column_start+var_attributes_*4;
 		}
 	};
 

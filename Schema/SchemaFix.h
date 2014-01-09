@@ -14,6 +14,7 @@
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/base_object.hpp>
 #include "Schema.h"
+
 class SchemaFix:public Schema {
 public:
 	SchemaFix(std::vector<column_type> columns);

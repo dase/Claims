@@ -61,15 +61,18 @@ bool ExpandableBlockStreamProjectionScan::open(const PartitionOffset& partition_
 }
 
 bool ExpandableBlockStreamProjectionScan::next(BlockStreamBase* block) {
-//
+	cout<<"I am in the next of ExpandableBlockStreamProjectionScan!!!"<<endl;
 	allocated_block allo_block_temp;
 	ChunkReaderIterator* chunk_reader_iterator;
+	cout<<"I am in the next of ExpandableBlockStreamProjectionScan!!!"<<endl;
 	if(atomicPopChunkReaderIterator(chunk_reader_iterator)){
 		/* there is unused ChunkReaderIterator*/
 //		lock_.acquire();
+		cout<<"!!!!!!!!!!!!!!!!!!!!!!"<<endl;
 		if(chunk_reader_iterator->nextBlock(block)){
 //			lock_.release();
 			/* there is still unread block*/
+			cout<<"!!!!!!!!!!!!!!!!!!!!!!"<<endl;
 			atomicPushChunkReaderIterator(chunk_reader_iterator);
 //			lock_.release();
 			return true;
@@ -77,15 +80,17 @@ bool ExpandableBlockStreamProjectionScan::next(BlockStreamBase* block) {
 		else{
 			/* the ChunkReaderIterator is exhausted, so we destructe it.*/
 //			lock_.release();
+			cout<<"!!!!!!!!!!!!!!!!!!!!!!"<<endl;
 			chunk_reader_iterator->~ChunkReaderIterator();
 			printf("One Chunk is exhausted!\n");
 		}
 	}
 	/* there isn't any unused ChunkReaderIterator or the ChunkReaderIterator is exhausted,
 	 * so we create new one*/
+	cout<<"I am in the next of ExpandableBlockStreamProjectionScan!!!"<<endl;
 	if((chunk_reader_iterator=partition_reader_iterator_->nextChunk())!=0){
 		atomicPushChunkReaderIterator(chunk_reader_iterator);
-//
+		cout<<"!!!!!!!!!!!!!!!!!!!!!!"<<endl;
 		return next(block);
 	}
 	else{

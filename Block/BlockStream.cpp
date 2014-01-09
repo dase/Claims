@@ -20,29 +20,6 @@ BlockStreamFix::~BlockStreamFix() {
 
 }
 
-BlockStreamVar::BlockStreamVar(unsigned block_size,Schema *schema)
-:BlockStreamBase(block_size),schema_(schema),cur_tuple_size_(0),var_attributes_(0){
-	attributes_=schema->getncolumns();
-	int* schema_info=(int*)((char*)start+block_size-sizeof(int)*(attributes_+1));
-	for(unsigned i=0;i<attributes_;i++){
-//		data_type type=schema->columns[i].type;
-		switch(schema->columns[i].type){
-			case t_int:*(schema_info+i)=1;break;
-			case t_float:*(schema_info+i)=2;break;
-			case t_double:*(schema_info+i)=3;break;
-			case t_u_long:*(schema_info+i)=4;break;
-			case t_string:*(schema_info+i)=5;var_attributes_++;break;
-			default:cout<<"no type!"<<endl;break;
-		}
-	}
-	free_front_=start;
-	free_end_=(char*)start+block_size-sizeof(int)*attributes_-sizeof(int)-sizeof(int);
-}
-
-BlockStreamVar::~BlockStreamVar(){
-
-}
-
 void BlockStreamFix::setEmpty(){
 	free_=start;
 }
@@ -52,10 +29,8 @@ BlockStreamBase* BlockStreamBase::createBlock(Schema* schema,unsigned block_size
 		return new BlockStreamFix(block_size,schema->getTupleMaxSize());
 	}
 	else{
-		/*
-		 * TODO: support variable-length BlockStream
-		 */
-		return 0;
+		cout<<"build a blockvar!!!"<<endl;
+		return new BlockStreamVar(block_size,schema);
 	}
 }
 

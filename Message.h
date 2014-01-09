@@ -370,6 +370,7 @@ public:
 	}
 	void run()
 	{
+		cout<<"in the run of executor!!!"<<endl;
 		if(tuple_stream_iterator_root_>0){
 			tuple_stream_iterator_root_->open();
 			while(tuple_stream_iterator_root_->next(0));

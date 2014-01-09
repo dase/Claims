@@ -60,32 +60,38 @@ int main(){
 	scan_state.schema_=new SchemaVar(column_list);
 	BlockStreamIteratorBase* scan=new ExpandableBlockStreamProjectionScan(scan_state);
 
-//	ExpandableBlockStreamFilter::State filter_state;
-//	filter_state.block_size_=64*1024-sizeof(unsigned);
-//
-//
-//	int f0=1;
-//	FilterIterator::AttributeComparator filter0(column_type(t_int),Comparator::L,0,&f0);
-//	std::vector<FilterIterator::AttributeComparator> ComparatorList;
-//	ComparatorList.push_back(filter0);
-//
-//	std::vector<column_type> svc;
-//	svc.push_back(data_type(t_int));
-//	svc.push_back(data_type(t_int));
-//	svc.push_back(data_type(t_string));
-//	Schema *sv=new SchemaVar(svc);
-//	filter_state.schema_=sv;
-//	filter_state.comparator_list_=ComparatorList;
-//	filter_state.child_=scan;
-//	BlockStreamIteratorBase* filter=new ExpandableBlockStreamFilter(filter_state);
+	ExpandableBlockStreamFilter::State filter_state;
+
+	int f0=1;
+	FilterIterator::AttributeComparator filter0(column_type(t_int),Comparator::L,0,&f0);
+	std::vector<FilterIterator::AttributeComparator> ComparatorList;
+	ComparatorList.push_back(filter0);
+
+	std::vector<column_type> svc;
+	svc.push_back(data_type(t_int));
+	svc.push_back(data_type(t_int));
+	svc.push_back(data_type(t_string));
+	Schema *sv=new SchemaVar(svc);
+
+	filter_state.block_size_=64*1024-sizeof(unsigned);
+	filter_state.schema_=sv;
+	filter_state.comparator_list_=ComparatorList;
+	filter_state.child_=scan;
+
+	BlockStreamIteratorBase* filter=new ExpandableBlockStreamFilter(filter_state);
 
 	BlockStreamPrint::State print_state;
 	print_state.block_size_=64*1024-sizeof(unsigned);
-	print_state.child_=scan;
-	print_state.schema_=scan_state.schema_;
+	print_state.child_=filter;
+	print_state.schema_=filter_state.schema_;
 	print_state.spliter_="-|-";
 
 	BlockStreamIteratorBase* print=new BlockStreamPrint(print_state);
-	IteratorExecutorMaster::getInstance()->ExecuteBlockStreamIteratorsOnSite(print,"127.0.0.1");
+
+	print->open();
+	print->next(0);
+	print->close();
+
+//	IteratorExecutorMaster::getInstance()->ExecuteBlockStreamIteratorsOnSite(print,"127.0.0.1");
 	return 0;
 }

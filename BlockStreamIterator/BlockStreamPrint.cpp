@@ -27,15 +27,14 @@ bool BlockStreamPrint::open(const PartitionOffset& offset){
 }
 bool BlockStreamPrint::next(BlockStreamBase*){
 	unsigned block_count(0);
-	cout<<"in the print!!!"<<endl;
-	while(state_.child_->next(block_buffer_)){
 		unsigned tuple_in_block(0);
+	while(state_.child_->next(block_buffer_)){
 		BlockStreamBase::BlockStreamTraverseIterator* it=block_buffer_->createIterator();
 		void* tuple;
 		while((tuple=it->nextTuple())!=0){
-			state_.schema_->displayTuple(tuple,state_.spliter_.c_str());
+//			state_.schema_->displayTuple(tuple,state_.spliter_.c_str());
 			tuple_in_block++;
-			cout<<tuple_in_block<<endl;
+			cout<<"the tuple count is: "<<tuple_in_block<<endl;
 		}
 //		printf("Tuples in Block[%d]=%d\n",block_count++,block_buffer_->getTuplesInBlock());
 		block_buffer_->setEmpty();
