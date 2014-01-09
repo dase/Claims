@@ -4,7 +4,8 @@
  *  Created on: Nov 18, 2013
  *      Author: wangli
  */
-
+#ifndef __TEST_PROJECTIONSCAN__
+#define __TEST_PROJECTIONSCAN__
 #include <iostream>
 #include "../ExpandableBlockStreamProjectionScan.h"
 #include "../../BlockStreamPrint.h"
@@ -148,3 +149,4 @@ static int testProjectionScan(){
 		sleep(1);
 	}
 }
+#endif
