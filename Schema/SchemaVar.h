@@ -19,7 +19,9 @@
 class SchemaVar:public Schema {
 public:
 	SchemaVar(std::vector<column_type> columns);
+
 	SchemaVar(){};
+
 	virtual ~SchemaVar();
 
 	virtual unsigned getTupleMaxSize(){};

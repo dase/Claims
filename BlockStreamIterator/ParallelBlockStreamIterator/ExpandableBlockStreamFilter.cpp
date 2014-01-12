@@ -51,7 +51,8 @@ bool ExpandableBlockStreamFilter::open(const PartitionOffset& part_off){
 
 
 bool ExpandableBlockStreamFilter::next(BlockStreamBase* block){
-
+	cout<<"wth"<<endl;
+	sleep(1);
 	remaining_block rb;
 	void* tuple_from_child;
 	void* tuple_in_block;
@@ -68,8 +69,12 @@ bool ExpandableBlockStreamFilter::next(BlockStreamBase* block){
 			if(pass_filter){
 				const unsigned bytes=state_.schema_->getTupleActualSize(tuple_from_child);
 				if((tuple_in_block=block->allocateTuple(bytes))>0){
-					/* the block has space to hold this tuple*/
-					state_.schema_->copyTuple(tuple_from_child,tuple_in_block);
+					/* the block has space to hold this tuple,
+					 * copyTuple can be used in the hashtable,
+					 * but here we must use the block insert
+					 * */
+					block->insert(tuple_in_block,tuple_from_child,bytes);
+//					state_.schema_->copyTuple(tuple_from_child,tuple_in_block);
 					rb.iterator->increase_cur_();
 				}
 				else{
@@ -93,6 +98,7 @@ bool ExpandableBlockStreamFilter::next(BlockStreamBase* block){
 //	BlockStreamBase* block_for_asking=BlockStreamBase::createBlock(state_.schema_,state_.block_size_);
 	BlockStreamBase* block_for_asking=AtomicPopFreeBlockStream();
 	block_for_asking->setEmpty();
+	int i=0;
 	while(state_.child_->next(block_for_asking)){
 		BlockStreamBase::BlockStreamTraverseIterator* traverse_iterator=block_for_asking->createIterator();
 		while((tuple_from_child=traverse_iterator->currentTuple())>0){
@@ -107,7 +113,10 @@ bool ExpandableBlockStreamFilter::next(BlockStreamBase* block){
 				const unsigned bytes=state_.schema_->getTupleActualSize(tuple_from_child);
 				if((tuple_in_block=block->allocateTuple(bytes))>0){
 					/* the block has space to hold this tuple*/
-					state_.schema_->copyTuple(tuple_from_child,tuple_in_block);
+					/* modified by zhanglei, exchange the function of schema to block*/
+					block->insert(tuple_in_block,tuple_from_child,bytes);
+					cout<<"the tuple is: "<<i++<<endl;
+//					state_.schema_->copyTuple(tuple_from_child,tuple_in_block);
 					traverse_iterator->increase_cur_();
 				}
 				else{

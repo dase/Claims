@@ -85,6 +85,7 @@ public:
 	/*for debug*/
 	virtual void printSchema()=0;
 	virtual bool insert(void *dest,void *src,unsigned bytes)=0;
+	virtual bool insert(void *dest,void *src)=0;
 	virtual void toDisk(BlockStreamBase *bsb,string path)=0;
 protected:
 	virtual void* getTuple(unsigned offset) const =0;
@@ -128,7 +129,10 @@ public:
 	 * which last four bytes indicate the number of tuples in the block.*/
 	void constructFromBlock(const Block& block);
 	virtual void printSchema(){};
-	bool insert(void *dest,void *src,unsigned bytes){}
+	bool insert(void *dest,void *src,unsigned bytes){
+		memcpy(dest,src,bytes);
+	}
+	bool insert(void *dest,void *src){};
 	void toDisk(BlockStreamBase *bsb,string path){};
 protected:
 //	char* data_;
@@ -192,6 +196,15 @@ public:
 	}
 
 	bool insert(void *dest,void *src,unsigned bytes){
+		memcpy(dest,src,bytes);
+		int *free_end=(int*)free_end_;
+		*free_end=free_front_-start;
+		free_end_=free_end_-sizeof(int);
+		return true;
+	}
+
+	bool insert(void *dest,void *src){
+		int bytes=schema_->getTupleActualSize(src);
 		memcpy(dest,src,bytes);
 		int *free_end=(int*)free_end_;
 		*free_end=free_front_-start;

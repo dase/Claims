@@ -15,13 +15,9 @@
 #include "../../LogicalQueryPlan/Aggregation.h"
 using namespace std;
 int main(){
-	cout<<"in the main!!!"<<endl;
 	Environment::getInstance(true);
-	cout<<"in the main!!!"<<endl;
 	ResourceManagerMaster *rmms=Environment::getInstance()->getResourceManagerMaster();
-	cout<<"in the main!!!"<<endl;
 	Catalog* catalog=Environment::getInstance()->getCatalog();
-	cout<<"in the main!!!"<<endl;
 
 	TableDescriptor* table_1=new TableDescriptor("1",Environment::getInstance()->getCatalog()->allocate_unique_table_id());
 	table_1->addAttribute("1",data_type(t_int));  				//0
@@ -50,6 +46,7 @@ int main(){
 
 	cout<<"in ======================================"<<endl;
 
+	/*******************scan******************/
 	ExpandableBlockStreamProjectionScan::State scan_state;
 	scan_state.block_size_=64*1024-sizeof(unsigned);
 	scan_state.projection_id_=catalog->getTable(0)->getProjectoin(0)->getProjectionID();
@@ -60,10 +57,15 @@ int main(){
 	scan_state.schema_=new SchemaVar(column_list);
 	BlockStreamIteratorBase* scan=new ExpandableBlockStreamProjectionScan(scan_state);
 
+
+
+	/*******************filter******************/
 	ExpandableBlockStreamFilter::State filter_state;
 
 	int f0=1;
 	FilterIterator::AttributeComparator filter0(column_type(t_int),Comparator::L,0,&f0);
+	char* str="string1";
+	FilterIterator::AttributeComparator filter1(column_type(t_string),Comparator::EQ,0,str);
 	std::vector<FilterIterator::AttributeComparator> ComparatorList;
 	ComparatorList.push_back(filter0);
 
@@ -80,6 +82,8 @@ int main(){
 
 	BlockStreamIteratorBase* filter=new ExpandableBlockStreamFilter(filter_state);
 
+
+	/*******************print******************/
 	BlockStreamPrint::State print_state;
 	print_state.block_size_=64*1024-sizeof(unsigned);
 	print_state.child_=filter;
@@ -88,6 +92,8 @@ int main(){
 
 	BlockStreamIteratorBase* print=new BlockStreamPrint(print_state);
 
+
+	/*******************show******************/
 	print->open();
 	print->next(0);
 	print->close();
