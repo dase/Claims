@@ -16,7 +16,7 @@
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactName="OneToMany" buildProperties="" description="" id="cdt.managedbuild.toolchain.gnu.base.1629078757" name="Default" parent="org.eclipse.cdt.build.core.emptycfg">
+				<configuration artifactName="Claims" buildProperties="" description="" id="cdt.managedbuild.toolchain.gnu.base.1629078757" name="Default" parent="org.eclipse.cdt.build.core.emptycfg">
 					<folderInfo id="cdt.managedbuild.toolchain.gnu.base.1629078757.1210568603" name="/" resourcePath="">
 						<toolChain id="cdt.managedbuild.toolchain.gnu.base.1327788221" name="cdt.managedbuild.toolchain.gnu.base" superClass="cdt.managedbuild.toolchain.gnu.base">
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.target.gnu.platform.base.1478951002" name="Debug Platform" osList="linux,hpux,aix,qnx" superClass="cdt.managedbuild.target.gnu.platform.base"/>
@@ -83,4 +83,5 @@
 			<resource resourceType="PROJECT" workspacePath="/OneToMany"/>
 		</configuration>
 	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 </cproject>
