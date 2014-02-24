@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project> 
+<project>
 	<configuration id="cdt.managedbuild.toolchain.gnu.base.1629078757" name="Default">
 		<extension point="org.eclipse.cdt.core.LanguageSettingsProvider">
 			<provider copy-of="extension" id="org.eclipse.cdt.ui.UserLanguageSettingsProvider"/>
