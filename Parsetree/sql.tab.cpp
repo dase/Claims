@@ -62,14 +62,14 @@
 #include <iostream>
 #include <stdio.h>
 #include <malloc.h>
+#include <vector>
 #include "sql_node_struct.h"
 using namespace std;
 
 Node * parsetreeroot = NULL;
 char globalInputText[10000];
 int globalReadOffset;
-Node *NodePointer[10000];		// 2014-3-6---指向每个节点的指针数组---by余楷
-int NodePointerNum = 0;		// 2014-3-6---指向每个节点的指针数组中元素个数---by余楷
+vector<Node *> NodePointer;	// 2014-4-2---存放节点指针的数组改为vector---by Yu
 int errorNumber = 0;			// 2014-3-6---声明SQL解析错误数---by余楷
 int readInputForLexer( char *buffer, int *numBytesRead, int maxBytesToRead );
 char linebuf[500];
