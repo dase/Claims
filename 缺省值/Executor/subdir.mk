@@ -6,18 +6,21 @@
 CPP_SRCS += \
 ../Executor/Coordinator.cpp \
 ../Executor/ExchangeTracker.cpp \
+../Executor/ExpanderTracker.cpp \
 ../Executor/IteratorExecutorMaster.cpp \
 ../Executor/IteratorExecutorSlave.cpp 
 
 OBJS += \
 ./Executor/Coordinator.o \
 ./Executor/ExchangeTracker.o \
+./Executor/ExpanderTracker.o \
 ./Executor/IteratorExecutorMaster.o \
 ./Executor/IteratorExecutorSlave.o 
 
 CPP_DEPS += \
 ./Executor/Coordinator.d \
 ./Executor/ExchangeTracker.d \
+./Executor/ExpanderTracker.d \
 ./Executor/IteratorExecutorMaster.d \
 ./Executor/IteratorExecutorSlave.d 
 

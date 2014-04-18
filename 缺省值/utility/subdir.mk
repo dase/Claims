@@ -4,18 +4,21 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
+../utility/ExpandabilityShrinkability.cpp \
 ../utility/Expression.cpp \
 ../utility/SQLExpression.cpp \
 ../utility/ThreadSafe.cpp \
 ../utility/hashtable2.cpp 
 
 OBJS += \
+./utility/ExpandabilityShrinkability.o \
 ./utility/Expression.o \
 ./utility/SQLExpression.o \
 ./utility/ThreadSafe.o \
 ./utility/hashtable2.o 
 
 CPP_DEPS += \
+./utility/ExpandabilityShrinkability.d \
 ./utility/Expression.d \
 ./utility/SQLExpression.d \
 ./utility/ThreadSafe.d \

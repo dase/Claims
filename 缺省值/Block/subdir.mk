@@ -17,7 +17,8 @@ CPP_SRCS += \
 ../Block/BlockWritableFixBuffer.cpp \
 ../Block/DynamicBlockBuffer.cpp \
 ../Block/PartitionedBlockBuffer.cpp \
-../Block/PartitionedBlockContainer.cpp 
+../Block/PartitionedBlockContainer.cpp \
+../Block/ResultSet.cpp 
 
 OBJS += \
 ./Block/Block.o \
@@ -33,7 +34,8 @@ OBJS += \
 ./Block/BlockWritableFixBuffer.o \
 ./Block/DynamicBlockBuffer.o \
 ./Block/PartitionedBlockBuffer.o \
-./Block/PartitionedBlockContainer.o 
+./Block/PartitionedBlockContainer.o \
+./Block/ResultSet.o 
 
 CPP_DEPS += \
 ./Block/Block.d \
@@ -49,7 +51,8 @@ CPP_DEPS += \
 ./Block/BlockWritableFixBuffer.d \
 ./Block/DynamicBlockBuffer.d \
 ./Block/PartitionedBlockBuffer.d \
-./Block/PartitionedBlockContainer.d 
+./Block/PartitionedBlockContainer.d \
+./Block/ResultSet.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

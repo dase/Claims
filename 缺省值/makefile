@@ -11,13 +11,16 @@ RM := rm
 -include subdir.mk
 -include utility/subdir.mk
 -include utility/Test/subdir.mk
+-include utility/Block/subdir.mk
 -include types/Test/subdir.mk
 -include types/subdir.mk
 -include try/subdir.mk
 -include storage/subdir.mk
 -include iterator/subdir.mk
 -include common/subdir.mk
+-include ThirdParty/Test/subdir.mk
 -include Test/subdir.mk
+-include Test/TestSuit/subdir.mk
 -include Serialization/subdir.mk
 -include Schema/subdir.mk
 -include Schema/Test/subdir.mk
@@ -34,45 +37,6 @@ RM := rm
 -include IndexManager/subdir.mk
 -include Executor/Test/subdir.mk
 -include Executor/subdir.mk
--include Default/utility/subdir.mk
--include Default/utility/Test/subdir.mk
--include Default/types/Test/subdir.mk
--include Default/types/subdir.mk
--include Default/try/subdir.mk
--include Default/subdir.mk
--include Default/storage/subdir.mk
--include Default/iterator/subdir.mk
--include Default/common/subdir.mk
--include Default/Test/subdir.mk
--include Default/Serialization/subdir.mk
--include Default/Schema/subdir.mk
--include Default/Schema/Test/subdir.mk
--include Default/Scheduler/test/subdir.mk
--include Default/Scheduler/subdir.mk
--include Default/Resource/subdir.mk
--include Default/PerformanceTest/subdir.mk
--include Default/PerformanceMonitor/subdir.mk
--include Default/Parsetree/subdir.mk
--include Default/Parsetree/Test/subdir.mk
--include Default/LogicalQueryPlan/Test/subdir.mk
--include Default/LogicalQueryPlan/subdir.mk
--include Default/Loader/subdir.mk
--include Default/IndexManager/subdir.mk
--include Default/Executor/Test/subdir.mk
--include Default/Executor/subdir.mk
--include Default/Daemon/Test/subdir.mk
--include Default/Daemon/subdir.mk
--include Default/Client/Test/subdir.mk
--include Default/Client/subdir.mk
--include Default/Catalog/subdir.mk
--include Default/Catalog/stat/subdir.mk
--include Default/Catalog/Test/subdir.mk
--include Default/BufferManager/subdir.mk
--include Default/BlockStreamIterator/ParallelBlockStreamIterator/Test/subdir.mk
--include Default/BlockStreamIterator/ParallelBlockStreamIterator/subdir.mk
--include Default/BlockStreamIterator/subdir.mk
--include Default/BlockIterator/subdir.mk
--include Default/Block/subdir.mk
 -include Daemon/Test/subdir.mk
 -include Daemon/subdir.mk
 -include Client/Test/subdir.mk
@@ -114,19 +78,19 @@ endif
 # Add inputs and outputs from these tool invocations to the build variables 
 
 # 所有目标
-all: 
+all: ClaimsForYu
 
 # 工具调用
-: $(OBJS) $(USER_OBJS)
+ClaimsForYu: $(OBJS) $(USER_OBJS)
 	@echo '正在构建目标： $@'
 	@echo '正在调用： GNU C++ 链接器'
-	g++  -o $(OBJS) $(USER_OBJS) $(LIBS)
+	g++  -o"ClaimsForYu" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo '已结束构建目标： $@'
 	@echo ' '
 
 # 其他目标
 clean:
-	-$(RM) $(OBJS)$(C++_DEPS)$(C_DEPS)$(CC_DEPS)$(CPP_DEPS)$(EXECUTABLES)$(CXX_DEPS)$(C_UPPER_DEPS) 
+	-$(RM) $(OBJS)$(C++_DEPS)$(C_DEPS)$(CC_DEPS)$(CPP_DEPS)$(EXECUTABLES)$(CXX_DEPS)$(C_UPPER_DEPS) ClaimsForYu
 	-@echo ' '
 
 .PHONY: all clean dependents
