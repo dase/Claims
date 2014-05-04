@@ -330,9 +330,9 @@ static const unsigned short int yyprhs[] =
     1208,  1210,  1219,  1220,  1223,  1225,  1230,  1231,  1233,  1235,
     1237,  1243,  1245,  1250,  1251,  1253,  1255,  1257,  1259,  1261,
     1263,  1268,  1269,  1271,  1273,  1275,  1280,  1282,  1288,  1289,
-    1292,  1295,  1298,  1300,  1306,  1308,  1313,  1317,  1325,  1330,
-    1335,  1340,  1344,  1348,  1353,  1358,  1362,  1366,  1370,  1375,
-    1381,  1385,  1389,  1395,  1398,  1402,  1407,  1413,  1419,  1424,
+    1292,  1295,  1298,  1300,  1306,  1308,  1314,  1318,  1326,  1331,
+    1336,  1341,  1345,  1349,  1354,  1359,  1363,  1367,  1371,  1376,
+    1382,  1386,  1390,  1396,  1399,  1403,  1408,  1414,  1419,  1424,
     1429,  1433,  1437,  1438,  1440,  1441,  1444,  1445,  1448,  1449,
     1452,  1453,  1455,  1457,  1463,  1465,  1469,  1471,  1475,  1476,
     1478,  1480,  1482,  1486,  1488,  1492,  1494,  1496,  1498,  1500,
@@ -489,18 +489,18 @@ static const short int yyrhs[] =
       -1,   255,    -1,   460,    -1,   158,   454,   209,   407,    -1,
      461,    -1,   286,   454,   209,   407,   462,    -1,    -1,   462,
      171,    -1,   462,   255,    -1,   462,   287,    -1,   463,    -1,
-     288,   209,   407,   105,     4,    -1,   464,    -1,   193,   289,
-     192,   467,    -1,   193,   290,   467,    -1,   193,   465,   291,
-     105,     3,   466,   467,    -1,   193,    61,    68,     3,    -1,
-     193,    61,   186,     3,    -1,   193,    61,   209,     3,    -1,
-     193,    68,     3,    -1,   193,   186,     3,    -1,   193,   292,
-       3,   293,    -1,   193,   292,     3,   294,    -1,   193,   295,
-     296,    -1,   193,   297,   345,    -1,   193,   487,   297,    -1,
-     193,   298,   102,     8,    -1,   193,   116,   105,     3,   466,
-      -1,   193,   299,   294,    -1,   193,   469,   293,    -1,   193,
-     317,   272,   466,   467,    -1,   193,   283,    -1,   193,   465,
-     300,    -1,   193,   430,   294,   467,    -1,   193,   209,   294,
-     466,   467,    -1,   193,   465,   272,   466,   467,    -1,   193,
+     288,   209,   407,   105,     4,    -1,   464,    -1,   193,   465,
+     272,   466,   467,    -1,   193,   290,   467,    -1,   193,   465,
+     291,   105,     3,   466,   467,    -1,   193,    61,    68,     3,
+      -1,   193,    61,   186,     3,    -1,   193,    61,   209,     3,
+      -1,   193,    68,     3,    -1,   193,   186,     3,    -1,   193,
+     292,     3,   293,    -1,   193,   292,     3,   294,    -1,   193,
+     295,   296,    -1,   193,   297,   345,    -1,   193,   487,   297,
+      -1,   193,   298,   102,     8,    -1,   193,   116,   105,     3,
+     466,    -1,   193,   299,   294,    -1,   193,   469,   293,    -1,
+     193,   317,   272,   466,   467,    -1,   193,   283,    -1,   193,
+     465,   300,    -1,   193,   430,   294,   467,    -1,   193,   209,
+     294,   466,   467,    -1,   193,   289,   192,   467,    -1,   193,
      301,   466,   468,    -1,   193,   430,   302,   467,    -1,   193,
      303,   345,    -1,   193,   487,   303,    -1,    -1,   318,    -1,
       -1,   105,     3,    -1,    -1,    14,     4,    -1,    -1,    14,
@@ -582,67 +582,67 @@ static const short int yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const unsigned short int yyrline[] =
 {
-       0,   440,   440,   453,   466,   474,   486,   490,   495,   504,
-     505,   507,   508,   511,   516,   523,   524,   525,   528,   529,
-     532,   533,   540,   541,   548,   549,   550,   553,   554,   557,
-     558,   561,   562,   563,   564,   565,   566,   567,   568,   569,
-     572,   573,   574,   575,   578,   581,   582,   585,   586,   590,
-     595,   600,   605,   608,   609,   612,   613,   614,   629,   633,
-     637,   642,   646,   652,   653,   654,   657,   658,   661,   662,
-     665,   666,   667,   670,   671,   678,   682,   702,   703,   706,
-     711,   714,   719,   720,   721,   722,   725,   730,   731,   734,
-     735,   738,   744,   747,   753,   754,   757,   758,   759,   760,
-     761,   764,   764,   767,   768,   771,   772,   776,   777,   778,
-     779,   782,   786,   791,   794,   797,   800,   806,   809,   815,
-     821,   827,   830,   838,   839,   840,   844,   854,   865,   867,
-     876,   880,   882,   886,   887,   892,   895,   899,   903,   908,
-     912,   917,   923,   927,   928,   929,   932,   933,   936,   937,
-     941,   942,   943,   944,   945,   946,   950,   951,   952,   953,
-     954,   955,   956,   957,   958,   959,   960,   961,   962,   966,
-     970,   972,   983,   987,   990,   991,   995,   999,  1000,  1004,
-    1009,  1013,  1014,  1018,  1019,  1020,  1021,  1022,  1023,  1024,
-    1025,  1026,  1029,  1030,  1034,  1035,  1039,  1043,  1047,  1048,
-    1049,  1050,  1053,  1054,  1057,  1058,  1061,  1062,  1066,  1069,
-    1073,  1077,  1078,  1081,  1082,  1086,  1089,  1092,  1093,  1094,
-    1095,  1098,  1099,  1100,  1104,  1107,  1111,  1114,  1117,  1118,
-    1119,  1120,  1121,  1125,  1128,  1129,  1133,  1136,  1140,  1141,
-    1142,  1145,  1146,  1149,  1150,  1153,  1156,  1157,  1158,  1161,
-    1162,  1163,  1166,  1170,  1173,  1177,  1178,  1179,  1183,  1186,
-    1189,  1193,  1196,  1199,  1200,  1203,  1206,  1207,  1208,  1209,
-    1213,  1216,  1220,  1224,  1227,  1228,  1229,  1233,  1234,  1235,
-    1236,  1240,  1243,  1246,  1247,  1250,  1251,  1252,  1256,  1259,
-    1262,  1263,  1267,  1270,  1273,  1274,  1278,  1279,  1280,  1281,
-    1282,  1283,  1284,  1285,  1286,  1287,  1288,  1289,  1292,  1293,
-    1297,  1298,  1299,  1300,  1301,  1305,  1308,  1312,  1315,  1318,
-    1319,  1323,  1324,  1325,  1326,  1327,  1328,  1329,  1330,  1331,
-    1341,  1344,  1347,  1350,  1353,  1356,  1360,  1363,  1367,  1368,
-    1372,  1375,  1378,  1379,  1383,  1386,  1389,  1390,  1391,  1395,
-    1398,  1402,  1405,  1408,  1409,  1410,  1411,  1412,  1413,  1417,
-    1420,  1423,  1424,  1425,  1429,  1432,  1436,  1439,  1442,  1443,
-    1444,  1445,  1449,  1452,  1456,  1459,  1460,  1461,  1462,  1463,
-    1464,  1465,  1466,  1467,  1468,  1469,  1470,  1471,  1472,  1473,
-    1474,  1475,  1476,  1477,  1478,  1479,  1480,  1481,  1482,  1483,
-    1484,  1485,  1488,  1489,  1492,  1493,  1496,  1497,  1500,  1501,
-    1504,  1505,  1509,  1512,  1515,  1516,  1519,  1520,  1523,  1524,
-    1525,  1529,  1532,  1535,  1536,  1539,  1540,  1541,  1542,  1543,
-    1544,  1545,  1546,  1547,  1548,  1552,  1555,  1558,  1559,  1560,
-    1564,  1567,  1570,  1573,  1576,  1577,  1581,  1584,  1587,  1588,
-    1591,  1592,  1593,  1597,  1600,  1601,  1602,  1603,  1606,  1607,
-    1610,  1618,  1621,  1623,  1623,  1626,  1630,  1638,  1639,  1640,
-    1643,  1644,  1647,  1648,  1649,  1652,  1653,  1655,  1660,  1661,
-    1662,  1663,  1664,  1665,  1666,  1667,  1668,  1669,  1670,  1671,
-    1672,  1673,  1674,  1675,  1676,  1677,  1678,  1679,  1680,  1681,
-    1682,  1683,  1684,  1685,  1686,  1687,  1688,  1689,  1692,  1693,
-    1698,  1699,  1700,  1701,  1702,  1703,  1704,  1705,  1708,  1709,
-    1710,  1711,  1712,  1713,  1714,  1715,  1716,  1717,  1718,  1719,
-    1720,  1721,  1722,  1723,  1724,  1725,  1726,  1727,  1728,  1729,
-    1730,  1731,  1734,  1735,  1736,  1737,  1740,  1744,  1745,  1746,
-    1749,  1750,  1753,  1754,  1755,  1756,  1757,  1758,  1759,  1760,
-    1761,  1762,  1765,  1769,  1770,  1772,  1773,  1774,  1775,  1779,
-    1780,  1781,  1782,  1783,  1786,  1787,  1788,  1791,  1792,  1795,
-    1796,  1797,  1798,  1799,  1800,  1801,  1802,  1803,  1806,  1807,
-    1808,  1809,  1812,  1813,  1816,  1817,  1820,  1821,  1824,  1825,
-    1826,  1829
+       0,   443,   443,   456,   469,   477,   489,   493,   498,   507,
+     508,   510,   511,   514,   519,   526,   527,   528,   531,   532,
+     535,   536,   543,   544,   551,   552,   553,   556,   557,   560,
+     561,   564,   565,   566,   567,   568,   569,   570,   571,   572,
+     575,   576,   577,   578,   581,   584,   585,   588,   589,   593,
+     598,   603,   608,   611,   612,   615,   616,   617,   632,   636,
+     640,   645,   649,   655,   656,   657,   660,   661,   664,   665,
+     668,   669,   670,   673,   674,   681,   685,   705,   706,   709,
+     714,   717,   722,   723,   724,   725,   728,   733,   734,   737,
+     738,   741,   747,   750,   756,   757,   760,   761,   762,   763,
+     764,   767,   767,   770,   771,   774,   775,   779,   780,   781,
+     782,   785,   789,   794,   797,   800,   803,   809,   812,   818,
+     824,   830,   833,   841,   842,   843,   847,   857,   868,   870,
+     879,   883,   885,   889,   890,   895,   898,   902,   906,   911,
+     915,   920,   926,   930,   931,   932,   935,   936,   939,   940,
+     944,   945,   946,   947,   948,   949,   953,   954,   955,   956,
+     957,   958,   959,   960,   961,   962,   963,   964,   965,   969,
+     973,   975,   986,   990,   993,   994,   998,  1002,  1003,  1007,
+    1012,  1016,  1017,  1021,  1022,  1023,  1024,  1025,  1026,  1027,
+    1028,  1029,  1032,  1033,  1037,  1038,  1042,  1046,  1050,  1051,
+    1052,  1053,  1056,  1057,  1060,  1061,  1064,  1065,  1069,  1072,
+    1076,  1080,  1081,  1084,  1085,  1089,  1092,  1095,  1096,  1097,
+    1098,  1101,  1102,  1103,  1107,  1110,  1114,  1117,  1120,  1121,
+    1122,  1123,  1124,  1128,  1131,  1132,  1136,  1139,  1143,  1144,
+    1145,  1148,  1149,  1152,  1153,  1156,  1159,  1160,  1161,  1164,
+    1165,  1166,  1169,  1173,  1176,  1180,  1181,  1182,  1186,  1189,
+    1192,  1196,  1199,  1202,  1203,  1206,  1209,  1210,  1211,  1212,
+    1216,  1219,  1223,  1227,  1230,  1231,  1232,  1236,  1237,  1238,
+    1239,  1243,  1246,  1249,  1250,  1253,  1254,  1255,  1259,  1262,
+    1265,  1266,  1270,  1273,  1276,  1277,  1281,  1282,  1283,  1284,
+    1285,  1286,  1287,  1288,  1289,  1290,  1291,  1292,  1295,  1296,
+    1300,  1301,  1302,  1303,  1304,  1308,  1311,  1315,  1318,  1321,
+    1322,  1326,  1327,  1328,  1329,  1330,  1331,  1332,  1333,  1334,
+    1344,  1347,  1350,  1353,  1356,  1359,  1363,  1366,  1370,  1371,
+    1375,  1378,  1381,  1382,  1386,  1389,  1392,  1393,  1394,  1398,
+    1401,  1405,  1408,  1411,  1412,  1413,  1414,  1415,  1416,  1420,
+    1423,  1426,  1427,  1428,  1432,  1435,  1439,  1442,  1445,  1446,
+    1447,  1448,  1452,  1455,  1458,  1461,  1462,  1463,  1464,  1465,
+    1466,  1467,  1468,  1469,  1470,  1471,  1472,  1473,  1474,  1475,
+    1476,  1477,  1478,  1479,  1480,  1481,  1482,  1483,  1484,  1485,
+    1486,  1487,  1490,  1491,  1494,  1495,  1498,  1499,  1502,  1503,
+    1506,  1507,  1511,  1514,  1517,  1518,  1521,  1522,  1525,  1526,
+    1527,  1531,  1534,  1537,  1538,  1541,  1542,  1543,  1544,  1545,
+    1546,  1547,  1548,  1549,  1550,  1554,  1557,  1560,  1561,  1562,
+    1566,  1569,  1572,  1575,  1578,  1579,  1583,  1586,  1589,  1590,
+    1593,  1594,  1595,  1599,  1602,  1603,  1604,  1605,  1608,  1609,
+    1612,  1620,  1623,  1625,  1625,  1628,  1632,  1640,  1641,  1642,
+    1645,  1646,  1649,  1650,  1651,  1654,  1655,  1657,  1662,  1663,
+    1664,  1665,  1666,  1667,  1668,  1669,  1670,  1671,  1672,  1673,
+    1674,  1675,  1676,  1677,  1678,  1679,  1680,  1681,  1682,  1683,
+    1684,  1685,  1686,  1687,  1688,  1689,  1690,  1691,  1694,  1695,
+    1700,  1701,  1702,  1703,  1704,  1705,  1706,  1707,  1710,  1711,
+    1712,  1713,  1714,  1715,  1716,  1717,  1718,  1719,  1720,  1721,
+    1722,  1723,  1724,  1725,  1726,  1727,  1728,  1729,  1730,  1731,
+    1732,  1733,  1736,  1737,  1738,  1739,  1742,  1746,  1747,  1748,
+    1751,  1752,  1755,  1756,  1757,  1758,  1759,  1760,  1761,  1762,
+    1763,  1764,  1767,  1771,  1772,  1774,  1775,  1776,  1777,  1781,
+    1782,  1783,  1784,  1785,  1788,  1789,  1790,  1793,  1794,  1797,
+    1798,  1799,  1800,  1801,  1802,  1803,  1804,  1805,  1808,  1809,
+    1810,  1811,  1814,  1815,  1818,  1819,  1822,  1823,  1826,  1827,
+    1828,  1831
 };
 #endif
 
@@ -857,9 +857,9 @@ static const unsigned char yyr2[] =
        1,     8,     0,     2,     1,     4,     0,     1,     1,     1,
        5,     1,     4,     0,     1,     1,     1,     1,     1,     1,
        4,     0,     1,     1,     1,     4,     1,     5,     0,     2,
-       2,     2,     1,     5,     1,     4,     3,     7,     4,     4,
+       2,     2,     1,     5,     1,     5,     3,     7,     4,     4,
        4,     3,     3,     4,     4,     3,     3,     3,     4,     5,
-       3,     3,     5,     2,     3,     4,     5,     5,     4,     4,
+       3,     3,     5,     2,     3,     4,     5,     4,     4,     4,
        3,     3,     0,     1,     0,     2,     0,     2,     0,     2,
        0,     1,     1,     5,     1,     3,     1,     3,     0,     1,
        1,     1,     3,     1,     3,     1,     1,     1,     1,     2,
@@ -1074,7 +1074,7 @@ static const unsigned short int yydefact[] =
      103,     0,     0,     0,     0,     0,     0,    44,   466,   465,
      254,   343,     0,     0,   464,   512,   513,   551,     0,   540,
        0,     0,     0,     0,   590,     0,   378,   379,   380,     0,
-     404,   406,   375,   407,   383,   384,    25,   388,   405,     0,
+     404,   406,   397,   407,   383,   384,    25,   388,   405,     0,
      398,   406,   547,     0,   576,   574,   575,     0,     0,     0,
        0,     0,     0,     0,     0,     0,     0,   541,     0,   395,
      399,   406,     0,   527,   528,   526,   596,   594,   544,     0,
@@ -1093,7 +1093,7 @@ static const unsigned short int yydefact[] =
       43,     9,    41,     0,     0,   562,     0,     0,     0,   588,
        0,     0,   560,   389,   396,     0,   409,   392,     0,   569,
      572,     0,     0,     0,   563,   564,   565,   566,   567,   568,
-       0,     0,   397,   404,   545,   543,     0,     0,   597,   595,
+       0,     0,   375,   404,   545,   543,     0,     0,   597,   595,
        0,     0,     0,     0,     0,     0,    57,    79,    52,     0,
        9,    66,    66,     0,    59,    46,     0,    67,     0,    51,
        0,    77,     0,   417,     0,   442,   413,   416,   415,   247,
@@ -2885,7 +2885,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
         case 2:
 
 /* Line 936 of glr.c  */
-#line 440 "sql.ypp"
+#line 443 "sql.ypp"
     { 		// 2014-3-4---增加对多条指令的识别支持---by余楷		// 2014-3-6---解析错误后置根结点为空---by余楷
   						printf("> \n"); 
   						((*yyvalp).ast_node) = newStmt(t_stmt, NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (2))].yystate.yysemantics.yysval.ast_node)); 
@@ -2904,7 +2904,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 3:
 
 /* Line 936 of glr.c  */
-#line 453 "sql.ypp"
+#line 456 "sql.ypp"
     { 		// 2014-3-4---增加对多条指令的识别支持---by余楷		// 2014-3-6---解析错误后置根结点为空---by余楷
 	  					printf(">> \n"); 
 	  					((*yyvalp).ast_node) = newStmt(t_stmt, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (3))].yystate.yysemantics.yysval.ast_node)); 
@@ -2923,7 +2923,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 4:
 
 /* Line 936 of glr.c  */
-#line 466 "sql.ypp"
+#line 469 "sql.ypp"
     { 
   						printf("> \n");
   						parsetreeroot = NULL;	// 2014-3-6---解析错误后置根结点为空---by余楷
@@ -2937,7 +2937,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 5:
 
 /* Line 936 of glr.c  */
-#line 474 "sql.ypp"
+#line 477 "sql.ypp"
     { 
   						printf(">> \n"); 
   						parsetreeroot = NULL;	// 2014-3-6---解析错误后置根结点为空---by余楷
@@ -2951,14 +2951,14 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 6:
 
 /* Line 936 of glr.c  */
-#line 486 "sql.ypp"
+#line 489 "sql.ypp"
     { ((*yyvalp).ast_node)=(((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.ast_node); /*output($$, 1);*/ puts("SQL parser： This is a select statement"); ;}
     break;
 
   case 7:
 
 /* Line 936 of glr.c  */
-#line 491 "sql.ypp"
+#line 494 "sql.ypp"
     {
 		((*yyvalp).ast_node) = newQueryStmt(t_query_stmt, NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (3))].yystate.yysemantics.yysval.intval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.ast_node), NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 		/*puts("SQL parser： select_stmt1");	*/ // 2014-3-5---优化输出信息，指明来自SQL parser---by余楷
@@ -2968,7 +2968,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 8:
 
 /* Line 936 of glr.c  */
-#line 497 "sql.ypp"
+#line 500 "sql.ypp"
     {
 			((*yyvalp).ast_node) = newQueryStmt(t_query_stmt, NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (11))].yystate.yysemantics.yysval.intval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (11))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (11))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((6) - (11))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((7) - (11))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((8) - (11))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((9) - (11))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((10) - (11))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((11) - (11))].yystate.yysemantics.yysval.ast_node));
 			/*puts("SQL parser： select_stmt2");	*/ // 2014-3-5---优化输出信息，指明来自SQL parser---by余楷
@@ -2978,35 +2978,35 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 9:
 
 /* Line 936 of glr.c  */
-#line 504 "sql.ypp"
+#line 507 "sql.ypp"
     { ((*yyvalp).ast_node)= NULL; /*puts("opt_where is null")*/; ;}
     break;
 
   case 10:
 
 /* Line 936 of glr.c  */
-#line 505 "sql.ypp"
+#line 508 "sql.ypp"
     { ((*yyvalp).ast_node) = newWhereList(t_where_list, NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (2))].yystate.yysemantics.yysval.ast_node)); /*puts("opt_where");*/;}
     break;
 
   case 11:
 
 /* Line 936 of glr.c  */
-#line 507 "sql.ypp"
+#line 510 "sql.ypp"
     { ((*yyvalp).ast_node)=NULL; /*puts("opt_groupby is null");*/ ;}
     break;
 
   case 12:
 
 /* Line 936 of glr.c  */
-#line 508 "sql.ypp"
+#line 511 "sql.ypp"
     { ((*yyvalp).ast_node) = newGroupbyList(t_groupby_list, NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (4))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (4))].yystate.yysemantics.yysval.intval)); /*puts("opt_groupby");*/;}
     break;
 
   case 13:
 
 /* Line 936 of glr.c  */
-#line 512 "sql.ypp"
+#line 515 "sql.ypp"
     { 
 		((*yyvalp).ast_node)=newGroupbyExpr(t_groupby_expr, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (2))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (2))].yystate.yysemantics.yysval.intval), NULL);
 		/*puts("groupby_list1");*/
@@ -3016,7 +3016,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 14:
 
 /* Line 936 of glr.c  */
-#line 517 "sql.ypp"
+#line 520 "sql.ypp"
     {
 		((*yyvalp).ast_node)=newGroupbyExpr(t_groupby_expr, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (4))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (4))].yystate.yysemantics.yysval.intval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (4))].yystate.yysemantics.yysval.ast_node));
 		/*puts("groupby_list2");*/
@@ -3026,49 +3026,49 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 15:
 
 /* Line 936 of glr.c  */
-#line 523 "sql.ypp"
+#line 526 "sql.ypp"
     { ((*yyvalp).intval) = 0; ;}
     break;
 
   case 16:
 
 /* Line 936 of glr.c  */
-#line 524 "sql.ypp"
+#line 527 "sql.ypp"
     { ((*yyvalp).intval) = 0; ;}
     break;
 
   case 17:
 
 /* Line 936 of glr.c  */
-#line 525 "sql.ypp"
+#line 528 "sql.ypp"
     { ((*yyvalp).intval) = 1; ;}
     break;
 
   case 18:
 
 /* Line 936 of glr.c  */
-#line 528 "sql.ypp"
+#line 531 "sql.ypp"
     { ((*yyvalp).intval) = 0; ;}
     break;
 
   case 19:
 
 /* Line 936 of glr.c  */
-#line 529 "sql.ypp"
+#line 532 "sql.ypp"
     { ((*yyvalp).intval) = 1; ;}
     break;
 
   case 20:
 
 /* Line 936 of glr.c  */
-#line 532 "sql.ypp"
+#line 535 "sql.ypp"
     { ((*yyvalp).ast_node)=NULL; /*puts("opt_having is null");*/ ;}
     break;
 
   case 21:
 
 /* Line 936 of glr.c  */
-#line 534 "sql.ypp"
+#line 537 "sql.ypp"
     {
 		((*yyvalp).ast_node)=newHavingList(t_having_list, NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (2))].yystate.yysemantics.yysval.ast_node));
 		/*puts("opt_having2");*/
@@ -3078,14 +3078,14 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 22:
 
 /* Line 936 of glr.c  */
-#line 540 "sql.ypp"
+#line 543 "sql.ypp"
     { ((*yyvalp).ast_node)=NULL; /*puts("opt_orederby is null");*/ ;}
     break;
 
   case 23:
 
 /* Line 936 of glr.c  */
-#line 542 "sql.ypp"
+#line 545 "sql.ypp"
     {
 		((*yyvalp).ast_node)=newOrderbyList(t_groupby_list, NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.ast_node));
 		/*puts("opt_orederby2");*/
@@ -3095,182 +3095,182 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 24:
 
 /* Line 936 of glr.c  */
-#line 548 "sql.ypp"
+#line 551 "sql.ypp"
     {((*yyvalp).ast_node) = NULL; /*puts("opt_limit is null");*/ ;}
     break;
 
   case 25:
 
 /* Line 936 of glr.c  */
-#line 549 "sql.ypp"
+#line 552 "sql.ypp"
     { ((*yyvalp).ast_node)=newLimitExpr(t_limit_expr, NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (2))].yystate.yysemantics.yysval.ast_node)); /*puts("opt_limit2");*/ ;}
     break;
 
   case 26:
 
 /* Line 936 of glr.c  */
-#line 550 "sql.ypp"
+#line 553 "sql.ypp"
     { ((*yyvalp).ast_node)=newLimitExpr(t_limit_expr, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (4))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (4))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 27:
 
 /* Line 936 of glr.c  */
-#line 553 "sql.ypp"
+#line 556 "sql.ypp"
     { ((*yyvalp).ast_node)=NULL; /*puts("opt_into_list is null");*/ ;}
     break;
 
   case 28:
 
 /* Line 936 of glr.c  */
-#line 554 "sql.ypp"
+#line 557 "sql.ypp"
     {  ;}
     break;
 
   case 29:
 
 /* Line 936 of glr.c  */
-#line 557 "sql.ypp"
+#line 560 "sql.ypp"
     { ((*yyvalp).ast_node) = newColumn(t_column, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.strval), NULL, NULL); ;}
     break;
 
   case 30:
 
 /* Line 936 of glr.c  */
-#line 558 "sql.ypp"
+#line 561 "sql.ypp"
     { ((*yyvalp).ast_node) = newColumn(t_column, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.strval), NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 31:
 
 /* Line 936 of glr.c  */
-#line 561 "sql.ypp"
+#line 564 "sql.ypp"
     { ((*yyvalp).intval) = 0; ;}
     break;
 
   case 32:
 
 /* Line 936 of glr.c  */
-#line 562 "sql.ypp"
+#line 565 "sql.ypp"
     { if(((*yyvalp).intval) & 1) yyerror("duplicate ALL option"); ((*yyvalp).intval) = (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (2))].yystate.yysemantics.yysval.intval) | 1; ;}
     break;
 
   case 33:
 
 /* Line 936 of glr.c  */
-#line 563 "sql.ypp"
+#line 566 "sql.ypp"
     { if(((*yyvalp).intval) & 2) yyerror("duplicate DISTINCT option"); ((*yyvalp).intval) = (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (2))].yystate.yysemantics.yysval.intval) | 2; ;}
     break;
 
   case 34:
 
 /* Line 936 of glr.c  */
-#line 564 "sql.ypp"
+#line 567 "sql.ypp"
     { if(((*yyvalp).intval) & 4) yyerror("duplicate DISTINCTROW option"); ((*yyvalp).intval) = (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (2))].yystate.yysemantics.yysval.intval) | 4; ;}
     break;
 
   case 35:
 
 /* Line 936 of glr.c  */
-#line 565 "sql.ypp"
+#line 568 "sql.ypp"
     { if(((*yyvalp).intval) & 8) yyerror("duplicate HIGH_PRIORITY option"); ((*yyvalp).intval) = (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (2))].yystate.yysemantics.yysval.intval) | 8; ;}
     break;
 
   case 36:
 
 /* Line 936 of glr.c  */
-#line 566 "sql.ypp"
+#line 569 "sql.ypp"
     { if(((*yyvalp).intval) & 16) yyerror("duplicate STRAIGHT_JOIN option"); ((*yyvalp).intval) = (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (2))].yystate.yysemantics.yysval.intval) | 16; ;}
     break;
 
   case 37:
 
 /* Line 936 of glr.c  */
-#line 567 "sql.ypp"
+#line 570 "sql.ypp"
     { if(((*yyvalp).intval) & 32) yyerror("duplicate SQL_SMALL_RESULT option"); ((*yyvalp).intval) = (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (2))].yystate.yysemantics.yysval.intval) | 32; ;}
     break;
 
   case 38:
 
 /* Line 936 of glr.c  */
-#line 568 "sql.ypp"
+#line 571 "sql.ypp"
     { if(((*yyvalp).intval) & 64) yyerror("duplicate SQL_BIG_RESULT option"); ((*yyvalp).intval) = (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (2))].yystate.yysemantics.yysval.intval) | 64; ;}
     break;
 
   case 39:
 
 /* Line 936 of glr.c  */
-#line 569 "sql.ypp"
+#line 572 "sql.ypp"
     { if(((*yyvalp).intval) & 128) yyerror("duplicate SQL_CALC_FOUND_ROWS option"); ((*yyvalp).intval) = (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (2))].yystate.yysemantics.yysval.intval) | 128; ;}
     break;
 
   case 40:
 
 /* Line 936 of glr.c  */
-#line 572 "sql.ypp"
+#line 575 "sql.ypp"
     { ((*yyvalp).ast_node) = newSelectList(t_select_list, 0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.ast_node), NULL); /*puts("select_expr_list1");*/ ;}
     break;
 
   case 41:
 
 /* Line 936 of glr.c  */
-#line 573 "sql.ypp"
+#line 576 "sql.ypp"
     { ((*yyvalp).ast_node) = newSelectList(t_select_list, 0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.ast_node)); /*puts("select_expr_list2");*/ ;}
     break;
 
   case 42:
 
 /* Line 936 of glr.c  */
-#line 574 "sql.ypp"
+#line 577 "sql.ypp"
     { ((*yyvalp).ast_node) = newSelectList(t_select_list, 1, NULL, NULL); /*puts("select_expr_list3");*/ ;}
     break;
 
   case 43:
 
 /* Line 936 of glr.c  */
-#line 575 "sql.ypp"
+#line 578 "sql.ypp"
     { ((*yyvalp).ast_node) = newSelectList(t_select_list, 1, NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.ast_node)); /*puts("select_expr_list4");*/ ;}
     break;
 
   case 44:
 
 /* Line 936 of glr.c  */
-#line 578 "sql.ypp"
+#line 581 "sql.ypp"
     { ((*yyvalp).ast_node) = newSelectExpr(t_select_expr, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (2))].yystate.yysemantics.yysval.strval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (2))].yystate.yysemantics.yysval.ast_node)); /*puts("select_expr");*/ ;}
     break;
 
   case 45:
 
 /* Line 936 of glr.c  */
-#line 581 "sql.ypp"
+#line 584 "sql.ypp"
     { ((*yyvalp).ast_node)=newFromList(t_from_list, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.ast_node), NULL); /*puts("table_references1");*/ ;}
     break;
 
   case 46:
 
 /* Line 936 of glr.c  */
-#line 582 "sql.ypp"
+#line 585 "sql.ypp"
     { ((*yyvalp).ast_node)=newFromList(t_from_list, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.ast_node)); /*puts("table_references2");*/ ;}
     break;
 
   case 47:
 
 /* Line 936 of glr.c  */
-#line 585 "sql.ypp"
+#line 588 "sql.ypp"
     { ((*yyvalp).ast_node)=(((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.ast_node); /*puts("table_referen1");*/ ;}
     break;
 
   case 48:
 
 /* Line 936 of glr.c  */
-#line 586 "sql.ypp"
+#line 589 "sql.ypp"
     { ((*yyvalp).ast_node)=(((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.ast_node); /*puts("table_referen2");*/ ;}
     break;
 
   case 49:
 
 /* Line 936 of glr.c  */
-#line 591 "sql.ypp"
+#line 594 "sql.ypp"
     {
 		((*yyvalp).ast_node)=newTable(t_table, NULL,(((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (2))].yystate.yysemantics.yysval.strval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (2))].yystate.yysemantics.yysval.strval), 0, NULL);
 		/*puts("table_factor1");*/
@@ -3280,7 +3280,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 50:
 
 /* Line 936 of glr.c  */
-#line 596 "sql.ypp"
+#line 599 "sql.ypp"
     {
 		((*yyvalp).ast_node)=newTable(t_table, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (4))].yystate.yysemantics.yysval.strval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (4))].yystate.yysemantics.yysval.strval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (4))].yystate.yysemantics.yysval.strval), 0, NULL);
    		/*puts("table_factor2");*/ 
@@ -3290,7 +3290,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 51:
 
 /* Line 936 of glr.c  */
-#line 601 "sql.ypp"
+#line 604 "sql.ypp"
     {
 		((*yyvalp).ast_node)=newTable(t_table, NULL, NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.strval), 1, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.ast_node));
 		/*puts("table_factor3");*/
@@ -3300,35 +3300,35 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 52:
 
 /* Line 936 of glr.c  */
-#line 605 "sql.ypp"
+#line 608 "sql.ypp"
     { ((*yyvalp).ast_node)=(((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (3))].yystate.yysemantics.yysval.ast_node); ;}
     break;
 
   case 55:
 
 /* Line 936 of glr.c  */
-#line 612 "sql.ypp"
+#line 615 "sql.ypp"
     { ((*yyvalp).strval)=(((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (2))].yystate.yysemantics.yysval.strval); /*puts("opt_as_alias1");*/ ;}
     break;
 
   case 56:
 
 /* Line 936 of glr.c  */
-#line 613 "sql.ypp"
+#line 616 "sql.ypp"
     { ((*yyvalp).strval)=(((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.strval); /*puts("opt_as_alias2");*/ ;}
     break;
 
   case 57:
 
 /* Line 936 of glr.c  */
-#line 614 "sql.ypp"
+#line 617 "sql.ypp"
     { ((*yyvalp).strval)=NULL; /*puts("opt_as_alias3");*/ ;}
     break;
 
   case 58:
 
 /* Line 936 of glr.c  */
-#line 630 "sql.ypp"
+#line 633 "sql.ypp"
     {
 		((*yyvalp).ast_node)=newJoin(t_join, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (5))].yystate.yysemantics.yysval.intval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (5))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (5))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (5))].yystate.yysemantics.yysval.ast_node));
 	;}
@@ -3337,7 +3337,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 59:
 
 /* Line 936 of glr.c  */
-#line 634 "sql.ypp"
+#line 637 "sql.ypp"
     {
 		((*yyvalp).ast_node)=newJoin(t_join, -1, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.ast_node), NULL);
 	;}
@@ -3346,7 +3346,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 60:
 
 /* Line 936 of glr.c  */
-#line 638 "sql.ypp"
+#line 641 "sql.ypp"
     {
 		Node *m=newCondition(t_condition, 1, (((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (5))].yystate.yysemantics.yysval.ast_node));
 		((*yyvalp).ast_node)=newJoin(t_join, -1, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (5))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (5))].yystate.yysemantics.yysval.ast_node), m);
@@ -3356,7 +3356,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 61:
 
 /* Line 936 of glr.c  */
-#line 643 "sql.ypp"
+#line 646 "sql.ypp"
     {
 		((*yyvalp).ast_node)=newJoin(t_join, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (6))].yystate.yysemantics.yysval.intval)+(((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (6))].yystate.yysemantics.yysval.intval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (6))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (6))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((6) - (6))].yystate.yysemantics.yysval.ast_node));
     	;}
@@ -3365,7 +3365,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 62:
 
 /* Line 936 of glr.c  */
-#line 647 "sql.ypp"
+#line 650 "sql.ypp"
     {
 		((*yyvalp).ast_node)=newJoin(t_join, 32 + (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (5))].yystate.yysemantics.yysval.intval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (5))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (5))].yystate.yysemantics.yysval.ast_node), NULL);
 	;}
@@ -3374,91 +3374,91 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 63:
 
 /* Line 936 of glr.c  */
-#line 652 "sql.ypp"
+#line 655 "sql.ypp"
     { ((*yyvalp).intval) = 0; ;}
     break;
 
   case 64:
 
 /* Line 936 of glr.c  */
-#line 653 "sql.ypp"
+#line 656 "sql.ypp"
     { ((*yyvalp).intval) = 1; ;}
     break;
 
   case 65:
 
 /* Line 936 of glr.c  */
-#line 654 "sql.ypp"
+#line 657 "sql.ypp"
     { ((*yyvalp).intval) = 2; ;}
     break;
 
   case 66:
 
 /* Line 936 of glr.c  */
-#line 657 "sql.ypp"
+#line 660 "sql.ypp"
     { ((*yyvalp).intval) = 0; ;}
     break;
 
   case 67:
 
 /* Line 936 of glr.c  */
-#line 658 "sql.ypp"
+#line 661 "sql.ypp"
     {((*yyvalp).intval) = 4; ;}
     break;
 
   case 68:
 
 /* Line 936 of glr.c  */
-#line 661 "sql.ypp"
+#line 664 "sql.ypp"
     { ((*yyvalp).intval) = 8; ;}
     break;
 
   case 69:
 
 /* Line 936 of glr.c  */
-#line 662 "sql.ypp"
+#line 665 "sql.ypp"
     { ((*yyvalp).intval) = 16; ;}
     break;
 
   case 70:
 
 /* Line 936 of glr.c  */
-#line 665 "sql.ypp"
+#line 668 "sql.ypp"
     { ((*yyvalp).intval) = 8 + (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (2))].yystate.yysemantics.yysval.intval); ;}
     break;
 
   case 71:
 
 /* Line 936 of glr.c  */
-#line 666 "sql.ypp"
+#line 669 "sql.ypp"
     { ((*yyvalp).intval) = 16 + (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (2))].yystate.yysemantics.yysval.intval); ;}
     break;
 
   case 72:
 
 /* Line 936 of glr.c  */
-#line 667 "sql.ypp"
+#line 670 "sql.ypp"
     { ((*yyvalp).intval) = 0; ;}
     break;
 
   case 73:
 
 /* Line 936 of glr.c  */
-#line 670 "sql.ypp"
+#line 673 "sql.ypp"
     {;}
     break;
 
   case 74:
 
 /* Line 936 of glr.c  */
-#line 671 "sql.ypp"
+#line 674 "sql.ypp"
     {((*yyvalp).ast_node)=(((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.ast_node);;}
     break;
 
   case 75:
 
 /* Line 936 of glr.c  */
-#line 679 "sql.ypp"
+#line 682 "sql.ypp"
     {
     	((*yyvalp).ast_node)=newCondition(t_condition, 1, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (2))].yystate.yysemantics.yysval.ast_node));
     ;}
@@ -3467,7 +3467,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 76:
 
 /* Line 936 of glr.c  */
-#line 683 "sql.ypp"
+#line 686 "sql.ypp"
     {
     	((*yyvalp).ast_node)=newCondition(t_condition, 2, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (4))].yystate.yysemantics.yysval.ast_node));
     ;}
@@ -3476,231 +3476,231 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 77:
 
 /* Line 936 of glr.c  */
-#line 702 "sql.ypp"
+#line 705 "sql.ypp"
     { emit("INDEX %s", (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.strval));  ;}
     break;
 
   case 78:
 
 /* Line 936 of glr.c  */
-#line 703 "sql.ypp"
+#line 706 "sql.ypp"
     { emit("INDEX %s", (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.strval)); ;}
     break;
 
   case 79:
 
 /* Line 936 of glr.c  */
-#line 706 "sql.ypp"
+#line 709 "sql.ypp"
     {  ;}
     break;
 
   case 80:
 
 /* Line 936 of glr.c  */
-#line 711 "sql.ypp"
+#line 714 "sql.ypp"
     { emit("STMT"); ;}
     break;
 
   case 81:
 
 /* Line 936 of glr.c  */
-#line 716 "sql.ypp"
+#line 719 "sql.ypp"
     { emit("DELETEONE %d %s", (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (7))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (7))].yystate.yysemantics.yysval.strval)); free((((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (7))].yystate.yysemantics.yysval.strval)); ;}
     break;
 
   case 82:
 
 /* Line 936 of glr.c  */
-#line 719 "sql.ypp"
+#line 722 "sql.ypp"
     { ((*yyvalp).ast_node) = (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (2))].yystate.yysemantics.yysval.ast_node) + 01; ;}
     break;
 
   case 83:
 
 /* Line 936 of glr.c  */
-#line 720 "sql.ypp"
+#line 723 "sql.ypp"
     { ((*yyvalp).ast_node) = (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (2))].yystate.yysemantics.yysval.ast_node) + 02; ;}
     break;
 
   case 84:
 
 /* Line 936 of glr.c  */
-#line 721 "sql.ypp"
+#line 724 "sql.ypp"
     { ((*yyvalp).ast_node) = (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (2))].yystate.yysemantics.yysval.ast_node) + 04; ;}
     break;
 
   case 85:
 
 /* Line 936 of glr.c  */
-#line 722 "sql.ypp"
+#line 725 "sql.ypp"
     { ((*yyvalp).ast_node) = 0; ;}
     break;
 
   case 86:
 
 /* Line 936 of glr.c  */
-#line 728 "sql.ypp"
+#line 731 "sql.ypp"
     {  ;}
     break;
 
   case 87:
 
 /* Line 936 of glr.c  */
-#line 730 "sql.ypp"
+#line 733 "sql.ypp"
     {  ;}
     break;
 
   case 88:
 
 /* Line 936 of glr.c  */
-#line 731 "sql.ypp"
+#line 734 "sql.ypp"
     {  ;}
     break;
 
   case 91:
 
 /* Line 936 of glr.c  */
-#line 739 "sql.ypp"
+#line 742 "sql.ypp"
     { emit("DELETEMULTI %d %d %d", (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (7))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (7))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((6) - (7))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 92:
 
 /* Line 936 of glr.c  */
-#line 744 "sql.ypp"
+#line 747 "sql.ypp"
     { ((*yyvalp).ast_node)=(((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.ast_node); output(((*yyvalp).ast_node), 1); puts("SQL parser： This is a insert statement"); ;}
     break;
 
   case 93:
 
 /* Line 936 of glr.c  */
-#line 750 "sql.ypp"
+#line 753 "sql.ypp"
     { ((*yyvalp).ast_node) = newInsertStmt((((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (8))].yystate.yysemantics.yysval.intval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (8))].yystate.yysemantics.yysval.strval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (8))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((7) - (8))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((8) - (8))].yystate.yysemantics.yysval.ast_node), NULL, NULL); ;}
     break;
 
   case 94:
 
 /* Line 936 of glr.c  */
-#line 753 "sql.ypp"
+#line 756 "sql.ypp"
     { ((*yyvalp).ast_node) = NULL; ;}
     break;
 
   case 95:
 
 /* Line 936 of glr.c  */
-#line 754 "sql.ypp"
+#line 757 "sql.ypp"
     { ((*yyvalp).ast_node) = (((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (5))].yystate.yysemantics.yysval.ast_node); ;}
     break;
 
   case 96:
 
 /* Line 936 of glr.c  */
-#line 757 "sql.ypp"
+#line 760 "sql.ypp"
     { ((*yyvalp).intval) = 0; ;}
     break;
 
   case 97:
 
 /* Line 936 of glr.c  */
-#line 758 "sql.ypp"
+#line 761 "sql.ypp"
     { ((*yyvalp).intval) = (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (2))].yystate.yysemantics.yysval.intval) | 01 ; ;}
     break;
 
   case 98:
 
 /* Line 936 of glr.c  */
-#line 759 "sql.ypp"
+#line 762 "sql.ypp"
     { ((*yyvalp).intval) = (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (2))].yystate.yysemantics.yysval.intval) | 02 ; ;}
     break;
 
   case 99:
 
 /* Line 936 of glr.c  */
-#line 760 "sql.ypp"
+#line 763 "sql.ypp"
     { ((*yyvalp).intval) = (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (2))].yystate.yysemantics.yysval.intval) | 04 ; ;}
     break;
 
   case 100:
 
 /* Line 936 of glr.c  */
-#line 761 "sql.ypp"
+#line 764 "sql.ypp"
     { ((*yyvalp).intval) = (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (2))].yystate.yysemantics.yysval.intval) | 010 ; ;}
     break;
 
   case 103:
 
 /* Line 936 of glr.c  */
-#line 767 "sql.ypp"
+#line 770 "sql.ypp"
     { ((*yyvalp).ast_node) = NULL; ;}
     break;
 
   case 104:
 
 /* Line 936 of glr.c  */
-#line 768 "sql.ypp"
+#line 771 "sql.ypp"
     { ((*yyvalp).ast_node) = (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (3))].yystate.yysemantics.yysval.ast_node); ;}
     break;
 
   case 105:
 
 /* Line 936 of glr.c  */
-#line 771 "sql.ypp"
+#line 774 "sql.ypp"
     { ((*yyvalp).ast_node) = newInsertValueList((((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (3))].yystate.yysemantics.yysval.ast_node), NULL); ;}
     break;
 
   case 106:
 
 /* Line 936 of glr.c  */
-#line 772 "sql.ypp"
+#line 775 "sql.ypp"
     { ((*yyvalp).ast_node) = newInsertValueList((((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (5))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (5))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 107:
 
 /* Line 936 of glr.c  */
-#line 776 "sql.ypp"
+#line 779 "sql.ypp"
     { ((*yyvalp).ast_node) = newInsertVals(0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.ast_node), NULL); ;}
     break;
 
   case 108:
 
 /* Line 936 of glr.c  */
-#line 777 "sql.ypp"
+#line 780 "sql.ypp"
     { ((*yyvalp).ast_node) = newInsertVals(1, NULL, NULL); ;}
     break;
 
   case 109:
 
 /* Line 936 of glr.c  */
-#line 778 "sql.ypp"
+#line 781 "sql.ypp"
     { ((*yyvalp).ast_node) = newInsertVals(0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 110:
 
 /* Line 936 of glr.c  */
-#line 779 "sql.ypp"
+#line 782 "sql.ypp"
     { ((*yyvalp).ast_node) = newInsertVals(1, NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 111:
 
 /* Line 936 of glr.c  */
-#line 783 "sql.ypp"
+#line 786 "sql.ypp"
     { ((*yyvalp).ast_node) = newInsertStmt((((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (7))].yystate.yysemantics.yysval.intval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (7))].yystate.yysemantics.yysval.strval), NULL, NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((7) - (7))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((6) - (7))].yystate.yysemantics.yysval.ast_node), NULL); ;}
     break;
 
   case 112:
 
 /* Line 936 of glr.c  */
-#line 787 "sql.ypp"
+#line 790 "sql.ypp"
     { ((*yyvalp).ast_node) = newInsertStmt((((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (7))].yystate.yysemantics.yysval.intval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (7))].yystate.yysemantics.yysval.strval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (7))].yystate.yysemantics.yysval.ast_node), NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((7) - (7))].yystate.yysemantics.yysval.ast_node), NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((6) - (7))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 113:
 
 /* Line 936 of glr.c  */
-#line 791 "sql.ypp"
+#line 794 "sql.ypp"
     { 
 		if((((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (3))].yystate.yysemantics.yysval.subtok) != 4) yyerror("bad insert assignment to %s", (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.strval)); 
 		else ((*yyvalp).ast_node) = newInsertAssignList((((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.strval), 0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.ast_node), NULL); ;}
@@ -3709,7 +3709,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 114:
 
 /* Line 936 of glr.c  */
-#line 794 "sql.ypp"
+#line 797 "sql.ypp"
     { 
 		if ((((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (3))].yystate.yysemantics.yysval.subtok) != 4) yyerror("bad insert assignment to %s", (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.strval));
  		else ((*yyvalp).ast_node) = newInsertAssignList((((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.strval), 1, NULL, NULL); ;}
@@ -3718,7 +3718,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 115:
 
 /* Line 936 of glr.c  */
-#line 797 "sql.ypp"
+#line 800 "sql.ypp"
     { 
 		if ((((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (5))].yystate.yysemantics.yysval.subtok) != 4) yyerror("bad insert assignment to %s", (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (5))].yystate.yysemantics.yysval.ast_node));		 
 		else ((*yyvalp).ast_node) = newInsertAssignList((((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (5))].yystate.yysemantics.yysval.strval), 0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (5))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (5))].yystate.yysemantics.yysval.ast_node)); ;}
@@ -3727,7 +3727,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 116:
 
 /* Line 936 of glr.c  */
-#line 800 "sql.ypp"
+#line 803 "sql.ypp"
     { 
 		if ((((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (5))].yystate.yysemantics.yysval.subtok) != 4) yyerror("bad insert assignment to %s", (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (5))].yystate.yysemantics.yysval.ast_node));
 		else ((*yyvalp).ast_node) = newInsertAssignList((((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (5))].yystate.yysemantics.yysval.strval), 1, NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (5))].yystate.yysemantics.yysval.ast_node)); ;}
@@ -3736,70 +3736,70 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 117:
 
 /* Line 936 of glr.c  */
-#line 806 "sql.ypp"
+#line 809 "sql.ypp"
     { emit("STMT"); ;}
     break;
 
   case 118:
 
 /* Line 936 of glr.c  */
-#line 812 "sql.ypp"
+#line 815 "sql.ypp"
     { emit("REPLACEVALS %d %d %s", (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (8))].yystate.yysemantics.yysval.intval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((7) - (8))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (8))].yystate.yysemantics.yysval.strval)); free((((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (8))].yystate.yysemantics.yysval.strval)) ;}
     break;
 
   case 119:
 
 /* Line 936 of glr.c  */
-#line 818 "sql.ypp"
+#line 821 "sql.ypp"
     { emit("REPLACEASGN %d %d %s", (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (7))].yystate.yysemantics.yysval.intval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((6) - (7))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (7))].yystate.yysemantics.yysval.strval)); free((((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (7))].yystate.yysemantics.yysval.strval)) ;}
     break;
 
   case 120:
 
 /* Line 936 of glr.c  */
-#line 823 "sql.ypp"
+#line 826 "sql.ypp"
     { emit("REPLACESELECT %d %s", (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (7))].yystate.yysemantics.yysval.intval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (7))].yystate.yysemantics.yysval.strval)); free((((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (7))].yystate.yysemantics.yysval.strval)); ;}
     break;
 
   case 121:
 
 /* Line 936 of glr.c  */
-#line 827 "sql.ypp"
+#line 830 "sql.ypp"
     { emit("STMT"); ;}
     break;
 
   case 122:
 
 /* Line 936 of glr.c  */
-#line 834 "sql.ypp"
+#line 837 "sql.ypp"
     { emit("UPDATE %d %d %d", (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (8))].yystate.yysemantics.yysval.intval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (8))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (8))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 123:
 
 /* Line 936 of glr.c  */
-#line 838 "sql.ypp"
+#line 841 "sql.ypp"
     { ((*yyvalp).intval) = 0; ;}
     break;
 
   case 124:
 
 /* Line 936 of glr.c  */
-#line 839 "sql.ypp"
+#line 842 "sql.ypp"
     { ((*yyvalp).intval) = (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (2))].yystate.yysemantics.yysval.intval) | 01; ;}
     break;
 
   case 125:
 
 /* Line 936 of glr.c  */
-#line 840 "sql.ypp"
+#line 843 "sql.ypp"
     { ((*yyvalp).intval) = (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (2))].yystate.yysemantics.yysval.intval) | 02; ;}
     break;
 
   case 126:
 
 /* Line 936 of glr.c  */
-#line 845 "sql.ypp"
+#line 848 "sql.ypp"
     {
 		/*
 		if ($2 != 4 || $3->data.string_val == NULL) 
@@ -3814,7 +3814,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 127:
 
 /* Line 936 of glr.c  */
-#line 855 "sql.ypp"
+#line 858 "sql.ypp"
     { 
 	/*
 		if ($4 != 4) 
@@ -3830,294 +3830,294 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 130:
 
 /* Line 936 of glr.c  */
-#line 876 "sql.ypp"
+#line 879 "sql.ypp"
     { ((*yyvalp).ast_node)=(((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.ast_node); output(((*yyvalp).ast_node), 1); puts("SQL parser： This is a create_database statement"); ;}
     break;
 
   case 131:
 
 /* Line 936 of glr.c  */
-#line 881 "sql.ypp"
+#line 884 "sql.ypp"
     { ((*yyvalp).ast_node) =  newCreateDatabaseStmt(t_create_database_stmt, 1, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (4))].yystate.yysemantics.yysval.intval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (4))].yystate.yysemantics.yysval.strval)); ;}
     break;
 
   case 132:
 
 /* Line 936 of glr.c  */
-#line 883 "sql.ypp"
+#line 886 "sql.ypp"
     { ((*yyvalp).ast_node) =  newCreateDatabaseStmt(t_create_database_stmt, 2, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (4))].yystate.yysemantics.yysval.intval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (4))].yystate.yysemantics.yysval.strval)); ;}
     break;
 
   case 133:
 
 /* Line 936 of glr.c  */
-#line 886 "sql.ypp"
+#line 889 "sql.ypp"
     { ((*yyvalp).intval) = 0; ;}
     break;
 
   case 134:
 
 /* Line 936 of glr.c  */
-#line 887 "sql.ypp"
+#line 890 "sql.ypp"
     { ((*yyvalp).intval) = 1; ;}
     break;
 
   case 135:
 
 /* Line 936 of glr.c  */
-#line 892 "sql.ypp"
+#line 895 "sql.ypp"
     { ((*yyvalp).ast_node)=(((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.ast_node); output(((*yyvalp).ast_node), 1); puts("SQL parser： This is a create_table statement"); ;}
     break;
 
   case 136:
 
 /* Line 936 of glr.c  */
-#line 896 "sql.ypp"
+#line 899 "sql.ypp"
     { ((*yyvalp).ast_node) = newCreateTableStmt(t_create_table_stmt, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (8))].yystate.yysemantics.yysval.intval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (8))].yystate.yysemantics.yysval.intval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (8))].yystate.yysemantics.yysval.strval), NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((7) - (8))].yystate.yysemantics.yysval.ast_node), NULL); ;}
     break;
 
   case 137:
 
 /* Line 936 of glr.c  */
-#line 900 "sql.ypp"
+#line 903 "sql.ypp"
     { ((*yyvalp).ast_node) = newCreateTableStmt(t_create_table_stmt, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (10))].yystate.yysemantics.yysval.intval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (10))].yystate.yysemantics.yysval.intval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (10))].yystate.yysemantics.yysval.strval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((7) - (10))].yystate.yysemantics.yysval.strval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((9) - (10))].yystate.yysemantics.yysval.ast_node), NULL); ;}
     break;
 
   case 138:
 
 /* Line 936 of glr.c  */
-#line 905 "sql.ypp"
+#line 908 "sql.ypp"
     { ((*yyvalp).ast_node) = newCreateTableStmt(t_create_table_stmt, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (9))].yystate.yysemantics.yysval.intval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (9))].yystate.yysemantics.yysval.intval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (9))].yystate.yysemantics.yysval.strval), NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((7) - (9))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((9) - (9))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 139:
 
 /* Line 936 of glr.c  */
-#line 909 "sql.ypp"
+#line 912 "sql.ypp"
     { ((*yyvalp).ast_node) = newCreateTableStmt(t_create_table_stmt, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (6))].yystate.yysemantics.yysval.intval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (6))].yystate.yysemantics.yysval.intval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (6))].yystate.yysemantics.yysval.strval), NULL, NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((6) - (6))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 140:
 
 /* Line 936 of glr.c  */
-#line 914 "sql.ypp"
+#line 917 "sql.ypp"
     { ((*yyvalp).ast_node) = newCreateTableStmt(t_create_table_stmt, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (11))].yystate.yysemantics.yysval.intval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (11))].yystate.yysemantics.yysval.intval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (11))].yystate.yysemantics.yysval.strval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((7) - (11))].yystate.yysemantics.yysval.strval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((9) - (11))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((11) - (11))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 141:
 
 /* Line 936 of glr.c  */
-#line 919 "sql.ypp"
+#line 922 "sql.ypp"
     { ((*yyvalp).ast_node) = newCreateTableStmt(t_create_table_stmt, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (8))].yystate.yysemantics.yysval.intval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (8))].yystate.yysemantics.yysval.intval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (8))].yystate.yysemantics.yysval.strval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((7) - (8))].yystate.yysemantics.yysval.strval), NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((8) - (8))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 142:
 
 /* Line 936 of glr.c  */
-#line 924 "sql.ypp"
+#line 927 "sql.ypp"
     { ((*yyvalp).ast_node) = newCreateSelectStmt(t_create_select_stmt, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.intval), 0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 143:
 
 /* Line 936 of glr.c  */
-#line 927 "sql.ypp"
+#line 930 "sql.ypp"
     { ((*yyvalp).intval) = 0; ;}
     break;
 
   case 144:
 
 /* Line 936 of glr.c  */
-#line 928 "sql.ypp"
+#line 931 "sql.ypp"
     { ((*yyvalp).intval) = 1; ;}
     break;
 
   case 145:
 
 /* Line 936 of glr.c  */
-#line 929 "sql.ypp"
+#line 932 "sql.ypp"
     { ((*yyvalp).intval) = 2; ;}
     break;
 
   case 146:
 
 /* Line 936 of glr.c  */
-#line 932 "sql.ypp"
+#line 935 "sql.ypp"
     { ((*yyvalp).intval) = 0; ;}
     break;
 
   case 147:
 
 /* Line 936 of glr.c  */
-#line 933 "sql.ypp"
+#line 936 "sql.ypp"
     { ((*yyvalp).intval) = 1; ;}
     break;
 
   case 148:
 
 /* Line 936 of glr.c  */
-#line 936 "sql.ypp"
+#line 939 "sql.ypp"
     { ((*yyvalp).ast_node) = newCreateColList(t_create_col_list, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.ast_node), NULL); ;}
     break;
 
   case 149:
 
 /* Line 936 of glr.c  */
-#line 937 "sql.ypp"
+#line 940 "sql.ypp"
     { ((*yyvalp).ast_node) = newCreateColList(t_create_col_list, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 150:
 
 /* Line 936 of glr.c  */
-#line 941 "sql.ypp"
+#line 944 "sql.ypp"
     { ((*yyvalp).ast_node) = newCreateDef( t_create_def, 1, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.strval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (3))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.ast_node), NULL); ;}
     break;
 
   case 151:
 
 /* Line 936 of glr.c  */
-#line 942 "sql.ypp"
+#line 945 "sql.ypp"
     { ((*yyvalp).ast_node) = newCreateDef( t_create_def, 2, NULL, NULL, NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (5))].yystate.yysemantics.yysval.ast_node)); /*puts("primary key ok!");*/ ;}
     break;
 
   case 152:
 
 /* Line 936 of glr.c  */
-#line 943 "sql.ypp"
+#line 946 "sql.ypp"
     { ((*yyvalp).ast_node) = newCreateDef( t_create_def, 3, NULL, NULL, NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (4))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 153:
 
 /* Line 936 of glr.c  */
-#line 944 "sql.ypp"
+#line 947 "sql.ypp"
     { ((*yyvalp).ast_node) = newCreateDef( t_create_def, 4, NULL, NULL, NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (4))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 154:
 
 /* Line 936 of glr.c  */
-#line 945 "sql.ypp"
+#line 948 "sql.ypp"
     { ((*yyvalp).ast_node) = newCreateDef( t_create_def, 5, NULL, NULL, NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (5))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 155:
 
 /* Line 936 of glr.c  */
-#line 946 "sql.ypp"
+#line 949 "sql.ypp"
     { ((*yyvalp).ast_node) = newCreateDef( t_create_def, 6, NULL, NULL, NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (5))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 156:
 
 /* Line 936 of glr.c  */
-#line 950 "sql.ypp"
+#line 953 "sql.ypp"
     { ((*yyvalp).ast_node) = newColumnAtts(t_column_atts, 0, 0, 0, NULL, NULL); ;}
     break;
 
   case 157:
 
 /* Line 936 of glr.c  */
-#line 951 "sql.ypp"
+#line 954 "sql.ypp"
     { Column_atts *t = (Column_atts *)(((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.ast_node); t->datatype |= 01; ((*yyvalp).ast_node) = (Node *)t; ;}
     break;
 
   case 158:
 
 /* Line 936 of glr.c  */
-#line 952 "sql.ypp"
+#line 955 "sql.ypp"
     { Column_atts *t = (Column_atts *)(((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (2))].yystate.yysemantics.yysval.ast_node); t->datatype |= 02; ((*yyvalp).ast_node) = (Node *)t; ;}
     break;
 
   case 159:
 
 /* Line 936 of glr.c  */
-#line 953 "sql.ypp"
+#line 956 "sql.ypp"
     { Column_atts *t = (Column_atts *)(((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.ast_node); t->datatype |= 04; t->s = (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.strval); ((*yyvalp).ast_node) = (Node *)t; ;}
     break;
 
   case 160:
 
 /* Line 936 of glr.c  */
-#line 954 "sql.ypp"
+#line 957 "sql.ypp"
     { Column_atts *t = (Column_atts *)(((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.ast_node); t->datatype |= 010; t->num1 = atoi((((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.strval)); ((*yyvalp).ast_node) = (Node *)t; ;}
     break;
 
   case 161:
 
 /* Line 936 of glr.c  */
-#line 955 "sql.ypp"
+#line 958 "sql.ypp"
     { Column_atts *t = (Column_atts *)(((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.ast_node); t->datatype |= 020; t->num2 = atof((((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.strval)); ((*yyvalp).ast_node) = (Node *)t; ;}
     break;
 
   case 162:
 
 /* Line 936 of glr.c  */
-#line 956 "sql.ypp"
+#line 959 "sql.ypp"
     { Column_atts *t = (Column_atts *)(((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.ast_node); t->datatype |= 040; t->num1 = atoi((((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.strval)); ((*yyvalp).ast_node) = (Node *)t; ;}
     break;
 
   case 163:
 
 /* Line 936 of glr.c  */
-#line 957 "sql.ypp"
+#line 960 "sql.ypp"
     { Column_atts *t = (Column_atts *)(((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (2))].yystate.yysemantics.yysval.ast_node); t->datatype |= 0100; ((*yyvalp).ast_node) = (Node *)t; ;}
     break;
 
   case 164:
 
 /* Line 936 of glr.c  */
-#line 958 "sql.ypp"
+#line 961 "sql.ypp"
     { Column_atts *t = (Column_atts *)(((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.ast_node); t->datatype |= 0200; ((*yyvalp).ast_node) = (Node *)t; ;}
     break;
 
   case 165:
 
 /* Line 936 of glr.c  */
-#line 959 "sql.ypp"
+#line 962 "sql.ypp"
     { Column_atts *t = (Column_atts *)(((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.ast_node); t->datatype |= 0400; ((*yyvalp).ast_node) = (Node *)t; ;}
     break;
 
   case 166:
 
 /* Line 936 of glr.c  */
-#line 960 "sql.ypp"
+#line 963 "sql.ypp"
     { Column_atts *t = (Column_atts *)(((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (2))].yystate.yysemantics.yysval.ast_node); t->datatype |= 01000; ((*yyvalp).ast_node) = (Node *)t; ;}
     break;
 
   case 167:
 
 /* Line 936 of glr.c  */
-#line 961 "sql.ypp"
+#line 964 "sql.ypp"
     { Column_atts *t = (Column_atts *)(((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.ast_node); t->datatype |= 02000; ((*yyvalp).ast_node) = (Node *)t; ;}
     break;
 
   case 168:
 
 /* Line 936 of glr.c  */
-#line 962 "sql.ypp"
+#line 965 "sql.ypp"
     { Column_atts *t = (Column_atts *)(((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (5))].yystate.yysemantics.yysval.ast_node); t->datatype |= 04000; t->col_list = (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (5))].yystate.yysemantics.yysval.ast_node); ((*yyvalp).ast_node) = (Node *)t; ;}
     break;
 
   case 169:
 
 /* Line 936 of glr.c  */
-#line 966 "sql.ypp"
+#line 969 "sql.ypp"
     { ((*yyvalp).ast_node) = (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.ast_node); puts("SQL parser： This is a create_projection statement"); ;}
     break;
 
   case 170:
 
 /* Line 936 of glr.c  */
-#line 971 "sql.ypp"
+#line 974 "sql.ypp"
     { ((*yyvalp).ast_node) = newCreateProjectionStmt(t_create_projection_stmt, (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (10))].yystate.yysemantics.yysval.strval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((6) - (10))].yystate.yysemantics.yysval.ast_node), 1, (((yyGLRStackItem const *)yyvsp)[YYFILL ((10) - (10))].yystate.yysemantics.yysval.strval)); ;}
     break;
 
   case 171:
 
 /* Line 936 of glr.c  */
-#line 973 "sql.ypp"
+#line 976 "sql.ypp"
     { 
 		if ((((yyGLRStackItem const *)yyvsp)[YYFILL ((9) - (13))].yystate.yysemantics.yysval.subtok) != 4) { yyerror("please give a specific number"); } 
 		else { ((*yyvalp).ast_node) = newCreateProjectionStmt(t_create_projection_stmt, (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (13))].yystate.yysemantics.yysval.strval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((6) - (13))].yystate.yysemantics.yysval.ast_node), atoi((((yyGLRStackItem const *)yyvsp)[YYFILL ((10) - (13))].yystate.yysemantics.yysval.strval)), (((yyGLRStackItem const *)yyvsp)[YYFILL ((13) - (13))].yystate.yysemantics.yysval.strval)); }
@@ -4127,1029 +4127,1071 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 172:
 
 /* Line 936 of glr.c  */
-#line 983 "sql.ypp"
+#line 986 "sql.ypp"
     { ((*yyvalp).ast_node) = newDoStmt(t_do_stmt,(((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (2))].yystate.yysemantics.yysval.ast_node)); puts("SQL parser： This is a do expr statement"); ;}
     break;
 
   case 173:
 
 /* Line 936 of glr.c  */
-#line 987 "sql.ypp"
+#line 990 "sql.ypp"
     { ((*yyvalp).ast_node) = (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.ast_node); puts("SQL parser： This is a truncate_stmt statement"); ;}
     break;
 
   case 174:
 
 /* Line 936 of glr.c  */
-#line 990 "sql.ypp"
+#line 993 "sql.ypp"
     { ((*yyvalp).ast_node) = newTruncateStmt(t_truncate_stmt, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (2))].yystate.yysemantics.yysval.strval)); ;}
     break;
 
   case 175:
 
 /* Line 936 of glr.c  */
-#line 991 "sql.ypp"
+#line 994 "sql.ypp"
     { ((*yyvalp).ast_node) = newTruncateStmt(t_truncate_stmt, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.strval)); ;}
     break;
 
   case 176:
 
 /* Line 936 of glr.c  */
-#line 995 "sql.ypp"
+#line 998 "sql.ypp"
     { ((*yyvalp).ast_node)=(((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.ast_node); output(((*yyvalp).ast_node), 1); puts("SQL parser： This is a alter_database statement"); ;}
     break;
 
   case 177:
 
 /* Line 936 of glr.c  */
-#line 999 "sql.ypp"
+#line 1002 "sql.ypp"
     { ((*yyvalp).ast_node) = newAlterDatabaseStmt(t_alter_database_stmt, 1, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (4))].yystate.yysemantics.yysval.strval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (4))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 178:
 
 /* Line 936 of glr.c  */
-#line 1000 "sql.ypp"
+#line 1003 "sql.ypp"
     { ((*yyvalp).ast_node) = newAlterDatabaseStmt(t_alter_database_stmt, 2, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (4))].yystate.yysemantics.yysval.strval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (4))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 179:
 
 /* Line 936 of glr.c  */
-#line 1004 "sql.ypp"
+#line 1007 "sql.ypp"
     { ((*yyvalp).ast_node)=(((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.ast_node); output(((*yyvalp).ast_node), 1); puts("SQL parser： This is a alter_table statement"); ;}
     break;
 
   case 180:
 
 /* Line 936 of glr.c  */
-#line 1009 "sql.ypp"
+#line 1012 "sql.ypp"
     { ((*yyvalp).ast_node) = newAlterTableStmt(t_alter_table_stmt, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (5))].yystate.yysemantics.yysval.intval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (5))].yystate.yysemantics.yysval.strval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (5))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 183:
 
 /* Line 936 of glr.c  */
-#line 1018 "sql.ypp"
+#line 1021 "sql.ypp"
     {;}
     break;
 
   case 184:
 
 /* Line 936 of glr.c  */
-#line 1019 "sql.ypp"
+#line 1022 "sql.ypp"
     {;}
     break;
 
   case 189:
 
 /* Line 936 of glr.c  */
-#line 1024 "sql.ypp"
+#line 1027 "sql.ypp"
     {;}
     break;
 
   case 190:
 
 /* Line 936 of glr.c  */
-#line 1025 "sql.ypp"
+#line 1028 "sql.ypp"
     {;}
     break;
 
   case 192:
 
 /* Line 936 of glr.c  */
-#line 1029 "sql.ypp"
+#line 1032 "sql.ypp"
     { ((*yyvalp).intval) = 0; ;}
     break;
 
   case 193:
 
 /* Line 936 of glr.c  */
-#line 1030 "sql.ypp"
+#line 1033 "sql.ypp"
     { ((*yyvalp).intval) = 1; ;}
     break;
 
   case 194:
 
 /* Line 936 of glr.c  */
-#line 1034 "sql.ypp"
+#line 1037 "sql.ypp"
     { ((*yyvalp).intval) = 0; ;}
     break;
 
   case 195:
 
 /* Line 936 of glr.c  */
-#line 1035 "sql.ypp"
+#line 1038 "sql.ypp"
     { ((*yyvalp).intval) = 1; ;}
     break;
 
   case 196:
 
 /* Line 936 of glr.c  */
-#line 1039 "sql.ypp"
+#line 1042 "sql.ypp"
     { ((*yyvalp).ast_node)=(((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.ast_node); output(((*yyvalp).ast_node), 1); puts("SQL parser： This is a create_index statement"); ;}
     break;
 
   case 197:
 
 /* Line 936 of glr.c  */
-#line 1044 "sql.ypp"
+#line 1047 "sql.ypp"
     { ((*yyvalp).ast_node) = newCreateIndex(t_create_index_stmt, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (10))].yystate.yysemantics.yysval.intval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (10))].yystate.yysemantics.yysval.strval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (10))].yystate.yysemantics.yysval.intval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((7) - (10))].yystate.yysemantics.yysval.strval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((9) - (10))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 198:
 
 /* Line 936 of glr.c  */
-#line 1047 "sql.ypp"
+#line 1050 "sql.ypp"
     { ((*yyvalp).intval) = 0;;}
     break;
 
   case 199:
 
 /* Line 936 of glr.c  */
-#line 1048 "sql.ypp"
+#line 1051 "sql.ypp"
     { ((*yyvalp).intval) = 1; ;}
     break;
 
   case 200:
 
 /* Line 936 of glr.c  */
-#line 1049 "sql.ypp"
+#line 1052 "sql.ypp"
     { ((*yyvalp).intval) = 2; ;}
     break;
 
   case 201:
 
 /* Line 936 of glr.c  */
-#line 1050 "sql.ypp"
+#line 1053 "sql.ypp"
     { ((*yyvalp).intval) = 3; ;}
     break;
 
   case 202:
 
 /* Line 936 of glr.c  */
-#line 1053 "sql.ypp"
+#line 1056 "sql.ypp"
     { ((*yyvalp).intval) = 0; ;}
     break;
 
   case 203:
 
 /* Line 936 of glr.c  */
-#line 1054 "sql.ypp"
+#line 1057 "sql.ypp"
     { ((*yyvalp).intval) = (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (2))].yystate.yysemantics.yysval.intval); ;}
     break;
 
   case 204:
 
 /* Line 936 of glr.c  */
-#line 1057 "sql.ypp"
+#line 1060 "sql.ypp"
     { ((*yyvalp).intval) = 1; ;}
     break;
 
   case 205:
 
 /* Line 936 of glr.c  */
-#line 1058 "sql.ypp"
+#line 1061 "sql.ypp"
     { ((*yyvalp).intval) = 2; ;}
     break;
 
   case 206:
 
 /* Line 936 of glr.c  */
-#line 1061 "sql.ypp"
+#line 1064 "sql.ypp"
     { ((*yyvalp).ast_node) = newIndexColList(t_index_col_list, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.strval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (3))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.intval), NULL); ;}
     break;
 
   case 207:
 
 /* Line 936 of glr.c  */
-#line 1062 "sql.ypp"
+#line 1065 "sql.ypp"
     { ((*yyvalp).ast_node) = newIndexColList(t_index_col_list, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (5))].yystate.yysemantics.yysval.strval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (5))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (5))].yystate.yysemantics.yysval.intval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (5))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 208:
 
 /* Line 936 of glr.c  */
-#line 1066 "sql.ypp"
+#line 1069 "sql.ypp"
     { ((*yyvalp).ast_node)=(((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.ast_node); output(((*yyvalp).ast_node), 1); puts("SQL parser： This is a drop_index statement"); ;}
     break;
 
   case 209:
 
 /* Line 936 of glr.c  */
-#line 1069 "sql.ypp"
+#line 1072 "sql.ypp"
     { ((*yyvalp).ast_node) = newDropIndex(t_drop_index, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (5))].yystate.yysemantics.yysval.strval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (5))].yystate.yysemantics.yysval.strval)); ;}
     break;
 
   case 210:
 
 /* Line 936 of glr.c  */
-#line 1073 "sql.ypp"
+#line 1076 "sql.ypp"
     { ((*yyvalp).ast_node)=(((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.ast_node); output(((*yyvalp).ast_node), 1); puts("SQL parser： This is a drop_database statement"); ;}
     break;
 
   case 211:
 
 /* Line 936 of glr.c  */
-#line 1077 "sql.ypp"
+#line 1080 "sql.ypp"
     { ((*yyvalp).ast_node) = newDropDatabase(t_drop_database_stmt, 1, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (4))].yystate.yysemantics.yysval.intval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (4))].yystate.yysemantics.yysval.strval)); ;}
     break;
 
   case 212:
 
 /* Line 936 of glr.c  */
-#line 1078 "sql.ypp"
+#line 1081 "sql.ypp"
     { ((*yyvalp).ast_node) = newDropDatabase(t_drop_database_stmt, 2, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (4))].yystate.yysemantics.yysval.intval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (4))].yystate.yysemantics.yysval.strval)); ;}
     break;
 
   case 213:
 
 /* Line 936 of glr.c  */
-#line 1081 "sql.ypp"
+#line 1084 "sql.ypp"
     { ((*yyvalp).intval) = 0; ;}
     break;
 
   case 214:
 
 /* Line 936 of glr.c  */
-#line 1082 "sql.ypp"
+#line 1085 "sql.ypp"
     { ((*yyvalp).intval) = 1; ;}
     break;
 
   case 215:
 
 /* Line 936 of glr.c  */
-#line 1086 "sql.ypp"
+#line 1089 "sql.ypp"
     { ((*yyvalp).ast_node)=(((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.ast_node); output(((*yyvalp).ast_node), 1); puts("SQL parser： This is a drop_table statement"); ;}
     break;
 
   case 216:
 
 /* Line 936 of glr.c  */
-#line 1089 "sql.ypp"
+#line 1092 "sql.ypp"
     { ((*yyvalp).ast_node) = newDropTable(t_drop_table_stmt, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (6))].yystate.yysemantics.yysval.intval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (6))].yystate.yysemantics.yysval.intval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((6) - (6))].yystate.yysemantics.yysval.intval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (6))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 217:
 
 /* Line 936 of glr.c  */
-#line 1092 "sql.ypp"
+#line 1095 "sql.ypp"
     { ((*yyvalp).ast_node) = newTableList(t_table_list, NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.strval), NULL); ;}
     break;
 
   case 218:
 
 /* Line 936 of glr.c  */
-#line 1093 "sql.ypp"
+#line 1096 "sql.ypp"
     { ((*yyvalp).ast_node) = newTableList(t_table_list, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.strval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.strval), NULL); ;}
     break;
 
   case 219:
 
 /* Line 936 of glr.c  */
-#line 1094 "sql.ypp"
+#line 1097 "sql.ypp"
     { ((*yyvalp).ast_node) = newTableList(t_table_list, NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.strval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 220:
 
 /* Line 936 of glr.c  */
-#line 1095 "sql.ypp"
+#line 1098 "sql.ypp"
     { ((*yyvalp).ast_node) = newTableList(t_table_list, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (5))].yystate.yysemantics.yysval.strval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (5))].yystate.yysemantics.yysval.strval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (5))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 221:
 
 /* Line 936 of glr.c  */
-#line 1098 "sql.ypp"
+#line 1101 "sql.ypp"
     { ((*yyvalp).intval) = 0; ;}
     break;
 
   case 222:
 
 /* Line 936 of glr.c  */
-#line 1099 "sql.ypp"
+#line 1102 "sql.ypp"
     { ((*yyvalp).intval) = 1; ;}
     break;
 
   case 223:
 
 /* Line 936 of glr.c  */
-#line 1100 "sql.ypp"
+#line 1103 "sql.ypp"
     { ((*yyvalp).intval) = 2; ;}
     break;
 
   case 224:
 
 /* Line 936 of glr.c  */
-#line 1104 "sql.ypp"
+#line 1107 "sql.ypp"
     { ((*yyvalp).ast_node)=(((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.ast_node); output(((*yyvalp).ast_node), 1); puts("SQL parser： This is a load_table statement"); ;}
     break;
 
   case 225:
 
 /* Line 936 of glr.c  */
-#line 1107 "sql.ypp"
+#line 1110 "sql.ypp"
     { ((*yyvalp).ast_node) = newLoadTable(t_load_table_stmt, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (9))].yystate.yysemantics.yysval.strval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (9))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((7) - (9))].yystate.yysemantics.yysval.strval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((9) - (9))].yystate.yysemantics.yysval.strval));;}
     break;
 
   case 226:
 
 /* Line 936 of glr.c  */
-#line 1111 "sql.ypp"
+#line 1114 "sql.ypp"
     { emit("STMT"); ;}
     break;
 
   case 227:
 
 /* Line 936 of glr.c  */
-#line 1114 "sql.ypp"
+#line 1117 "sql.ypp"
     {;}
     break;
 
   case 228:
 
 /* Line 936 of glr.c  */
-#line 1117 "sql.ypp"
+#line 1120 "sql.ypp"
     {;}
     break;
 
   case 229:
 
 /* Line 936 of glr.c  */
-#line 1118 "sql.ypp"
+#line 1121 "sql.ypp"
     {;}
     break;
 
   case 230:
 
 /* Line 936 of glr.c  */
-#line 1119 "sql.ypp"
+#line 1122 "sql.ypp"
     {;}
     break;
 
   case 231:
 
 /* Line 936 of glr.c  */
-#line 1120 "sql.ypp"
+#line 1123 "sql.ypp"
     {;}
     break;
 
   case 232:
 
 /* Line 936 of glr.c  */
-#line 1121 "sql.ypp"
+#line 1124 "sql.ypp"
     {;}
     break;
 
   case 233:
 
 /* Line 936 of glr.c  */
-#line 1125 "sql.ypp"
+#line 1128 "sql.ypp"
     { emit("STMT"); ;}
     break;
 
   case 234:
 
 /* Line 936 of glr.c  */
-#line 1128 "sql.ypp"
+#line 1131 "sql.ypp"
     {;}
     break;
 
   case 235:
 
 /* Line 936 of glr.c  */
-#line 1129 "sql.ypp"
+#line 1132 "sql.ypp"
     {;}
     break;
 
   case 236:
 
 /* Line 936 of glr.c  */
-#line 1133 "sql.ypp"
+#line 1136 "sql.ypp"
     { emit("STMT"); ;}
     break;
 
   case 237:
 
 /* Line 936 of glr.c  */
-#line 1136 "sql.ypp"
+#line 1139 "sql.ypp"
     {;}
     break;
 
   case 238:
 
 /* Line 936 of glr.c  */
-#line 1140 "sql.ypp"
+#line 1143 "sql.ypp"
     { emit("STMT"); ;}
     break;
 
   case 239:
 
 /* Line 936 of glr.c  */
-#line 1141 "sql.ypp"
+#line 1144 "sql.ypp"
     { emit("STMT"); ;}
     break;
 
   case 240:
 
 /* Line 936 of glr.c  */
-#line 1142 "sql.ypp"
+#line 1145 "sql.ypp"
     { emit("STMT"); ;}
     break;
 
   case 245:
 
 /* Line 936 of glr.c  */
-#line 1153 "sql.ypp"
+#line 1156 "sql.ypp"
     { emit("STMT"); ;}
     break;
 
   case 246:
 
 /* Line 936 of glr.c  */
-#line 1156 "sql.ypp"
+#line 1159 "sql.ypp"
     { ((*yyvalp).intval) = 0; ;}
     break;
 
   case 247:
 
 /* Line 936 of glr.c  */
-#line 1157 "sql.ypp"
+#line 1160 "sql.ypp"
     { ((*yyvalp).intval) = 1; ;}
     break;
 
   case 248:
 
 /* Line 936 of glr.c  */
-#line 1158 "sql.ypp"
+#line 1161 "sql.ypp"
     { ((*yyvalp).intval) = 2; ;}
     break;
 
   case 249:
 
 /* Line 936 of glr.c  */
-#line 1161 "sql.ypp"
+#line 1164 "sql.ypp"
     { ((*yyvalp).intval) = 0; ;}
     break;
 
   case 250:
 
 /* Line 936 of glr.c  */
-#line 1162 "sql.ypp"
+#line 1165 "sql.ypp"
     { ((*yyvalp).intval) = 1; ;}
     break;
 
   case 251:
 
 /* Line 936 of glr.c  */
-#line 1163 "sql.ypp"
+#line 1166 "sql.ypp"
     { ((*yyvalp).intval) = 2; ;}
     break;
 
   case 252:
 
 /* Line 936 of glr.c  */
-#line 1166 "sql.ypp"
+#line 1169 "sql.ypp"
     { emit("STMT"); ;}
     break;
 
   case 253:
 
 /* Line 936 of glr.c  */
-#line 1170 "sql.ypp"
+#line 1173 "sql.ypp"
     { emit("STMT"); ;}
     break;
 
   case 261:
 
 /* Line 936 of glr.c  */
-#line 1193 "sql.ypp"
+#line 1196 "sql.ypp"
     { emit("STMT"); ;}
     break;
 
   case 266:
 
 /* Line 936 of glr.c  */
-#line 1206 "sql.ypp"
+#line 1209 "sql.ypp"
     { ((*yyvalp).intval) = 1; ;}
     break;
 
   case 267:
 
 /* Line 936 of glr.c  */
-#line 1207 "sql.ypp"
+#line 1210 "sql.ypp"
     { ((*yyvalp).intval) = 2; ;}
     break;
 
   case 268:
 
 /* Line 936 of glr.c  */
-#line 1208 "sql.ypp"
+#line 1211 "sql.ypp"
     { ((*yyvalp).intval) = 3; ;}
     break;
 
   case 269:
 
 /* Line 936 of glr.c  */
-#line 1209 "sql.ypp"
+#line 1212 "sql.ypp"
     { ((*yyvalp).intval) = 4; ;}
     break;
 
   case 274:
 
 /* Line 936 of glr.c  */
-#line 1227 "sql.ypp"
+#line 1230 "sql.ypp"
     { ((*yyvalp).intval) = 0; ;}
     break;
 
   case 275:
 
 /* Line 936 of glr.c  */
-#line 1228 "sql.ypp"
+#line 1231 "sql.ypp"
     { ((*yyvalp).intval) = 1; ;}
     break;
 
   case 276:
 
 /* Line 936 of glr.c  */
-#line 1229 "sql.ypp"
+#line 1232 "sql.ypp"
     { ((*yyvalp).intval) = 2; ;}
     break;
 
   case 277:
 
 /* Line 936 of glr.c  */
-#line 1233 "sql.ypp"
+#line 1236 "sql.ypp"
     { ((*yyvalp).intval) = 1; ;}
     break;
 
   case 278:
 
 /* Line 936 of glr.c  */
-#line 1234 "sql.ypp"
+#line 1237 "sql.ypp"
     { ((*yyvalp).intval) = 2; ;}
     break;
 
   case 279:
 
 /* Line 936 of glr.c  */
-#line 1235 "sql.ypp"
+#line 1238 "sql.ypp"
     { ((*yyvalp).intval) = 3; ;}
     break;
 
   case 280:
 
 /* Line 936 of glr.c  */
-#line 1236 "sql.ypp"
+#line 1239 "sql.ypp"
     { ((*yyvalp).intval) = 4; ;}
     break;
 
   case 281:
 
 /* Line 936 of glr.c  */
-#line 1240 "sql.ypp"
+#line 1243 "sql.ypp"
     { emit("STMT"); ;}
     break;
 
   case 288:
 
 /* Line 936 of glr.c  */
-#line 1256 "sql.ypp"
+#line 1259 "sql.ypp"
     { emit("STMT"); ;}
     break;
 
   case 292:
 
 /* Line 936 of glr.c  */
-#line 1267 "sql.ypp"
+#line 1270 "sql.ypp"
     { emit("STMT"); ;}
     break;
 
   case 296:
 
 /* Line 936 of glr.c  */
-#line 1278 "sql.ypp"
+#line 1281 "sql.ypp"
     { ((*yyvalp).intval) = 01; ;}
     break;
 
   case 297:
 
 /* Line 936 of glr.c  */
-#line 1279 "sql.ypp"
+#line 1282 "sql.ypp"
     { ((*yyvalp).intval) = 02; ;}
     break;
 
   case 298:
 
 /* Line 936 of glr.c  */
-#line 1280 "sql.ypp"
+#line 1283 "sql.ypp"
     { ((*yyvalp).intval) = 04; ;}
     break;
 
   case 299:
 
 /* Line 936 of glr.c  */
-#line 1281 "sql.ypp"
+#line 1284 "sql.ypp"
     { ((*yyvalp).intval) = 010; ;}
     break;
 
   case 300:
 
 /* Line 936 of glr.c  */
-#line 1282 "sql.ypp"
+#line 1285 "sql.ypp"
     { ((*yyvalp).intval) = 020; ;}
     break;
 
   case 301:
 
 /* Line 936 of glr.c  */
-#line 1283 "sql.ypp"
+#line 1286 "sql.ypp"
     { ((*yyvalp).intval) = 040; ;}
     break;
 
   case 302:
 
 /* Line 936 of glr.c  */
-#line 1284 "sql.ypp"
+#line 1287 "sql.ypp"
     { ((*yyvalp).intval) = 0100; ;}
     break;
 
   case 303:
 
 /* Line 936 of glr.c  */
-#line 1285 "sql.ypp"
+#line 1288 "sql.ypp"
     { ((*yyvalp).intval) = 0200; ;}
     break;
 
   case 304:
 
 /* Line 936 of glr.c  */
-#line 1286 "sql.ypp"
+#line 1289 "sql.ypp"
     { ((*yyvalp).intval) = 0400; ;}
     break;
 
   case 305:
 
 /* Line 936 of glr.c  */
-#line 1287 "sql.ypp"
+#line 1290 "sql.ypp"
     { ((*yyvalp).intval) = 01000; ;}
     break;
 
   case 306:
 
 /* Line 936 of glr.c  */
-#line 1288 "sql.ypp"
+#line 1291 "sql.ypp"
     { ((*yyvalp).intval) = 02000; ;}
     break;
 
   case 307:
 
 /* Line 936 of glr.c  */
-#line 1289 "sql.ypp"
+#line 1292 "sql.ypp"
     { ((*yyvalp).intval) = 04000; ;}
     break;
 
   case 315:
 
 /* Line 936 of glr.c  */
-#line 1305 "sql.ypp"
+#line 1308 "sql.ypp"
     { emit("STMT"); ;}
     break;
 
   case 317:
 
 /* Line 936 of glr.c  */
-#line 1312 "sql.ypp"
+#line 1315 "sql.ypp"
     { emit("STMT"); ;}
     break;
 
   case 330:
 
 /* Line 936 of glr.c  */
-#line 1341 "sql.ypp"
+#line 1344 "sql.ypp"
     { emit("STMT"); ;}
     break;
 
   case 332:
 
 /* Line 936 of glr.c  */
-#line 1347 "sql.ypp"
+#line 1350 "sql.ypp"
     { emit("STMT"); ;}
     break;
 
   case 334:
 
 /* Line 936 of glr.c  */
-#line 1353 "sql.ypp"
+#line 1356 "sql.ypp"
     { emit("STMT"); ;}
     break;
 
   case 336:
 
 /* Line 936 of glr.c  */
-#line 1360 "sql.ypp"
+#line 1363 "sql.ypp"
     { emit("STMT"); ;}
     break;
 
   case 340:
 
 /* Line 936 of glr.c  */
-#line 1372 "sql.ypp"
+#line 1375 "sql.ypp"
     { emit("STMT"); ;}
     break;
 
   case 344:
 
 /* Line 936 of glr.c  */
-#line 1383 "sql.ypp"
+#line 1386 "sql.ypp"
     { emit("STMT"); ;}
     break;
 
   case 346:
 
 /* Line 936 of glr.c  */
-#line 1389 "sql.ypp"
+#line 1392 "sql.ypp"
     { ((*yyvalp).intval) = 0; ;}
     break;
 
   case 347:
 
 /* Line 936 of glr.c  */
-#line 1390 "sql.ypp"
+#line 1393 "sql.ypp"
     { ((*yyvalp).intval) = 1; ;}
     break;
 
   case 348:
 
 /* Line 936 of glr.c  */
-#line 1391 "sql.ypp"
+#line 1394 "sql.ypp"
     { ((*yyvalp).intval) = 2; ;}
     break;
 
   case 349:
 
 /* Line 936 of glr.c  */
-#line 1395 "sql.ypp"
+#line 1398 "sql.ypp"
     { emit("STMT"); ;}
     break;
 
   case 351:
 
 /* Line 936 of glr.c  */
-#line 1402 "sql.ypp"
+#line 1405 "sql.ypp"
     { emit("STMT"); ;}
     break;
 
   case 353:
 
 /* Line 936 of glr.c  */
-#line 1408 "sql.ypp"
+#line 1411 "sql.ypp"
     { ((*yyvalp).intval) = 0; ;}
     break;
 
   case 354:
 
 /* Line 936 of glr.c  */
-#line 1409 "sql.ypp"
+#line 1412 "sql.ypp"
     { ((*yyvalp).intval) = 1; ;}
     break;
 
   case 355:
 
 /* Line 936 of glr.c  */
-#line 1410 "sql.ypp"
+#line 1413 "sql.ypp"
     { ((*yyvalp).intval) = 2; ;}
     break;
 
   case 356:
 
 /* Line 936 of glr.c  */
-#line 1411 "sql.ypp"
+#line 1414 "sql.ypp"
     { ((*yyvalp).intval) = 3; ;}
     break;
 
   case 357:
 
 /* Line 936 of glr.c  */
-#line 1412 "sql.ypp"
+#line 1415 "sql.ypp"
     { ((*yyvalp).intval) = 4; ;}
     break;
 
   case 358:
 
 /* Line 936 of glr.c  */
-#line 1413 "sql.ypp"
+#line 1416 "sql.ypp"
     { ((*yyvalp).intval) = 5; ;}
     break;
 
   case 359:
 
 /* Line 936 of glr.c  */
-#line 1417 "sql.ypp"
+#line 1420 "sql.ypp"
     { emit("STMT"); ;}
     break;
 
   case 361:
 
 /* Line 936 of glr.c  */
-#line 1423 "sql.ypp"
+#line 1426 "sql.ypp"
     { ((*yyvalp).intval) = 0; ;}
     break;
 
   case 362:
 
 /* Line 936 of glr.c  */
-#line 1424 "sql.ypp"
+#line 1427 "sql.ypp"
     { ((*yyvalp).intval) = 1; ;}
     break;
 
   case 363:
 
 /* Line 936 of glr.c  */
-#line 1425 "sql.ypp"
+#line 1428 "sql.ypp"
     { ((*yyvalp).intval) = 2; ;}
     break;
 
   case 364:
 
 /* Line 936 of glr.c  */
-#line 1429 "sql.ypp"
+#line 1432 "sql.ypp"
     { emit("STMT"); ;}
     break;
 
   case 366:
 
 /* Line 936 of glr.c  */
-#line 1436 "sql.ypp"
+#line 1439 "sql.ypp"
     { emit("STMT"); ;}
     break;
 
   case 372:
 
 /* Line 936 of glr.c  */
-#line 1449 "sql.ypp"
+#line 1452 "sql.ypp"
     { emit("STMT"); ;}
+    break;
+
+  case 374:
+
+/* Line 936 of glr.c  */
+#line 1458 "sql.ypp"
+    { ((*yyvalp).ast_node) = (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.ast_node); output(((*yyvalp).ast_node), 1); puts("SQL parser： This is a show statement"); ;}
+    break;
+
+  case 375:
+
+/* Line 936 of glr.c  */
+#line 1461 "sql.ypp"
+    { ((*yyvalp).ast_node) = newShowStmt(1, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (5))].yystate.yysemantics.yysval.intval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (5))].yystate.yysemantics.yysval.strval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (5))].yystate.yysemantics.yysval.strval)); ;}
     break;
 
   case 402:
 
 /* Line 936 of glr.c  */
-#line 1488 "sql.ypp"
+#line 1490 "sql.ypp"
     { ((*yyvalp).intval) = 0; ;}
     break;
 
   case 403:
 
 /* Line 936 of glr.c  */
-#line 1489 "sql.ypp"
+#line 1491 "sql.ypp"
     { ((*yyvalp).intval) = 1; ;}
+    break;
+
+  case 404:
+
+/* Line 936 of glr.c  */
+#line 1494 "sql.ypp"
+    { ((*yyvalp).strval) = NULL; ;}
+    break;
+
+  case 405:
+
+/* Line 936 of glr.c  */
+#line 1495 "sql.ypp"
+    { ((*yyvalp).strval) = (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (2))].yystate.yysemantics.yysval.strval); ;}
+    break;
+
+  case 406:
+
+/* Line 936 of glr.c  */
+#line 1498 "sql.ypp"
+    { ((*yyvalp).strval) = NULL; ;}
+    break;
+
+  case 407:
+
+/* Line 936 of glr.c  */
+#line 1499 "sql.ypp"
+    { ((*yyvalp).strval) = (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (2))].yystate.yysemantics.yysval.strval); ;}
     break;
 
   case 418:
 
 /* Line 936 of glr.c  */
-#line 1523 "sql.ypp"
+#line 1525 "sql.ypp"
     { ((*yyvalp).intval) = 0; ;}
     break;
 
   case 419:
 
 /* Line 936 of glr.c  */
-#line 1524 "sql.ypp"
+#line 1526 "sql.ypp"
     { ((*yyvalp).intval) = 1; ;}
     break;
 
   case 420:
 
 /* Line 936 of glr.c  */
-#line 1525 "sql.ypp"
+#line 1527 "sql.ypp"
     { ((*yyvalp).intval) = 2; ;}
     break;
 
   case 425:
 
 /* Line 936 of glr.c  */
-#line 1539 "sql.ypp"
+#line 1541 "sql.ypp"
     { ((*yyvalp).intval) = 1; ;}
     break;
 
   case 426:
 
 /* Line 936 of glr.c  */
-#line 1540 "sql.ypp"
+#line 1542 "sql.ypp"
     { ((*yyvalp).intval) = 2; ;}
     break;
 
   case 427:
 
 /* Line 936 of glr.c  */
-#line 1541 "sql.ypp"
+#line 1543 "sql.ypp"
     { ((*yyvalp).intval) = 04; ;}
     break;
 
   case 428:
 
 /* Line 936 of glr.c  */
-#line 1542 "sql.ypp"
+#line 1544 "sql.ypp"
     { ((*yyvalp).intval) = 010; ;}
     break;
 
   case 429:
 
 /* Line 936 of glr.c  */
-#line 1543 "sql.ypp"
+#line 1545 "sql.ypp"
     { ((*yyvalp).intval) = 020; ;}
     break;
 
   case 430:
 
 /* Line 936 of glr.c  */
-#line 1544 "sql.ypp"
+#line 1546 "sql.ypp"
     { ((*yyvalp).intval) = 040; ;}
     break;
 
   case 431:
 
 /* Line 936 of glr.c  */
-#line 1545 "sql.ypp"
+#line 1547 "sql.ypp"
     { ((*yyvalp).intval) = 0100; ;}
     break;
 
   case 432:
 
 /* Line 936 of glr.c  */
-#line 1546 "sql.ypp"
+#line 1548 "sql.ypp"
     { ((*yyvalp).intval) = 0200; ;}
     break;
 
   case 433:
 
 /* Line 936 of glr.c  */
-#line 1547 "sql.ypp"
+#line 1549 "sql.ypp"
     { ((*yyvalp).intval) = 0400; ;}
     break;
 
   case 434:
 
 /* Line 936 of glr.c  */
-#line 1548 "sql.ypp"
+#line 1550 "sql.ypp"
     { ((*yyvalp).intval) = 01000; ;}
     break;
 
   case 437:
 
 /* Line 936 of glr.c  */
-#line 1558 "sql.ypp"
+#line 1560 "sql.ypp"
     { ((*yyvalp).intval) = 0; ;}
     break;
 
   case 438:
 
 /* Line 936 of glr.c  */
-#line 1559 "sql.ypp"
+#line 1561 "sql.ypp"
     { ((*yyvalp).intval) = 1; ;}
     break;
 
   case 439:
 
 /* Line 936 of glr.c  */
-#line 1560 "sql.ypp"
+#line 1562 "sql.ypp"
     { ((*yyvalp).intval) = 2; ;}
     break;
 
   case 450:
 
 /* Line 936 of glr.c  */
-#line 1591 "sql.ypp"
+#line 1593 "sql.ypp"
     { ((*yyvalp).intval) = 1; ;}
     break;
 
   case 451:
 
 /* Line 936 of glr.c  */
-#line 1592 "sql.ypp"
+#line 1594 "sql.ypp"
     { ((*yyvalp).intval) = 2; ;}
     break;
 
   case 452:
 
 /* Line 936 of glr.c  */
-#line 1593 "sql.ypp"
+#line 1595 "sql.ypp"
     { ((*yyvalp).intval) = 3; ;}
     break;
 
   case 461:
 
 /* Line 936 of glr.c  */
-#line 1618 "sql.ypp"
+#line 1620 "sql.ypp"
     { emit("STMT"); ;}
     break;
 
   case 465:
 
 /* Line 936 of glr.c  */
-#line 1627 "sql.ypp"
+#line 1629 "sql.ypp"
     { if ((((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (3))].yystate.yysemantics.yysval.subtok) != 4) yyerror("bad set to @%s", (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.strval));
 		emit("SET %s", (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.strval)); free((((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.strval));
 	;}
@@ -5158,7 +5200,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 466:
 
 /* Line 936 of glr.c  */
-#line 1631 "sql.ypp"
+#line 1633 "sql.ypp"
     {
     	emit("SET %s", (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.strval)); 
     	free((((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.strval)); 
@@ -5168,903 +5210,903 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 467:
 
 /* Line 936 of glr.c  */
-#line 1638 "sql.ypp"
+#line 1640 "sql.ypp"
     { ((*yyvalp).ast_node) = NULL; ;}
     break;
 
   case 468:
 
 /* Line 936 of glr.c  */
-#line 1639 "sql.ypp"
+#line 1641 "sql.ypp"
     { ((*yyvalp).ast_node) = newLength (t_length, atoi((((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (3))].yystate.yysemantics.yysval.strval)), 0); ;}
     break;
 
   case 469:
 
 /* Line 936 of glr.c  */
-#line 1640 "sql.ypp"
+#line 1642 "sql.ypp"
     { ((*yyvalp).ast_node) = newLength (t_length, atoi((((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (5))].yystate.yysemantics.yysval.strval)), atoi((((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (5))].yystate.yysemantics.yysval.strval))); ;}
     break;
 
   case 470:
 
 /* Line 936 of glr.c  */
-#line 1643 "sql.ypp"
+#line 1645 "sql.ypp"
     { ((*yyvalp).intval) = 0; ;}
     break;
 
   case 471:
 
 /* Line 936 of glr.c  */
-#line 1644 "sql.ypp"
+#line 1646 "sql.ypp"
     { ((*yyvalp).intval) = 1; ;}
     break;
 
   case 472:
 
 /* Line 936 of glr.c  */
-#line 1647 "sql.ypp"
+#line 1649 "sql.ypp"
     { ((*yyvalp).intval) = 0; ;}
     break;
 
   case 473:
 
 /* Line 936 of glr.c  */
-#line 1648 "sql.ypp"
+#line 1650 "sql.ypp"
     { ((*yyvalp).intval) = (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (2))].yystate.yysemantics.yysval.intval) | 01; ;}
     break;
 
   case 474:
 
 /* Line 936 of glr.c  */
-#line 1649 "sql.ypp"
+#line 1651 "sql.ypp"
     { ((*yyvalp).intval) = (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (2))].yystate.yysemantics.yysval.intval) | 02; ;}
     break;
 
   case 475:
 
 /* Line 936 of glr.c  */
-#line 1652 "sql.ypp"
+#line 1654 "sql.ypp"
     { ((*yyvalp).ast_node) =newOptCsc(t_opt_csc, 0, NULL, NULL);;}
     break;
 
   case 476:
 
 /* Line 936 of glr.c  */
-#line 1654 "sql.ypp"
+#line 1656 "sql.ypp"
     { Opt_csc * t = (Opt_csc *)(((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (4))].yystate.yysemantics.yysval.ast_node); t->datatype = t->datatype | 01; t->s1 = (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (4))].yystate.yysemantics.yysval.strval); ((*yyvalp).ast_node) = (Node *)t; ;}
     break;
 
   case 477:
 
 /* Line 936 of glr.c  */
-#line 1656 "sql.ypp"
+#line 1658 "sql.ypp"
     { Opt_csc * t = (Opt_csc *)(((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.ast_node); t->datatype = t->datatype | 02; t->s2 = (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.strval); ((*yyvalp).ast_node) = (Node *)t; ;}
     break;
 
   case 478:
 
 /* Line 936 of glr.c  */
-#line 1660 "sql.ypp"
+#line 1662 "sql.ypp"
     { ((*yyvalp).ast_node) = newDatatype (t_datatype, 1, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (2))].yystate.yysemantics.yysval.ast_node), 0, NULL, 0, NULL); ;}
     break;
 
   case 479:
 
 /* Line 936 of glr.c  */
-#line 1661 "sql.ypp"
+#line 1663 "sql.ypp"
     { ((*yyvalp).ast_node) = newDatatype (t_datatype, 2, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (3))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.intval), NULL, 0, NULL); ;}
     break;
 
   case 480:
 
 /* Line 936 of glr.c  */
-#line 1662 "sql.ypp"
+#line 1664 "sql.ypp"
     { ((*yyvalp).ast_node) = newDatatype (t_datatype, 3, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (3))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.intval), NULL, 0, NULL); ;}
     break;
 
   case 481:
 
 /* Line 936 of glr.c  */
-#line 1663 "sql.ypp"
+#line 1665 "sql.ypp"
     { ((*yyvalp).ast_node) = newDatatype (t_datatype, 4, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (3))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.intval), NULL, 0, NULL); ;}
     break;
 
   case 482:
 
 /* Line 936 of glr.c  */
-#line 1664 "sql.ypp"
+#line 1666 "sql.ypp"
     { ((*yyvalp).ast_node) = newDatatype (t_datatype, 5, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (3))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.intval), NULL, 0, NULL); ;}
     break;
 
   case 483:
 
 /* Line 936 of glr.c  */
-#line 1665 "sql.ypp"
+#line 1667 "sql.ypp"
     { ((*yyvalp).ast_node) = newDatatype (t_datatype, 6, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (3))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.intval), NULL, 0, NULL); ;}
     break;
 
   case 484:
 
 /* Line 936 of glr.c  */
-#line 1666 "sql.ypp"
+#line 1668 "sql.ypp"
     { ((*yyvalp).ast_node) = newDatatype (t_datatype, 7, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (3))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.intval), NULL, 0, NULL); ;}
     break;
 
   case 485:
 
 /* Line 936 of glr.c  */
-#line 1667 "sql.ypp"
+#line 1669 "sql.ypp"
     { ((*yyvalp).ast_node) = newDatatype (t_datatype, 8, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (3))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.intval), NULL, 0, NULL); ;}
     break;
 
   case 486:
 
 /* Line 936 of glr.c  */
-#line 1668 "sql.ypp"
+#line 1670 "sql.ypp"
     { ((*yyvalp).ast_node) = newDatatype (t_datatype, 9, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (3))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.intval), NULL, 0, NULL); ;}
     break;
 
   case 487:
 
 /* Line 936 of glr.c  */
-#line 1669 "sql.ypp"
+#line 1671 "sql.ypp"
     { ((*yyvalp).ast_node) = newDatatype (t_datatype, 10, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (3))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.intval), NULL, 0, NULL); ;}
     break;
 
   case 488:
 
 /* Line 936 of glr.c  */
-#line 1670 "sql.ypp"
+#line 1672 "sql.ypp"
     { ((*yyvalp).ast_node) = newDatatype (t_datatype, 11, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (3))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.intval), NULL, 0, NULL); ;}
     break;
 
   case 489:
 
 /* Line 936 of glr.c  */
-#line 1671 "sql.ypp"
+#line 1673 "sql.ypp"
     { ((*yyvalp).ast_node) = newDatatype (t_datatype, 12, NULL, 0, NULL, 0, NULL); ;}
     break;
 
   case 490:
 
 /* Line 936 of glr.c  */
-#line 1672 "sql.ypp"
+#line 1674 "sql.ypp"
     { ((*yyvalp).ast_node) = newDatatype (t_datatype, 13, NULL, 0, NULL, 0, NULL); ;}
     break;
 
   case 491:
 
 /* Line 936 of glr.c  */
-#line 1673 "sql.ypp"
+#line 1675 "sql.ypp"
     { ((*yyvalp).ast_node) = newDatatype (t_datatype, 14, NULL, 0, NULL, 0, NULL); ;}
     break;
 
   case 492:
 
 /* Line 936 of glr.c  */
-#line 1674 "sql.ypp"
+#line 1676 "sql.ypp"
     { ((*yyvalp).ast_node) = newDatatype (t_datatype, 15, NULL, 0, NULL, 0, NULL); ;}
     break;
 
   case 493:
 
 /* Line 936 of glr.c  */
-#line 1675 "sql.ypp"
+#line 1677 "sql.ypp"
     { ((*yyvalp).ast_node) = newDatatype (t_datatype, 16, NULL, 0, NULL, 0, NULL); ;}
     break;
 
   case 494:
 
 /* Line 936 of glr.c  */
-#line 1676 "sql.ypp"
+#line 1678 "sql.ypp"
     { ((*yyvalp).ast_node) = newDatatype (t_datatype, 17, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (3))].yystate.yysemantics.yysval.ast_node), 0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.ast_node), 0, NULL); ;}
     break;
 
   case 495:
 
 /* Line 936 of glr.c  */
-#line 1677 "sql.ypp"
+#line 1679 "sql.ypp"
     { Node * t = newLength(t_datatype, atoi((((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (5))].yystate.yysemantics.yysval.strval)), NULL); ((*yyvalp).ast_node) = newDatatype (t_datatype, 18, t, 0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (5))].yystate.yysemantics.yysval.ast_node), 0, NULL); ;}
     break;
 
   case 496:
 
 /* Line 936 of glr.c  */
-#line 1678 "sql.ypp"
+#line 1680 "sql.ypp"
     { ((*yyvalp).ast_node) = newDatatype (t_datatype, 19, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (2))].yystate.yysemantics.yysval.ast_node), 0, NULL, 0, NULL); ;}
     break;
 
   case 497:
 
 /* Line 936 of glr.c  */
-#line 1679 "sql.ypp"
+#line 1681 "sql.ypp"
     {  Node * t = newLength(t_datatype, atoi((((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (4))].yystate.yysemantics.yysval.strval)), NULL); ((*yyvalp).ast_node) = newDatatype (t_datatype, 20, t, 0, NULL, 0, NULL); ;}
     break;
 
   case 498:
 
 /* Line 936 of glr.c  */
-#line 1680 "sql.ypp"
+#line 1682 "sql.ypp"
     { ((*yyvalp).ast_node) = newDatatype (t_datatype, 21, NULL, 0, NULL, 0, NULL); ;}
     break;
 
   case 499:
 
 /* Line 936 of glr.c  */
-#line 1681 "sql.ypp"
+#line 1683 "sql.ypp"
     { ((*yyvalp).ast_node) = newDatatype (t_datatype, 22, NULL, 0, NULL, 0, NULL); ;}
     break;
 
   case 500:
 
 /* Line 936 of glr.c  */
-#line 1682 "sql.ypp"
+#line 1684 "sql.ypp"
     { ((*yyvalp).ast_node) = newDatatype (t_datatype, 23, NULL, 0, NULL, 0, NULL); ;}
     break;
 
   case 501:
 
 /* Line 936 of glr.c  */
-#line 1683 "sql.ypp"
+#line 1685 "sql.ypp"
     { ((*yyvalp).ast_node) = newDatatype (t_datatype, 24, NULL, 0, NULL, 0, NULL); ;}
     break;
 
   case 502:
 
 /* Line 936 of glr.c  */
-#line 1684 "sql.ypp"
+#line 1686 "sql.ypp"
     { ((*yyvalp).ast_node) = newDatatype (t_datatype, 25, NULL, 0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (3))].yystate.yysemantics.yysval.intval), NULL); ;}
     break;
 
   case 503:
 
 /* Line 936 of glr.c  */
-#line 1685 "sql.ypp"
+#line 1687 "sql.ypp"
     { ((*yyvalp).ast_node) = newDatatype (t_datatype, 26, NULL, 0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (3))].yystate.yysemantics.yysval.intval), NULL); ;}
     break;
 
   case 504:
 
 /* Line 936 of glr.c  */
-#line 1686 "sql.ypp"
+#line 1688 "sql.ypp"
     { ((*yyvalp).ast_node) = newDatatype (t_datatype, 27, NULL, 0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (3))].yystate.yysemantics.yysval.intval), NULL); ;}
     break;
 
   case 505:
 
 /* Line 936 of glr.c  */
-#line 1687 "sql.ypp"
+#line 1689 "sql.ypp"
     { ((*yyvalp).ast_node) = newDatatype (t_datatype, 28, NULL, 0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (3))].yystate.yysemantics.yysval.intval), NULL); ;}
     break;
 
   case 506:
 
 /* Line 936 of glr.c  */
-#line 1688 "sql.ypp"
+#line 1690 "sql.ypp"
     { ((*yyvalp).ast_node) = newDatatype (t_datatype, 29, NULL, 0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (5))].yystate.yysemantics.yysval.ast_node), 0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (5))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 507:
 
 /* Line 936 of glr.c  */
-#line 1689 "sql.ypp"
+#line 1691 "sql.ypp"
     { ((*yyvalp).ast_node) = newDatatype (t_datatype, 30, NULL, 0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (5))].yystate.yysemantics.yysval.ast_node), 0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (5))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 508:
 
 /* Line 936 of glr.c  */
-#line 1692 "sql.ypp"
+#line 1694 "sql.ypp"
     { ((*yyvalp).ast_node) = newEnumList( t_enum_list, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.strval), NULL); ;}
     break;
 
   case 509:
 
 /* Line 936 of glr.c  */
-#line 1693 "sql.ypp"
+#line 1695 "sql.ypp"
     { ((*yyvalp).ast_node) = newEnumList( t_enum_list, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.strval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 510:
 
 /* Line 936 of glr.c  */
-#line 1698 "sql.ypp"
+#line 1700 "sql.ypp"
     { ((*yyvalp).ast_node) = newColumn(t_name, NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.strval), NULL); /*puts("expr1");*/ ;}
     break;
 
   case 511:
 
 /* Line 936 of glr.c  */
-#line 1699 "sql.ypp"
+#line 1701 "sql.ypp"
     { ((*yyvalp).ast_node) = newExpr(t_name, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.strval)); ;}
     break;
 
   case 512:
 
 /* Line 936 of glr.c  */
-#line 1700 "sql.ypp"
+#line 1702 "sql.ypp"
     { ((*yyvalp).ast_node) = newColumn(t_name_name, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.strval), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.strval), NULL); /*puts("expr2");*/ ;}
     break;
 
   case 513:
 
 /* Line 936 of glr.c  */
-#line 1701 "sql.ypp"
+#line 1703 "sql.ypp"
     { ((*yyvalp).ast_node) = newColumn(t_name_name, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.strval), "*", NULL);/* puts("expr22");*/;}
     break;
 
   case 514:
 
 /* Line 936 of glr.c  */
-#line 1702 "sql.ypp"
+#line 1704 "sql.ypp"
     { ((*yyvalp).ast_node) = newExpr(t_stringval, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.strval)); /*puts("expr3");*/ ;}
     break;
 
   case 515:
 
 /* Line 936 of glr.c  */
-#line 1703 "sql.ypp"
+#line 1705 "sql.ypp"
     { ((*yyvalp).ast_node) = newExpr(t_intnum, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.strval)); /*puts("expr4");*/ ;}
     break;
 
   case 516:
 
 /* Line 936 of glr.c  */
-#line 1704 "sql.ypp"
+#line 1706 "sql.ypp"
     { ((*yyvalp).ast_node) = newExpr(t_approxnum, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.strval)); ;}
     break;
 
   case 517:
 
 /* Line 936 of glr.c  */
-#line 1705 "sql.ypp"
+#line 1707 "sql.ypp"
     { ((*yyvalp).ast_node) = newExpr(t_bool, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.strval)); ;}
     break;
 
   case 518:
 
 /* Line 936 of glr.c  */
-#line 1708 "sql.ypp"
+#line 1710 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprCal(t_expr_cal, "+", NULL, 0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 519:
 
 /* Line 936 of glr.c  */
-#line 1709 "sql.ypp"
+#line 1711 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprCal(t_expr_cal, "-", NULL, 0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 520:
 
 /* Line 936 of glr.c  */
-#line 1710 "sql.ypp"
+#line 1712 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprCal(t_expr_cal, "*", NULL, 0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 521:
 
 /* Line 936 of glr.c  */
-#line 1711 "sql.ypp"
+#line 1713 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprCal(t_expr_cal, "/", NULL, 0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 522:
 
 /* Line 936 of glr.c  */
-#line 1712 "sql.ypp"
+#line 1714 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprCal(t_expr_cal, "%", NULL, 0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 523:
 
 /* Line 936 of glr.c  */
-#line 1713 "sql.ypp"
+#line 1715 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprCal(t_expr_cal, "MOD", NULL, 0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 524:
 
 /* Line 936 of glr.c  */
-#line 1714 "sql.ypp"
+#line 1716 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprCal(t_expr_cal, "--", NULL, 0, NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (2))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 525:
 
 /* Line 936 of glr.c  */
-#line 1715 "sql.ypp"
+#line 1717 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprCal(t_expr_cal, "++", NULL, 0, NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (2))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 526:
 
 /* Line 936 of glr.c  */
-#line 1716 "sql.ypp"
+#line 1718 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprCal(t_expr_cal, "ANDOP", NULL, 0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 527:
 
 /* Line 936 of glr.c  */
-#line 1717 "sql.ypp"
+#line 1719 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprCal(t_expr_cal, "OR", NULL, 0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 528:
 
 /* Line 936 of glr.c  */
-#line 1718 "sql.ypp"
+#line 1720 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprCal(t_expr_cal, "XOR", NULL, 0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 529:
 
 /* Line 936 of glr.c  */
-#line 1719 "sql.ypp"
+#line 1721 "sql.ypp"
     { ((*yyvalp).ast_node) = newExprCal(t_expr_cal, "CMP", NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (3))].yystate.yysemantics.yysval.subtok), (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.ast_node));/* puts("=");*/ ;}
     break;
 
   case 530:
 
 /* Line 936 of glr.c  */
-#line 1720 "sql.ypp"
+#line 1722 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprCal(t_expr_cal, "CMP", NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (5))].yystate.yysemantics.yysval.subtok), (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (5))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (5))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 531:
 
 /* Line 936 of glr.c  */
-#line 1721 "sql.ypp"
+#line 1723 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprCal(t_expr_cal, "CMP", "ANY", (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (6))].yystate.yysemantics.yysval.subtok), (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (6))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (6))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 532:
 
 /* Line 936 of glr.c  */
-#line 1722 "sql.ypp"
+#line 1724 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprCal(t_expr_cal, "CMP", "SOME", (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (6))].yystate.yysemantics.yysval.subtok), (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (6))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (6))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 533:
 
 /* Line 936 of glr.c  */
-#line 1723 "sql.ypp"
+#line 1725 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprCal(t_expr_cal, "CMP", "ALL", (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (6))].yystate.yysemantics.yysval.subtok), (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (6))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (6))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 534:
 
 /* Line 936 of glr.c  */
-#line 1724 "sql.ypp"
+#line 1726 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprCal(t_expr_cal, "|", NULL, 0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 535:
 
 /* Line 936 of glr.c  */
-#line 1725 "sql.ypp"
+#line 1727 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprCal(t_expr_cal, "&", NULL, 0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 536:
 
 /* Line 936 of glr.c  */
-#line 1726 "sql.ypp"
+#line 1728 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprCal(t_expr_cal, "^", NULL, 0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 537:
 
 /* Line 936 of glr.c  */
-#line 1727 "sql.ypp"
+#line 1729 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprCal(t_expr_cal, (SHIFT==1?"LS":"RS"), NULL, 0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 538:
 
 /* Line 936 of glr.c  */
-#line 1728 "sql.ypp"
+#line 1730 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprCal(t_expr_cal, "NOT", NULL, 0, NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (2))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 539:
 
 /* Line 936 of glr.c  */
-#line 1729 "sql.ypp"
+#line 1731 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprCal(t_expr_cal, "!", NULL, 0, NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (2))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 540:
 
 /* Line 936 of glr.c  */
-#line 1730 "sql.ypp"
+#line 1732 "sql.ypp"
     { ((*yyvalp).ast_node)=NULL; ;}
     break;
 
   case 541:
 
 /* Line 936 of glr.c  */
-#line 1731 "sql.ypp"
+#line 1733 "sql.ypp"
     { ((*yyvalp).ast_node) = (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (3))].yystate.yysemantics.yysval.ast_node); ;}
     break;
 
   case 542:
 
 /* Line 936 of glr.c  */
-#line 1734 "sql.ypp"
+#line 1736 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprFunc(t_expr_func, "ISN", (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.ast_node), NULL, NULL, NULL); ;}
     break;
 
   case 543:
 
 /* Line 936 of glr.c  */
-#line 1735 "sql.ypp"
+#line 1737 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprFunc(t_expr_func, "ISNN", (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (4))].yystate.yysemantics.yysval.ast_node), NULL, NULL, NULL); ;}
     break;
 
   case 544:
 
 /* Line 936 of glr.c  */
-#line 1736 "sql.ypp"
+#line 1738 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprFunc(t_expr_func, "ISB", (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.ast_node), NULL, NULL, NULL); ;}
     break;
 
   case 545:
 
 /* Line 936 of glr.c  */
-#line 1737 "sql.ypp"
+#line 1739 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprFunc(t_expr_func, "ISNB", (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (4))].yystate.yysemantics.yysval.ast_node), NULL, NULL, NULL); ;}
     break;
 
   case 546:
 
 /* Line 936 of glr.c  */
-#line 1740 "sql.ypp"
+#line 1742 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprFunc(t_expr_func, "BA", (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (5))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (5))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (5))].yystate.yysemantics.yysval.ast_node), NULL); ;}
     break;
 
   case 547:
 
 /* Line 936 of glr.c  */
-#line 1744 "sql.ypp"
+#line 1746 "sql.ypp"
     { ((*yyvalp).ast_node) = newExprList(t_expr_list, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.ast_node), NULL); ;}
     break;
 
   case 548:
 
 /* Line 936 of glr.c  */
-#line 1745 "sql.ypp"
+#line 1747 "sql.ypp"
     { ((*yyvalp).ast_node) = newExprList(t_expr_list, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 549:
 
 /* Line 936 of glr.c  */
-#line 1746 "sql.ypp"
+#line 1748 "sql.ypp"
     { ((*yyvalp).ast_node) = newExprList(t_expr_list, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (5))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (5))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 551:
 
 /* Line 936 of glr.c  */
-#line 1750 "sql.ypp"
+#line 1752 "sql.ypp"
     {((*yyvalp).ast_node)=(((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.ast_node);;}
     break;
 
   case 552:
 
 /* Line 936 of glr.c  */
-#line 1753 "sql.ypp"
+#line 1755 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprCal(t_expr_cal, "INV", NULL, 0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (5))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (5))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 553:
 
 /* Line 936 of glr.c  */
-#line 1754 "sql.ypp"
+#line 1756 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprCal(t_expr_cal, "INV", NULL, 0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (7))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((6) - (7))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 554:
 
 /* Line 936 of glr.c  */
-#line 1755 "sql.ypp"
+#line 1757 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprCal(t_expr_cal, "NIN", NULL, 0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (6))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (6))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 555:
 
 /* Line 936 of glr.c  */
-#line 1756 "sql.ypp"
+#line 1758 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprCal(t_expr_cal, "NIN", NULL, 0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (8))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((7) - (8))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 556:
 
 /* Line 936 of glr.c  */
-#line 1757 "sql.ypp"
+#line 1759 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprCal(t_expr_cal, "INS", NULL, 0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (5))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (5))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 557:
 
 /* Line 936 of glr.c  */
-#line 1758 "sql.ypp"
+#line 1760 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprCal(t_expr_cal, "INS", NULL, 0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (7))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((6) - (7))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 558:
 
 /* Line 936 of glr.c  */
-#line 1759 "sql.ypp"
+#line 1761 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprCal(t_expr_cal, "NINS", NULL, 0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (6))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (6))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 559:
 
 /* Line 936 of glr.c  */
-#line 1760 "sql.ypp"
+#line 1762 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprCal(t_expr_cal, "NINS", NULL, 0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (8))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((7) - (8))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 560:
 
 /* Line 936 of glr.c  */
-#line 1761 "sql.ypp"
+#line 1763 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprCal(t_expr_cal, "EX", NULL, 0, NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (4))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 561:
 
 /* Line 936 of glr.c  */
-#line 1762 "sql.ypp"
+#line 1764 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprCal(t_expr_cal, "NINS", NULL, 0, NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (5))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 562:
 
 /* Line 936 of glr.c  */
-#line 1765 "sql.ypp"
+#line 1767 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprCal(t_expr_cal, "NAME", (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (4))].yystate.yysemantics.yysval.strval), 0, NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (4))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 563:
 
 /* Line 936 of glr.c  */
-#line 1769 "sql.ypp"
+#line 1771 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprFunc(t_expr_func, "FCOUNTALL", NULL, NULL, NULL, NULL); ;}
     break;
 
   case 564:
 
 /* Line 936 of glr.c  */
-#line 1770 "sql.ypp"
+#line 1772 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprFunc(t_expr_func, "FCOUNT", NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (4))].yystate.yysemantics.yysval.ast_node), NULL, NULL); ;}
     break;
 
   case 565:
 
 /* Line 936 of glr.c  */
-#line 1772 "sql.ypp"
+#line 1774 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprFunc(t_expr_func, "FSUM", NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (4))].yystate.yysemantics.yysval.ast_node), NULL, NULL); ;}
     break;
 
   case 566:
 
 /* Line 936 of glr.c  */
-#line 1773 "sql.ypp"
+#line 1775 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprFunc(t_expr_func, "FAVG", NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (4))].yystate.yysemantics.yysval.ast_node), NULL, NULL); ;}
     break;
 
   case 567:
 
 /* Line 936 of glr.c  */
-#line 1774 "sql.ypp"
+#line 1776 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprFunc(t_expr_func, "FMIN", NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (4))].yystate.yysemantics.yysval.ast_node), NULL, NULL); ;}
     break;
 
   case 568:
 
 /* Line 936 of glr.c  */
-#line 1775 "sql.ypp"
+#line 1777 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprFunc(t_expr_func, "FMAX", NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (4))].yystate.yysemantics.yysval.ast_node), NULL, NULL); ;}
     break;
 
   case 569:
 
 /* Line 936 of glr.c  */
-#line 1779 "sql.ypp"
+#line 1781 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprFunc(t_expr_func, "FSUBSTRING", NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (4))].yystate.yysemantics.yysval.ast_node), NULL, NULL); ;}
     break;
 
   case 570:
 
 /* Line 936 of glr.c  */
-#line 1780 "sql.ypp"
+#line 1782 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprFunc(t_expr_func, "FSUBSTRING2", NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (6))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (6))].yystate.yysemantics.yysval.ast_node), NULL);;}
     break;
 
   case 571:
 
 /* Line 936 of glr.c  */
-#line 1781 "sql.ypp"
+#line 1783 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprFunc(t_expr_func, "FSUBSTRING3", (((yyGLRStackItem const *)yyvsp)[YYFILL ((7) - (8))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (8))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (8))].yystate.yysemantics.yysval.ast_node), NULL); ;}
     break;
 
   case 572:
 
 /* Line 936 of glr.c  */
-#line 1782 "sql.ypp"
+#line 1784 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprFunc(t_expr_func, "FTRIM", NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (4))].yystate.yysemantics.yysval.ast_node), NULL, NULL); ;}
     break;
 
   case 573:
 
 /* Line 936 of glr.c  */
-#line 1783 "sql.ypp"
+#line 1785 "sql.ypp"
     { ;}
     break;
 
   case 574:
 
 /* Line 936 of glr.c  */
-#line 1786 "sql.ypp"
+#line 1788 "sql.ypp"
     { emit("INT 1"); ;}
     break;
 
   case 575:
 
 /* Line 936 of glr.c  */
-#line 1787 "sql.ypp"
+#line 1789 "sql.ypp"
     { emit("INT 2"); ;}
     break;
 
   case 576:
 
 /* Line 936 of glr.c  */
-#line 1788 "sql.ypp"
+#line 1790 "sql.ypp"
     { emit("INT 3"); ;}
     break;
 
   case 579:
 
 /* Line 936 of glr.c  */
-#line 1795 "sql.ypp"
+#line 1797 "sql.ypp"
     { emit("NUMBER 1"); ;}
     break;
 
   case 580:
 
 /* Line 936 of glr.c  */
-#line 1796 "sql.ypp"
+#line 1798 "sql.ypp"
     { emit("NUMBER 2"); ;}
     break;
 
   case 581:
 
 /* Line 936 of glr.c  */
-#line 1797 "sql.ypp"
+#line 1799 "sql.ypp"
     { emit("NUMBER 3"); ;}
     break;
 
   case 582:
 
 /* Line 936 of glr.c  */
-#line 1798 "sql.ypp"
+#line 1800 "sql.ypp"
     { emit("NUMBER 4"); ;}
     break;
 
   case 583:
 
 /* Line 936 of glr.c  */
-#line 1799 "sql.ypp"
+#line 1801 "sql.ypp"
     { emit("NUMBER 5"); ;}
     break;
 
   case 584:
 
 /* Line 936 of glr.c  */
-#line 1800 "sql.ypp"
+#line 1802 "sql.ypp"
     { emit("NUMBER 6"); ;}
     break;
 
   case 585:
 
 /* Line 936 of glr.c  */
-#line 1801 "sql.ypp"
+#line 1803 "sql.ypp"
     { emit("NUMBER 7"); ;}
     break;
 
   case 586:
 
 /* Line 936 of glr.c  */
-#line 1802 "sql.ypp"
+#line 1804 "sql.ypp"
     { emit("NUMBER 8"); ;}
     break;
 
   case 587:
 
 /* Line 936 of glr.c  */
-#line 1803 "sql.ypp"
+#line 1805 "sql.ypp"
     { emit("NUMBER 9"); ;}
     break;
 
   case 588:
 
 /* Line 936 of glr.c  */
-#line 1806 "sql.ypp"
+#line 1808 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprFunc(t_expr_func, "CASE1", (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (4))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (4))].yystate.yysemantics.yysval.ast_node), NULL, NULL); ;}
     break;
 
   case 589:
 
 /* Line 936 of glr.c  */
-#line 1807 "sql.ypp"
+#line 1809 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprFunc(t_expr_func, "CASE2", (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (6))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (6))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (6))].yystate.yysemantics.yysval.ast_node), NULL); ;}
     break;
 
   case 590:
 
 /* Line 936 of glr.c  */
-#line 1808 "sql.ypp"
+#line 1810 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprFunc(t_expr_func, "CASE3", NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (3))].yystate.yysemantics.yysval.ast_node), NULL, NULL); ;}
     break;
 
   case 591:
 
 /* Line 936 of glr.c  */
-#line 1809 "sql.ypp"
+#line 1811 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprFunc(t_expr_func, "CASE4", NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (5))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (5))].yystate.yysemantics.yysval.ast_node), NULL); ;}
     break;
 
   case 592:
 
 /* Line 936 of glr.c  */
-#line 1812 "sql.ypp"
+#line 1814 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprFunc(t_expr_func, "WHEN1", NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (4))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (4))].yystate.yysemantics.yysval.ast_node), NULL); ;}
     break;
 
   case 593:
 
 /* Line 936 of glr.c  */
-#line 1813 "sql.ypp"
+#line 1815 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprFunc(t_expr_func, "WHEN2", NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (5))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (5))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (5))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 594:
 
 /* Line 936 of glr.c  */
-#line 1816 "sql.ypp"
+#line 1818 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprCal(t_expr_cal, "LIKE", NULL, 0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 595:
 
 /* Line 936 of glr.c  */
-#line 1817 "sql.ypp"
+#line 1819 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprCal(t_expr_cal, "NLIKE", NULL, 0, NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (4))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 596:
 
 /* Line 936 of glr.c  */
-#line 1820 "sql.ypp"
+#line 1822 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprCal(t_expr_cal, "REGEXP", NULL, 0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
   case 597:
 
 /* Line 936 of glr.c  */
-#line 1821 "sql.ypp"
+#line 1823 "sql.ypp"
     { ((*yyvalp).ast_node)=newExprCal(t_expr_cal, "NREGEXP", NULL, 0, (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (4))].yystate.yysemantics.yysval.ast_node), (((yyGLRStackItem const *)yyvsp)[YYFILL ((4) - (4))].yystate.yysemantics.yysval.ast_node)); ;}
     break;
 
 
 
 /* Line 936 of glr.c  */
-#line 6068 "sql.tab.cpp"
+#line 6110 "sql.tab.cpp"
       default: break;
     }
 
@@ -7773,7 +7815,7 @@ yypdumpstack (yyGLRStack* yystackp)
 
 
 /* Line 2634 of glr.c  */
-#line 1832 "sql.ypp"
+#line 1834 "sql.ypp"
 
 
 void
