@@ -29,6 +29,10 @@ void ExpressionCalculator::compute(ExpressionItem operator_item,ExpressionItemSt
 			mins(stack,result);
 			break;
 		}
+		case op_multiple:{
+			mul(stack,result);
+			break;
+		}
 		case op_com_L:{
 			compare_less(stack,result);
 			break;

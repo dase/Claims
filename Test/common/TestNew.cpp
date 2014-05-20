@@ -22,7 +22,65 @@
 #include "../../common/ExpressionItem.h"
 #include "../../common/ExpressionCalculator.h"
 
-static void query_project(){
+static void query_select_aggregation(){
+	/*
+	 * select sum(a+1)+count(a),b
+	 * from T
+	 * where b>10
+	 * group by b
+	 * */
+}
+
+static void query_select_a_b_c_d(){
+	unsigned long long int start=curtick();
+	TableDescriptor* table=Environment::getInstance()->getCatalog()->getTable("PART");
+	//===========================scan===========================
+	LogicalOperator* scan=new LogicalScan(table->getProjectoin(0));
+
+	//==========================project=========================
+	vector< vector<ExpressionItem> >expr_list;
+
+	Expression expr1;
+	Expression expr2;
+	Expression expr3;
+	Expression expr9;
+
+	ExpressionItem expr_item1;
+	ExpressionItem expr_item2;
+	ExpressionItem expr_item3;
+	ExpressionItem expr_item9;
+
+	expr_item1.setVariable("PART","row_id");
+	expr_item2.setVariable("PART","P_PARTKEY");
+	expr_item3.setVariable("PART","P_NAME");
+	expr_item9.setVariable("PART","P_RETAILPRICE");
+
+	expr1.push_back(expr_item1);
+	expr2.push_back(expr_item2);
+	expr3.push_back(expr_item3);
+	expr9.push_back(expr_item9);
+
+	expr_list.push_back(expr1);
+	expr_list.push_back(expr2);
+	expr_list.push_back(expr3);
+	expr_list.push_back(expr9);
+
+	LogicalOperator* project=new LogicalProject(scan,expr_list);
+
+	//===========================root===========================
+	LogicalOperator* root=new LogicalQueryPlanRoot(0,project,LogicalQueryPlanRoot::PRINT);
+
+	cout<<"performance is ok!"<<endl;
+	BlockStreamIteratorBase* physical_iterator_tree=root->getIteratorTree(64*1024);
+//	physical_iterator_tree->print();
+	physical_iterator_tree->open();
+	while(physical_iterator_tree->next(0));
+	physical_iterator_tree->close();
+	printf("Q1: execution time: %4.4f second.\n",getSecond(start));
+
+}
+
+static void query_select_star(){
 	unsigned long long int start=curtick();
 	TableDescriptor* table=Environment::getInstance()->getCatalog()->getTable("PART");
 
@@ -190,7 +248,8 @@ static int common_project_tcp_h_test_single_node(){
 
 	init_single_node_tpc_h_envoriment();
 	for(unsigned i=0;i<repeated_times;i++){
-		query_project();
+//		query_select_star();
+		query_select_a_b_c_d();
 	}
 
 	Environment::getInstance()->~Environment();
@@ -205,7 +264,8 @@ static int common_project_tcp_h_test_multi_nodes(){
 	if(input==0){
 		init_multi_node_tpc_h_envoriment(true);
 		for(unsigned i=0;i<repeated_times;i++){
-			query_project();
+//			query_select_star();
+			query_select_a_b_c_d();
 		}
 	}
 	else{

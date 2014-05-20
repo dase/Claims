@@ -142,6 +142,9 @@ bool ExpressionItem::setOperator(const char* op_str){
 	else if(tmp=="-"){
 		content.op.op_=op_mins;
 	}
+	else if(tmp=="*"){
+		content.op.op_=op_multiple;
+	}
 	else if(tmp=="<"){
 		content.op.op_=op_com_L;
 	}

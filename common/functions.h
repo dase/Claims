@@ -79,6 +79,25 @@ static void mins_in_same_type(const ExpressionItem& left,const ExpressionItem& r
 	}
 }
 
+static void muls_in_same_type(const ExpressionItem& left,const ExpressionItem& right,ExpressionItem& target){
+	assert(left.return_type==right.return_type);
+	switch(left.return_type){
+		case t_int:{
+			target.return_type=t_int;
+			target.content.data.value._int=left.content.data.value._int*right.content.data.value._int;
+			break;
+		}
+		case t_float:{
+			target.return_type=t_float;
+			target.content.data.value._float=left.content.data.value._float*right.content.data.value._float;
+			break;
+		}
+		default:{
+			printf("add type not supproted!\n");
+		}
+	}
+}
+
 static void adds(ExpressionItemStack& stack, ExpressionItem& target){
 	assert(stack.size()>=2);
 	ExpressionItem right=stack.top();
@@ -141,6 +160,38 @@ static void minss(ExpressionItemStack& stack, ExpressionItem& target){
 }
 
 static void mins(ExpressionItemStack& stack, ExpressionItem& target){
+	assert(stack.size()>=2);
+	ExpressionItem right=stack.top();
+	stack.pop();
+	if(!check_data_type_for_add(right.return_type)){
+		printf("%s is not supported for +!\n",getReturnTypeName(right.return_type).c_str());
+	}
+	ExpressionItem left=stack.top();
+	stack.pop();
+	if(!check_data_type_for_add(left.return_type)){
+		printf("%s is not supported for +!\n",getReturnTypeName(left.return_type).c_str());
+	}
+//	target.return_type=right.return_type>left.return_type?right.return_type:left.return_type;
+	target.return_type=TypePromotion::arith_type_promotion_map[left.return_type][right.return_type];
+}
+
+static void muls(ExpressionItemStack& stack, ExpressionItem& target){
+	assert(stack.size()>=2);
+	ExpressionItem right=stack.top();
+	stack.pop();
+	if(!check_data_type_for_add(right.return_type)){
+		printf("%s is not supported for +!\n",getReturnTypeName(right.return_type).c_str());
+	}
+	ExpressionItem left=stack.top();
+	stack.pop();
+	if(!check_data_type_for_add(left.return_type)){
+		printf("%s is not supported for +!\n",getReturnTypeName(left.return_type).c_str());
+	}
+//	target.return_type=right.return_type>left.return_type?right.return_type:left.return_type;
+	target.return_type=TypePromotion::arith_type_promotion_map[left.return_type][right.return_type];
+}
+
+static void mul(ExpressionItemStack& stack, ExpressionItem& target){
 	//assuming all types are int.
 	assert(stack.size()>=2);
 	ExpressionItem right=stack.top();
@@ -164,7 +215,7 @@ static void mins(ExpressionItemStack& stack, ExpressionItem& target){
 		TypeCast::type_cast_functions[right.return_type][target.return_type](right);
 	}
 
-	mins_in_same_type(left,right,target);
+	muls_in_same_type(left,right,target);
 }
 
 static void compare_less_in_same_type(const ExpressionItem& left,const ExpressionItem& right,ExpressionItem& target){

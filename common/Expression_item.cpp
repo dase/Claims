@@ -36,8 +36,29 @@ static void test_add(){
 
 	ExpressionItem result;
 	ExpressionCalculator::calcuate(express_item_list,result);
-	print_test_name_result(is_equal(result.content.data.value._float,1.8)&&result.return_type==t_float,"(+)");
+	print_test_name_result(is_equal(result.content.data.value._float,21.8)&&result.return_type==t_float,"(+)");
 }
+
+static void test_multiple(){
+	std::vector<ExpressionItem> express_item_list;
+
+	ExpressionItem e1;
+	e1.setIntValue("3");
+	express_item_list.push_back(e1);
+
+	ExpressionItem e2;
+	e2.setFloatValue("1.8");
+	express_item_list.push_back(e2);
+
+	ExpressionItem e3;
+	e3.setOperator("*");
+	express_item_list.push_back(e3);
+
+	ExpressionItem result;
+	ExpressionCalculator::calcuate(express_item_list,result);
+	print_test_name_result(is_equal(result.content.data.value._float,5.4)&&result.return_type==t_float,"(*)");
+}
+
 static void test_com_less(){
 	//(3.3+4.4)<10
 	std::vector<ExpressionItem> express_item_list;
@@ -185,7 +206,7 @@ inline void test_upper(){
 	ExpressionItem result;
 	ExpressionCalculator::calcuate(express_item_list,result);
 
-	print_test_name_result(result._string=="ABCD"&&result.return_type==t_string,"upper");
+	print_test_name_result(result._string=="ASBCD"&&result.return_type==t_string,"upper");
 }
 
 inline void test_substring(){
@@ -270,6 +291,7 @@ static int test_expression_item(){
 	test_substring();
 	test_trim();
 	test_cast();
+	test_multiple();
 
 	return 0;
 }
