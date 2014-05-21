@@ -15,7 +15,10 @@ LogicalProject::LogicalProject(LogicalOperator *child, std::vector<std::vector<E
 }
 
 LogicalProject::~LogicalProject(){
-
+	dataflow_->~Dataflow();
+	if(child_>0){
+		child_->~LogicalOperator();
+	}
 }
 
 Dataflow LogicalProject::getDataflow(){
@@ -73,8 +76,7 @@ Schema *LogicalProject::getOutputSchema(){
 //		column_type column_schema(rt_type_per_expression);*/
 
 		column_type column_schema=ExpressionCalculator::getOutputType_(exprArray_[i]);
-		cout<<"column_type len: "<<column_schema.get_length()<<endl;
-		getchar();
+//		cout<<"column_type len: "<<column_schema.get_length()<<endl;
 		column_list.push_back(column_schema);
 	}
 	Schema *rt_schema=new SchemaFix(column_list);

@@ -69,7 +69,7 @@ static void query_select_a_b_c_d(){
 	LogicalOperator* project=new LogicalProject(scan,expr_list);
 
 	//===========================root===========================
-	LogicalOperator* root=new LogicalQueryPlanRoot(0,project,LogicalQueryPlanRoot::PRINT);
+	LogicalOperator* root=new LogicalQueryPlanRoot(0,project,LogicalQueryPlanRoot::PERFORMANCE);
 
 	cout<<"performance is ok!"<<endl;
 	BlockStreamIteratorBase* physical_iterator_tree=root->getIteratorTree(64*1024);

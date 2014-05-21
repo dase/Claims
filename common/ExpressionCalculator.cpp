@@ -195,7 +195,7 @@ column_type ExpressionCalculator::getOutputType_(std::vector<ExpressionItem> &ex
 	data_type dt=stack.top().return_type;
 	if(dt==t_string){
 		ct=new column_type(dt,exp[0].size);
-		cout<<"exp: "<<exp[0].size<<endl;
+//		cout<<"exp: "<<exp[0].size<<endl;
 	}
 	else{
 		ct=new column_type(dt);

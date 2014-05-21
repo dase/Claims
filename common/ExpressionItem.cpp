@@ -16,7 +16,7 @@ ExpressionItem::~ExpressionItem() {
 	// TODO Auto-generated destructor stub
 }
 
-bool ExpressionItem::setValue(void* value_str,data_type type){
+bool ExpressionItem::setValue(void* value_str,const data_type type){
 	switch(type){
 		case t_int:{
 //			cout<<"the value in the expressionitem is: "<<*(int *)value_str<<endl;
