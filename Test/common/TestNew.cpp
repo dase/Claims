@@ -53,6 +53,7 @@ static void query_select_a_b_c_d(){
 	expr_item1.setVariable("PART","row_id");
 	expr_item2.setVariable("PART","P_PARTKEY");
 	expr_item3.setVariable("PART","P_NAME");
+	expr_item3.size=54;
 	expr_item9.setVariable("PART","P_RETAILPRICE");
 
 	expr1.push_back(expr_item1);
@@ -136,13 +137,19 @@ static void query_select_star(){
 	expr_item1.setVariable("PART","row_id");
 	expr_item2.setVariable("PART","P_PARTKEY");
 	expr_item3.setVariable("PART","P_NAME");
+	expr_item3.size=55;
 	expr_item4.setVariable("PART","P_MFGR");
+	expr_item4.size=25;
 	expr_item5.setVariable("PART","P_BRAND");
+	expr_item5.size=10;
 	expr_item6.setVariable("PART","P_TYPE");
+	expr_item6.size=25;
 	expr_item7.setVariable("PART","P_SIZE");
 	expr_item8.setVariable("PART","P_CONTAINER");
+	expr_item8.size=10;
 	expr_item9.setVariable("PART","P_RETAILPRICE");
 	expr_item10.setVariable("PART","P_COMMENT");
+	expr_item10.size=23;
 
 	expr1.push_back(expr_item1);
 	expr2.push_back(expr_item2);
@@ -249,7 +256,7 @@ static int common_project_tcp_h_test_single_node(){
 	init_single_node_tpc_h_envoriment();
 	for(unsigned i=0;i<repeated_times;i++){
 //		query_select_star();
-		query_select_a_b_c_d();
+		query_select_star();
 	}
 
 	Environment::getInstance()->~Environment();

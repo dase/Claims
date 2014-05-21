@@ -70,7 +70,7 @@ int main(){
 //	return testServerClient();
 //	return test_data_type();
 
-	return test_expression_item();
+//	return test_expression_item();
 
 //	return testProject();
 //	return testSort();
@@ -88,7 +88,7 @@ int main(){
 //	return test_index_manager();
 //	in_test();
 
-//	common_project_tcp_h_test_single_node();
+	common_project_tcp_h_test_single_node();
 
 //	common_project_tcp_h_test_multi_node();
 //	test_expanderFramework_single_node(1);

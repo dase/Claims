@@ -29,6 +29,9 @@ bool check_data_type_for_add(data_type dt){
 	case t_double:{
 		return true;
 	}
+	case t_decimal:{
+		return true;
+	}
 	case t_u_long:{
 		return true;
 	}
@@ -54,6 +57,16 @@ static void add_in_same_type(const ExpressionItem& left,const ExpressionItem& ri
 			target.content.data.value._float=left.content.data.value._float+right.content.data.value._float;
 			break;
 		}
+		case t_decimal:{
+			target.return_type=t_decimal;
+			string sl(left.content.data.value._decimal);
+			string sr(right.content.data.value._decimal);
+			NValue l=NValue::getDecimalValueFromString(sl);
+			NValue r=NValue::getDecimalValueFromString(sr);
+			string st=l.op_add(r).createStringFromDecimal();
+			strcpy(target.content.data.value._decimal,st.c_str());
+			break;
+		}
 		default:{
 			printf("add type not supproted!\n");
 		}
@@ -73,6 +86,16 @@ static void mins_in_same_type(const ExpressionItem& left,const ExpressionItem& r
 			target.content.data.value._float=left.content.data.value._float-right.content.data.value._float;
 			break;
 		}
+		case t_decimal:{
+			target.return_type=t_decimal;
+			string sl(left.content.data.value._decimal);
+			string sr(right.content.data.value._decimal);
+			NValue l=NValue::getDecimalValueFromString(sl);
+			NValue r=NValue::getDecimalValueFromString(sr);
+			string st=l.op_subtract(r).createStringFromDecimal();
+			strcpy(target.content.data.value._decimal,st.c_str());
+			break;
+		}
 		default:{
 			printf("add type not supproted!\n");
 		}
@@ -90,6 +113,16 @@ static void muls_in_same_type(const ExpressionItem& left,const ExpressionItem& r
 		case t_float:{
 			target.return_type=t_float;
 			target.content.data.value._float=left.content.data.value._float*right.content.data.value._float;
+			break;
+		}
+		case t_decimal:{
+			target.return_type=t_decimal;
+			string sl(left.content.data.value._decimal);
+			string sr(right.content.data.value._decimal);
+			NValue l=NValue::getDecimalValueFromString(sl);
+			NValue r=NValue::getDecimalValueFromString(sr);
+			string st=l.op_multiply(r).createStringFromDecimal();
+			strcpy(target.content.data.value._decimal,st.c_str());
 			break;
 		}
 		default:{

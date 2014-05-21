@@ -10,7 +10,7 @@
 #include "TypeCast.h"
 #include "TypePromotionMap.h"
 #include "../utility/test_tool.h"
-static void test_add(){
+static void test_add_(){
 	//3+8.8+(-10)=1.8
 	std::vector<ExpressionItem> express_item_list;
 
@@ -39,7 +39,58 @@ static void test_add(){
 	print_test_name_result(is_equal(result.content.data.value._float,21.8)&&result.return_type==t_float,"(+)");
 }
 
+static void test_add(){
+	//3+8.8+(-10)=1.8
+	std::vector<ExpressionItem> express_item_list;
+
+	ExpressionItem ei1;
+	ei1.setIntValue("3");
+	express_item_list.push_back(ei1);
+
+	ExpressionItem ei2;
+	ei2.setDecimalValue("8.8");
+	express_item_list.push_back(ei2);
+
+	ExpressionItem ei3;
+	ei3.setOperator("+");
+	express_item_list.push_back(ei3);
+
+	ExpressionItem ei4;
+	ei4.setIntValue("-10");
+	express_item_list.push_back(ei4);
+
+	ExpressionItem ei5;
+	ei5.setOperator("+");
+	express_item_list.push_back(ei5);
+
+	ExpressionItem result;
+	ExpressionCalculator::calcuate(express_item_list,result);
+	string s(result.content.data.value._decimal);
+	print_test_name_result(is_equal(NValue::getDecimalValueFromString(s),NValue::getDecimalValueFromString("1.8"))&&result.return_type==t_decimal,"(+)");
+}
+
 static void test_multiple(){
+	std::vector<ExpressionItem> express_item_list;
+
+	ExpressionItem e1;
+	e1.setIntValue("3");
+	express_item_list.push_back(e1);
+
+	ExpressionItem e2;
+	e2.setDecimalValue("1.8");
+	express_item_list.push_back(e2);
+
+	ExpressionItem e3;
+	e3.setOperator("*");
+	express_item_list.push_back(e3);
+
+	ExpressionItem result;
+	ExpressionCalculator::calcuate(express_item_list,result);
+	string s(result.content.data.value._decimal);
+	print_test_name_result(is_equal(NValue::getDecimalValueFromString(s),NValue::getDecimalValueFromString("5.40"))&&result.return_type==t_decimal,"(*)");
+}
+
+static void test_multiple_(){
 	std::vector<ExpressionItem> express_item_list;
 
 	ExpressionItem e1;
@@ -280,18 +331,32 @@ inline void test_cast(){
 	print_test_name_result(result.content.data.value._int==12&&result.return_type==t_int,"cast");
 }
 
+inline void test_decimal_add2(){
+	NValue v1 = NValue::getDecimalValueFromString("4.4");
+	NValue v2 = NValue::getDecimalValueFromString("-8");
+	column_type* op=new column_type(data_type(t_decimal),2);
+	op->operate->multiple(&v1,&v2);
+	if(!print_test_name_result(op->operate->toString(&v1)==string("-35.20"),"Decimal multiple")){
+		printf("Expected -35.20, actual: %s\n",op->operate->toString(&v1).c_str());
+	}
+}
+
 static int test_expression_item(){
 	initialize_arithmetic_type_promotion_matrix();
 	initialize_type_cast_functions();
 
 	test_add();
-	test_com_less();
-	test_case_exp();
-	test_upper();
-	test_substring();
-	test_trim();
-	test_cast();
-	test_multiple();
+//	test_add_();
+//	test_com_less();
+//	test_case_exp();
+//	test_upper();
+//	test_substring();
+//	test_trim();
+//	test_cast();
+//	test_multiple();
+//	test_multiple_();
+
+//	test_decimal_add2();
 
 	return 0;
 }

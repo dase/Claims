@@ -42,6 +42,11 @@ inline void ADD(void* target, void* increment)
 {
 	*(T*)target+=*(T*)increment;
 }
+template<typename T>
+inline void MULTIPLE(void *target,void *increment)
+{
+	(*(T*)target)=(*(T*)target)*(*(T*)increment);
+}
 template<>
 inline void ADD<char*>(void* target, void* increment)
 {
@@ -145,6 +150,7 @@ public:
 	virtual bool less(const void*& a, const void*& b)const=0;
 	virtual bool greate(const void*& a, const void*& b)const=0;
 	virtual void add(void* target, void* increment)=0;
+	virtual void multiple(void* target, void* increment)=0;
 	virtual int compare(const void* a,const void* b)const=0;
 	virtual fun GetADDFunction()=0;
 	virtual fun GetMINFunction()=0;
@@ -189,6 +195,10 @@ public:
 	inline void add(void* target, void* increment)
 	{
 		ADD<int>(target,increment);
+	}
+	inline void multiple(void* target, void* increment)
+	{
+		MULTIPLE<int>(target, increment);
 	}
 	inline fun GetADDFunction()
 	{
@@ -257,6 +267,10 @@ public:
 	{
 		ADD<float>(target, increment);
 	}
+	inline void multiple(void* target, void* increment)
+	{
+		MULTIPLE<float>(target, increment);
+	}
 	inline fun GetADDFunction()
 	{
 		return ADD<float>;
@@ -322,6 +336,10 @@ public:
 	inline void add(void* target, void* increment)
 	{
 		ADD<double>(target, increment);
+	}
+	inline void multiple(void* target, void* increment)
+	{
+		MULTIPLE<double>(target, increment);
 	}
 	inline fun GetADDFunction()
 	{
@@ -389,6 +407,10 @@ public:
 	{
 		ADD<unsigned long>(target, increment);
 	}
+	inline void multiple(void* target, void* increment)
+	{
+		MULTIPLE<unsigned long>(target, increment);
+	}
 	inline fun GetADDFunction()
 	{
 		return ADD<unsigned long>;
@@ -454,6 +476,11 @@ public:
 		return strcmp((char*)a,(char*)b);
 	}
 	inline void add(void* target, void* increment)
+	{
+		//TODO: throw exception or implement the add for string.
+		printf("The sum for String is not current supported!\n");
+	}
+	inline void multiple(void* target, void* increment)
 	{
 		//TODO: throw exception or implement the add for string.
 		printf("The sum for String is not current supported!\n");
@@ -533,6 +560,11 @@ public:
 	{
 		ADD<date*>(target, increment);
 	}
+	inline void multiple(void* target, void* increment)
+	{
+		//TODO: throw exception or implement the add for string.
+		printf("The sum for String is not current supported!\n");
+	}
 	inline fun GetADDFunction()
 	{
 		return ADD<date*>;
@@ -603,6 +635,11 @@ public:
 	inline void add(void* target, void* increment)
 	{
 		ADD<time_duration*>(target, increment);
+	}
+	inline void multiple(void* target, void* increment)
+	{
+		//TODO: throw exception or implement the add for string.
+		printf("The sum for String is not current supported!\n");
 	}
 	inline fun GetADDFunction()
 	{
@@ -675,6 +712,11 @@ public:
 	{
 		ADD<ptime*>(target, increment);
 	}
+	inline void multiple(void* target, void* increment)
+	{
+		//TODO: throw exception or implement the add for string.
+		printf("The sum for String is not current supported!\n");
+	}
 	inline fun GetADDFunction()
 	{
 		return ADD<ptime*>;
@@ -745,6 +787,10 @@ public:
 	{
 		ADD<short>(target,increment);
 	}
+	inline void multiple(void* target, void* increment)
+	{
+		MULTIPLE<short>(target, increment);
+	}
 	inline fun GetADDFunction()
 	{
 		return ADD<short>;
@@ -810,6 +856,10 @@ public:
 	inline void add(void* target, void* increment)
 	{
 		ADD<unsigned short>(target,increment);
+	}
+	inline void multiple(void* target, void* increment)
+	{
+		MULTIPLE<unsigned short>(target, increment);
 	}
 	inline fun GetADDFunction()
 	{
@@ -897,6 +947,10 @@ public:
 	{
 		ADD<NValue*>(target, increment);
 //		((NValue*)target)->op_add(*(NValue*)increment);
+	}
+	inline void multiple(void* target, void* increment)
+	{
+		(*(NValue*)target)=((NValue*)target)->op_multiply(*(NValue*)increment);
 	}
 	inline fun GetADDFunction()
 	{

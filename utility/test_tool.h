@@ -38,4 +38,8 @@ inline bool is_equal(float x,float b){
 	return fabs(x-b)<0.000001;
 }
 
+inline bool is_equal(NValue x,NValue y){
+	return x.op_equals(y);
+}
+
 #endif /* TEST_TOOL_H_ */

@@ -55,13 +55,18 @@ Schema *LogicalProject::getOutputSchema(){
 				exprArray_[i][j].return_type=input_->getcolumn(mappings_.getMapping()[i][j]).type;
 			}
 		}
+		/*
 		//如果是获得输出的类型，就用原来的算一遍
 		data_type rt_type_per_expression=ExpressionCalculator::getOutputType(exprArray_[i]);
 		//只是试试：-》
 		column_type column_schema=*dataflow_.attribute_list_[mappings_.getMapping()[i][0]].attrType;
 
 		//TODO:设计一个功能，这个功能在输入的expressions选出schema，schema中是column_type
-//		column_type column_schema(rt_type_per_expression);
+//		column_type column_schema(rt_type_per_expression);*/
+
+		column_type column_schema=ExpressionCalculator::getOutputType_(exprArray_[i]);
+		cout<<"column_type len: "<<column_schema.get_length()<<endl;
+		getchar();
 		column_list.push_back(column_schema);
 	}
 	Schema *rt_schema=new SchemaFix(column_list);

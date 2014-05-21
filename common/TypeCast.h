@@ -9,6 +9,7 @@
 #define TYPECAST_H_
 #include "ExpressionItem.h"
 #include "../data_type.h"
+#include <sstream>
 #include <stdlib.h>
 
 typedef bool (*TypeCastFunction) (ExpressionItem& in);
@@ -16,7 +17,6 @@ class TypeCast{
 public:
 	static TypeCastFunction type_cast_functions[DATA_TYPE_NUMBER][DATA_TYPE_NUMBER];
 };
-
 
 inline bool int_to_int(ExpressionItem& in){
 	assert(in.return_type==t_int);
@@ -43,7 +43,15 @@ inline bool int_to_ulong(ExpressionItem& in){
 	in.content.data.value._ulong=new_value;
 	return true;
 }
-
+inline bool int_to_decimal(ExpressionItem& in){
+	assert(in.return_type==t_int);
+	cout<<"int_to_decimal"<<endl;
+	stringstream va;
+	va<<in.content.data.value._int;
+	in.return_type=t_decimal;
+	strcpy(in.content.data.value._decimal,va.str().c_str());
+	return true;
+}
 inline bool string_to_int(ExpressionItem& in){
 	assert(in.return_type==t_string);
 	int rt=atoi(in._string.c_str());
@@ -60,6 +68,7 @@ inline void initialize_type_cast_functions(){
 	TypeCast::type_cast_functions[t_int][t_float]=int_to_float;
 	TypeCast::type_cast_functions[t_int][t_double]=int_to_double;
 	TypeCast::type_cast_functions[t_int][t_u_long]=int_to_ulong;
+	TypeCast::type_cast_functions[t_int][t_decimal]=int_to_decimal;
 }
 
 
