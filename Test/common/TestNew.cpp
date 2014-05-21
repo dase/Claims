@@ -255,8 +255,8 @@ static int common_project_tcp_h_test_single_node(){
 
 	init_single_node_tpc_h_envoriment();
 	for(unsigned i=0;i<repeated_times;i++){
+		query_select_a_b_c_d();
 //		query_select_star();
-		query_select_star();
 	}
 
 	Environment::getInstance()->~Environment();

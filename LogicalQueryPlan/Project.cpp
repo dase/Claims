@@ -19,23 +19,30 @@ LogicalProject::~LogicalProject(){
 }
 
 Dataflow LogicalProject::getDataflow(){
-//	if(&dataflow_==0){
-//		dataflow_=new Dataflow();
-//		*dataflow_=child_->getDataflow();
-		dataflow_=child_->getDataflow();
-//	}
-	return dataflow_;
+	Dataflow ret;
+	const Dataflow child_dataflow=child_->getDataflow();
+	ret.property_.commnication_cost=child_dataflow.property_.commnication_cost;
+	ret.property_.partitioner=child_dataflow.property_.partitioner;
+	std::vector<Attribute> ret_attrs;
+	for(unsigned i=0;i<mappings_.getMapping().size();i++){
+		ret_attrs.push_back(child_dataflow.attribute_list_[mappings_.getMapping()[i][0]]);
+	}
+	ret.attribute_list_=ret_attrs;
+	dataflow_=new Dataflow();
+	*dataflow_=ret;
+	return ret;
 }
 
 BlockStreamIteratorBase *LogicalProject::getIteratorTree(const unsigned& blocksize){
-	getDataflow();
 	mappings_=getMapping();
+	getDataflow();
+	Dataflow child_dataflow=child_->getDataflow();
 	BlockStreamIteratorBase *child=child_->getIteratorTree(blocksize);
 	BlockStreamProjectIterator::State state;
 	state.block_size_=blocksize;
 	state.children_=child;
 	state.v_ei_=exprArray_;
-	state.input_=getSchema(dataflow_.attribute_list_);
+	state.input_=getSchema(child_dataflow.attribute_list_);
 	state.map_=mappings_;
 	/*
 	 * the output schema has the column type which has the data type and the data length
@@ -48,7 +55,8 @@ BlockStreamIteratorBase *LogicalProject::getIteratorTree(const unsigned& blocksi
 Schema *LogicalProject::getOutputSchema(){
 	//must scan the expression and get the output schema
 	vector<column_type> column_list;
-	Schema *input_=getSchema(dataflow_.attribute_list_);
+	Dataflow child_dataflow=child_->getDataflow();
+	Schema *input_=getSchema(child_dataflow.attribute_list_);
 	for(unsigned i=0;i<exprArray_.size();i++){
 		for(unsigned j=0;j<exprArray_[i].size();j++){
 			if(exprArray_[i][j].type==ExpressionItem::variable_type){
@@ -91,10 +99,11 @@ int LogicalProject::getColumnSeq(ExpressionItem &ei){
 	/*every time invoke a getColumnSeq, you need to new a catalog--@li: it seams that you actually get
 	 * the reference to the catalog rather than creating one.
 	*/
-	for(unsigned i=0;i<dataflow_.attribute_list_.size();i++){
-		TableDescriptor *table=Catalog::getInstance()->getTable(dataflow_.attribute_list_[i].table_id_);
+	Dataflow child_dataflow=child_->getDataflow();
+	for(unsigned i=0;i<child_dataflow.attribute_list_.size();i++){
+		TableDescriptor *table=Catalog::getInstance()->getTable(child_dataflow.attribute_list_[i].table_id_);
 		string tablename=table->getTableName();
-		if((tablename.compare(ei.content.var.table_name)==0)&&(dataflow_.attribute_list_[i].attrName.compare(ei.content.var.column_name)==0)){
+		if((tablename.compare(ei.content.var.table_name)==0)&&(child_dataflow.attribute_list_[i].attrName.compare(ei.content.var.column_name)==0)){
 			return i;
 		}
 	}
