@@ -38,6 +38,9 @@ bool check_data_type_for_add(data_type dt){
 	case t_smallInt:{
 		return true;
 	}
+	case t_date:{
+		return true;
+	}
 	default:{
 		return false;
 	}

@@ -151,6 +151,8 @@ public:
 	bool setOperator(const char*);
 	bool setStringValue(std::string);
 	bool setVariable(const char *,const char *);
+	//currently,date only const char * supported!
+	bool setDateValue(const char *);
 public:
 	union {
 		variable var;

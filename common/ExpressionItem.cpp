@@ -43,6 +43,10 @@ bool ExpressionItem::setValue(void* value_str,const data_type type){
 			setDecimalValue((const char *)value_str);
 			break;
 		}
+		case t_date:{
+			setDateValue((const char *)value_str);
+			break;
+		}
 		default:{
 			cout<<"no matching operator exists!!!"<<endl;
 			/*
@@ -129,6 +133,13 @@ bool ExpressionItem::setStringValue(std::string str){
 	type=const_type;
 	return_type=t_string;
 	_string=str;
+	return true;
+}
+
+bool ExpressionItem::setDateValue(const char * date_str){
+	type=const_type;
+	return_type=t_date;
+	strcpy(content.data.value._date,date_str);
 	return true;
 }
 

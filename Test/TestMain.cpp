@@ -32,6 +32,7 @@
 #include "../types/Test/data_type_test.cpp"
 #include "../common/Expression_item.cpp"
 #include "common/TestNew.cpp"
+#include "common/issue27.cpp"
 #include "../Loader/Test/test_load.cpp"
 
 #include "../BlockStreamIterator/ParallelBlockStreamIterator/Test/in_iterator_test.cpp"
@@ -88,7 +89,8 @@ int main(){
 //	return test_index_manager();
 //	in_test();
 
-	common_project_tcp_h_test_single_node();
+//	common_project_tcp_h_test_single_node();
+	issue27_single_node();
 
 //	common_project_tcp_h_test_multi_node();
 //	test_expanderFramework_single_node(1);
