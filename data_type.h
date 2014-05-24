@@ -530,7 +530,8 @@ public:
 	};
 	inline std::string toString(void* value)
 	{
-		return to_simple_string(*(date*)value);
+		std::string s=to_simple_string(*(date*)value);
+		return s;
 	};
 	void toValue(void* target, const char* string){
 		std::string s(string);

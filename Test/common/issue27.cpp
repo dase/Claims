@@ -74,24 +74,6 @@ static void query_select_aggregation(){
 	ExpressionItem ei16;
 	ExpressionItem ei17;
 
-	table_1->addAttribute("row_id", data_type(t_u_long));
-	table_1->addAttribute("L_ORDERKEY",data_type(t_u_long));  				//0
-	table_1->addAttribute("L_PARTKEY",data_type(t_u_long));
-	table_1->addAttribute("L_SUPPKEY",data_type(t_u_long));
-	table_1->addAttribute("L_LINENUMBER",data_type(t_u_long));
-	table_1->addAttribute("L_QUANTITY",data_type(t_decimal));
-	table_1->addAttribute("L_EXTENDEDPRICE",data_type(t_decimal));
-	table_1->addAttribute("L_DISCOUNT",data_type(t_decimal));
-	table_1->addAttribute("L_TEX",data_type(t_decimal));
-	table_1->addAttribute("L_RETURNFLAG",data_type(t_string),1);
-	table_1->addAttribute("L_LINESTATUS",data_type(t_string),1);
-	table_1->addAttribute("L_SHIPDATE",data_type(t_date));
-	table_1->addAttribute("L_COMMITDATE",data_type(t_date));
-	table_1->addAttribute("L_RECEIPTDATE",data_type(t_date));
-	table_1->addAttribute("L_SHIPINSTRUCT",data_type(t_string),25);
-	table_1->addAttribute("L_SHIPMODE",data_type(t_string),10);
-	table_1->addAttribute("L_COMMENT",data_type(t_string),44);
-
 	ei1.setVariable("LINEITEM","row_id");
 	ei2.setVariable("LINEITEM","L_ORDERKEY");
 	ei3.setVariable("LINEITEM","L_PARTKEY");
@@ -104,16 +86,16 @@ static void query_select_aggregation(){
 	ei10.setVariable("LINEITEM","L_RETURNFLAG");
 	ei10.size=1;
 	ei11.setVariable("LINEITEM","L_LINESTATUS");
-	ei10.size=1;
+	ei11.size=1;
 	ei12.setVariable("LINEITEM","L_SHIPDATE");
 	ei13.setVariable("LINEITEM","L_COMMITDATE");
 	ei14.setVariable("LINEITEM","L_RECEIPTDATE");
 	ei15.setVariable("LINEITEM","L_SHIPINSTRUCT");
 	ei15.size=25;
 	ei16.setVariable("LINEITEM","L_SHIPMODE");
-	ei15.size=10;
+	ei16.size=10;
 	ei17.setVariable("LINEITEM","L_COMMENT");
-	ei15.size=44;
+	ei17.size=44;
 
 	expr1.push_back(ei1);
 	expr2.push_back(ei2);
