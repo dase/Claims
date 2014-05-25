@@ -76,6 +76,10 @@ void ExpressionCalculator::computes(ExpressionItem operator_item, ExpressionItem
 			adds(stack,result);
 			break;
 		}
+		case op_multiple:{
+			muls(stack,result);
+			break;
+		}
 		case op_mins:{
 			minss(stack,result);
 			break;

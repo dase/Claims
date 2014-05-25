@@ -48,6 +48,7 @@ inline bool int_to_decimal(ExpressionItem& in){
 	cout<<"int_to_decimal"<<endl;
 	stringstream va;
 	va<<in.content.data.value._int;
+	cout<<"va : "<<va.str().c_str()<<endl;
 	in.return_type=t_decimal;
 	strcpy(in.content.data.value._decimal,va.str().c_str());
 	return true;

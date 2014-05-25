@@ -71,6 +71,8 @@ bool ExpressionItem::setIntValue(const char* int_str){
 	this->type=const_type;
 	this->return_type=t_int;
 	this->content.data.value._int=atoi(int_str);
+	string itemname(int_str);
+	this->item_name=itemname;
 	return true;
 }
 
@@ -126,6 +128,9 @@ bool ExpressionItem::setDecimalValue(const char * decimal_str){
 	type=const_type;
 	return_type=t_decimal;
 	strcpy(content.data.value._decimal,decimal_str);
+	string s(decimal_str);
+	string itemname(decimal_str);
+	item_name=itemname;
 	return true;
 }
 
@@ -133,6 +138,7 @@ bool ExpressionItem::setStringValue(std::string str){
 	type=const_type;
 	return_type=t_string;
 	_string=str;
+	item_name=str;
 	return true;
 }
 
@@ -187,6 +193,7 @@ bool ExpressionItem::setOperator(const char* op_str){
 		printf("[%s] fails to match to any existing operator\n",op_str);
 		return false;
 	}
+	item_name=tmp;
 	return true;
 }
 
@@ -198,5 +205,8 @@ bool ExpressionItem::setVariable(const char * table,const char * column){
 	content.var.column_name=column;
 	string column_(column);
 	string column_1(content.var.column_name);
+	stringstream item;
+	item<<string(table).c_str()<<"."<<string(column).c_str();
+	item_name=item.str();
 	return true;
 }

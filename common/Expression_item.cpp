@@ -15,28 +15,40 @@ static void test_add_(){
 	std::vector<ExpressionItem> express_item_list;
 
 	ExpressionItem ei1;
-	ei1.setIntValue("3");
-	express_item_list.push_back(ei1);
-
 	ExpressionItem ei2;
-	ei2.setFloatValue("8.8");
-	express_item_list.push_back(ei2);
-
 	ExpressionItem ei3;
-	ei3.setOperator("+");
-	express_item_list.push_back(ei3);
-
 	ExpressionItem ei4;
-	ei4.setIntValue("-10");
-	express_item_list.push_back(ei4);
-
 	ExpressionItem ei5;
-	ei5.setOperator("+");
+	ExpressionItem ei6;
+	ExpressionItem ei7;
+	ExpressionItem ei8;
+	ExpressionItem ei9;
+
+	ei1.setIntValue("2");
+	ei2.setIntValue("3");
+	ei3.setIntValue("4");
+	ei4.setOperator("+");
+	ei5.setOperator("*");
+	ei6.setIntValue("6");
+	ei7.setIntValue("5");
+	ei8.setOperator("-");
+	ei9.setOperator("*");
+
+	express_item_list.push_back(ei1);
+	express_item_list.push_back(ei2);
+	express_item_list.push_back(ei3);
+	express_item_list.push_back(ei4);
 	express_item_list.push_back(ei5);
+	express_item_list.push_back(ei6);
+	express_item_list.push_back(ei7);
+	express_item_list.push_back(ei8);
+	express_item_list.push_back(ei9);
+
 
 	ExpressionItem result;
 	ExpressionCalculator::calcuate(express_item_list,result);
-	print_test_name_result(is_equal(result.content.data.value._float,21.8)&&result.return_type==t_float,"(+)");
+	cout<<result.content.data.value._int<<endl;
+	print_test_name_result(is_equal(result.content.data.value._int,14)&&result.return_type==t_int,"(+)");
 }
 
 static void test_add(){
@@ -345,8 +357,8 @@ static int test_expression_item(){
 	initialize_arithmetic_type_promotion_matrix();
 	initialize_type_cast_functions();
 
-	test_add();
-//	test_add_();
+//	test_add();
+	test_add_();
 //	test_com_less();
 //	test_case_exp();
 //	test_upper();

@@ -93,8 +93,8 @@ static void mins_in_same_type(const ExpressionItem& left,const ExpressionItem& r
 			target.return_type=t_decimal;
 			string sl(left.content.data.value._decimal);
 			string sr(right.content.data.value._decimal);
-			NValue l=NValue::getDecimalValueFromString(sl);
 			NValue r=NValue::getDecimalValueFromString(sr);
+			NValue l=NValue::getDecimalValueFromString(sl);
 			string st=l.op_subtract(r).createStringFromDecimal();
 			strcpy(target.content.data.value._decimal,st.c_str());
 			break;
@@ -122,8 +122,8 @@ static void muls_in_same_type(const ExpressionItem& left,const ExpressionItem& r
 			target.return_type=t_decimal;
 			string sl(left.content.data.value._decimal);
 			string sr(right.content.data.value._decimal);
-			NValue l=NValue::getDecimalValueFromString(sl);
 			NValue r=NValue::getDecimalValueFromString(sr);
+			NValue l=NValue::getDecimalValueFromString(sl);
 			string st=l.op_multiply(r).createStringFromDecimal();
 			strcpy(target.content.data.value._decimal,st.c_str());
 			break;
@@ -184,12 +184,12 @@ static void minss(ExpressionItemStack& stack, ExpressionItem& target){
 	ExpressionItem right=stack.top();
 	stack.pop();
 	if(!check_data_type_for_add(right.return_type)){
-		printf("%s is not supported for +!\n",getReturnTypeName(right.return_type).c_str());
+		printf("%s is not supported for -s r!\n",getReturnTypeName(right.return_type).c_str());
 	}
 	ExpressionItem left=stack.top();
 	stack.pop();
 	if(!check_data_type_for_add(left.return_type)){
-		printf("%s is not supported for +!\n",getReturnTypeName(left.return_type).c_str());
+		printf("%s is not supported for -s l!\n",getReturnTypeName(left.return_type).c_str());
 	}
 //	target.return_type=right.return_type>left.return_type?right.return_type:left.return_type;
 	target.return_type=TypePromotion::arith_type_promotion_map[left.return_type][right.return_type];
@@ -200,15 +200,24 @@ static void mins(ExpressionItemStack& stack, ExpressionItem& target){
 	ExpressionItem right=stack.top();
 	stack.pop();
 	if(!check_data_type_for_add(right.return_type)){
-		printf("%s is not supported for +!\n",getReturnTypeName(right.return_type).c_str());
+		printf("%s is not supported for - r!\n",getReturnTypeName(right.return_type).c_str());
 	}
 	ExpressionItem left=stack.top();
 	stack.pop();
 	if(!check_data_type_for_add(left.return_type)){
-		printf("%s is not supported for +!\n",getReturnTypeName(left.return_type).c_str());
+		printf("%s is not supported for - l!\n",getReturnTypeName(left.return_type).c_str());
 	}
 //	target.return_type=right.return_type>left.return_type?right.return_type:left.return_type;
 	target.return_type=TypePromotion::arith_type_promotion_map[left.return_type][right.return_type];
+
+	if(target.return_type!=left.return_type){
+		//left should be converted into target.return_type if two types are different
+		TypeCast::type_cast_functions[left.return_type][target.return_type](left);
+	}
+	if(target.return_type!=right.return_type){
+		TypeCast::type_cast_functions[right.return_type][target.return_type](right);
+	}
+	mins_in_same_type(left,right,target);
 }
 
 static void muls(ExpressionItemStack& stack, ExpressionItem& target){
@@ -216,12 +225,12 @@ static void muls(ExpressionItemStack& stack, ExpressionItem& target){
 	ExpressionItem right=stack.top();
 	stack.pop();
 	if(!check_data_type_for_add(right.return_type)){
-		printf("%s is not supported for +!\n",getReturnTypeName(right.return_type).c_str());
+		printf("%s is not supported for *!\n",getReturnTypeName(right.return_type).c_str());
 	}
 	ExpressionItem left=stack.top();
 	stack.pop();
 	if(!check_data_type_for_add(left.return_type)){
-		printf("%s is not supported for +!\n",getReturnTypeName(left.return_type).c_str());
+		printf("%s is not supported for *!\n",getReturnTypeName(left.return_type).c_str());
 	}
 //	target.return_type=right.return_type>left.return_type?right.return_type:left.return_type;
 	target.return_type=TypePromotion::arith_type_promotion_map[left.return_type][right.return_type];
@@ -233,12 +242,12 @@ static void mul(ExpressionItemStack& stack, ExpressionItem& target){
 	ExpressionItem right=stack.top();
 	stack.pop();
 	if(!check_data_type_for_add(right.return_type)){
-		printf("%s is not supported for +!\n",getReturnTypeName(right.return_type).c_str());
+		printf("%s is not supported for *!\n",getReturnTypeName(right.return_type).c_str());
 	}
 	ExpressionItem left=stack.top();
 	stack.pop();
 	if(!check_data_type_for_add(left.return_type)){
-		printf("%s is not supported for +!\n",getReturnTypeName(left.return_type).c_str());
+		printf("%s is not supported for *!\n",getReturnTypeName(left.return_type).c_str());
 	}
 //	target.return_type=right.return_type>left.return_type?right.return_type:left.return_type;
 	target.return_type=TypePromotion::arith_type_promotion_map[left.return_type][right.return_type];

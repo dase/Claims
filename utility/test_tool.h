@@ -34,6 +34,11 @@ inline bool print_test_name_result(bool result,std::string test_name=std::string
 		return false;
 	}
 }
+
+inline bool is_equal(int x,int y){
+	return fabs(x-y)<0.0000001;
+}
+
 inline bool is_equal(float x,float b){
 	return fabs(x-b)<0.000001;
 }

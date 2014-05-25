@@ -14,7 +14,11 @@
 
 typedef std::stack<ExpressionItem> ExpressionItemStack;
 typedef std::vector<ExpressionItem> Expression;
-
+typedef struct{
+	Expression expr;
+	int op;
+}Exp_op;
+typedef vector<Exp_op> Exp_op_tmp;
 /**
  * print_expression is a good tool for debug.
  * You can :

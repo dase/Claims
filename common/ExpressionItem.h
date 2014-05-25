@@ -161,6 +161,7 @@ public:
 	}content;
 	ItemType type;
 	std::string _string;// string cannot be in unoin.
+	std::string item_name;
 	data_type return_type;
 	unsigned size;//add by zhanglei
 
