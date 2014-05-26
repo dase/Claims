@@ -78,10 +78,10 @@ struct data__{
 	double _double;
 	unsigned long _ulong;
 	bool _bool;
-	char _date[4];//date
-	char _time[8];//time
-	char _datatime[8];//datetime
-	char _decimal[16];//decimal
+//	char _date[4];//date
+//	char _time[8];//time
+//	char _datatime[8];//datetime
+//	char _decimal[16];//decimal
 	}value;
 };
 
@@ -138,6 +138,7 @@ public:
 	virtual ~ExpressionItem();
 	bool setValue(void*,data_type);
 	bool setData(data__&);
+	bool setData(data__&,data_type);
 	bool setIntValue(const char *);
 	bool setIntValue(int);
 	bool setFloatValue(const char*);
@@ -160,6 +161,10 @@ public:
 		express_operator op;
 	}content;
 	ItemType type;
+	date _date;
+	time_duration _time;
+	ptime _datatime;
+	NValue _decimal;
 	std::string _string;// string cannot be in unoin.
 	std::string item_name;
 	data_type return_type;
@@ -229,7 +234,8 @@ private:
 				return std::string("t_datetime");
 			}
 			case t_decimal:{
-				return std::string("t_decimal");
+//				ss<<content.data.value._decimal;
+				break;
 			}
 			case t_smallInt:{
 				return std::string("t_smallInt");

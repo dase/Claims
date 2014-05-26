@@ -66,7 +66,9 @@ bool BlockStreamProjectIterator::next(BlockStreamBase *block){
 				rb.bsti_->reset();
 				cur=rb.bsti_->currentTuple();
 			}
+			void *cao=0;
 			if((tuple=block->allocateTuple(total_length_))>0){
+				cao=tuple;
 				for(unsigned i=0;i<state_.v_ei_.size();i++){
 					ExpressionItem result;
 					ExpressItem_List toCalc;
@@ -78,9 +80,14 @@ bool BlockStreamProjectIterator::next(BlockStreamBase *block){
 //							int m=*(int*)state_.input_->getColumnAddess(nth,cur);
 							//put the nth column of the tuple into the Expression and turn it to a const
 							ei.setValue(state_.input_->getColumnAddess(nth,cur),state_.input_->getcolumn(nth).type);
+//							cout<<"====";
+//							ei.print_value();
+//							state_.input_->displayTuple(cur," ** ");
 							variable_++;
 						}
 						else if(state_.v_ei_[i][j].type==ExpressionItem::const_type){
+//							ei.setData(state_.v_ei_[i][j].content.data);
+							ei.return_type=state_.v_ei_[i][j].return_type;
 							ei.setData(state_.v_ei_[i][j].content.data);
 						}
 						else{
@@ -89,12 +96,17 @@ bool BlockStreamProjectIterator::next(BlockStreamBase *block){
 						toCalc.push_back(ei);
 					}
 					ExpressionCalculator::calcuate(toCalc,result);
+//					cout<<state_.output_->getcolumn(i).get_length()<<"=====";
 //					result.print_value();
 //					cout<<"state_.output_->getcolumn(i).get_length(): "<<state_.output_->getcolumn(i).get_length();
-//					getchar();
 					copyColumn(tuple,result,state_.output_->getcolumn(i).get_length());
+//					string str((char *)tuple);
+//					cout<<"str--tuple: "<<str.c_str()<<endl;
 					tuple=(char *)tuple+state_.output_->getcolumn(i).get_length();
 				}
+//				cout<<"zheli youcuo m ?"<<endl;
+//				state_.output_->displayTuple(cao," ++ ");
+//				getchar();
 				/* Recently, we can use choosing the first column
 				 * TODO:here we can do some mapping by using the func pointer in Expression*/
 				rb.bsti_->increase_cur_();
@@ -175,11 +187,11 @@ bool BlockStreamProjectIterator::copyColumn(void *&tuple,ExpressionItem &result,
 			break;
 		}
 		case t_decimal:{
-			memcpy(tuple,result.content.data.value._decimal,length);
+			memcpy(tuple,&result._decimal,length);
 			break;
 		}
 		case t_date:{
-			memcpy(tuple,result.content.data.value._date,length);
+			memcpy(tuple,&result._date,length);
 			break;
 		}
 		default:{

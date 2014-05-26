@@ -20,7 +20,7 @@ bool ExpressionItem::setValue(void* value_str,const data_type type){
 	switch(type){
 		case t_int:{
 //			cout<<"the value in the expressionitem is: "<<*(int *)value_str<<endl;
-			setIntValue(*(int *)value_str);
+			setIntValue((const char *)value_str);
 			break;
 		}
 		case t_float:{
@@ -60,9 +60,15 @@ bool ExpressionItem::setValue(void* value_str,const data_type type){
 	return true;
 }
 
+bool ExpressionItem::setData(data__& data,data_type rt){
+	this->type=const_type;
+	this->return_type=rt;
+	this->content.data=data;
+	return true;
+}
+
 bool ExpressionItem::setData(data__& data){
 	this->type=const_type;
-	/*return type not need!!!*/
 	this->content.data=data;
 	return true;
 }
@@ -127,8 +133,8 @@ bool ExpressionItem::setULongValue(unsigned long &u_long){
 bool ExpressionItem::setDecimalValue(const char * decimal_str){
 	type=const_type;
 	return_type=t_decimal;
-	strcpy(content.data.value._decimal,decimal_str);
-	string s(decimal_str);
+	NValue nvalue=*(NValue*)decimal_str;
+	_decimal=nvalue;
 	string itemname(decimal_str);
 	item_name=itemname;
 	return true;
@@ -145,7 +151,8 @@ bool ExpressionItem::setStringValue(std::string str){
 bool ExpressionItem::setDateValue(const char * date_str){
 	type=const_type;
 	return_type=t_date;
-	strcpy(content.data.value._date,date_str);
+	_date=*(date*)date_str;
+//	strcpy(content.data.value._date,date_str);
 	return true;
 }
 

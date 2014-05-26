@@ -41,17 +41,20 @@ Dataflow LogicalProject::getDataflow(){
 	}
 
 	for(unsigned i=0;i<mappings_.getMapping().size();i++){
+		cout<<"mappings_.getMappings().size(): "<<mappings_.getMapping().size()<<endl;
 		if(exprArray_[i].size()>1){
+			//在这里是要将新名字赋给dataflow中的attribute name的
 			string alias=recovereyName(exprArray_[i]);
 			column_type column=ExpressionCalculator::getOutputType_(exprArray_[i]);
 			//currently,0 is to table_id TODO;
 			Attribute attr_alais(0,i,alias,column.type,column.get_length());
 			ret_attrs.push_back(attr_alais);
-			continue;
 		}
 		else{
-			//在这里是要将新名字赋给dataflow中的attribute name的
-			ret_attrs.push_back(child_dataflow.attribute_list_[mappings_.getMapping()[i][0]]);
+			Attribute tmp=child_dataflow.attribute_list_[mappings_.getMapping()[i][0]];
+			Attribute attr(0,i,tmp.getName(),tmp.attrType->type,tmp.attrType->get_length());
+			ret_attrs.push_back(attr);
+//			ret_attrs.push_back(child_dataflow.attribute_list_[mappings_.getMapping()[i][0]]);
 		}
 //		getchar();
 	}
@@ -81,33 +84,35 @@ BlockStreamIteratorBase *LogicalProject::getIteratorTree(const unsigned& blocksi
 }
 
 Schema *LogicalProject::getOutputSchema(){
-	//must scan the expression and get the output schema
-	vector<column_type> column_list;
-	Dataflow child_dataflow=child_->getDataflow();
-	Schema *input_=getSchema(child_dataflow.attribute_list_);
-	for(unsigned i=0;i<exprArray_.size();i++){
-//		int seq=-1;
-//		for(unsigned j=0;j<exprArray_[i].size();j++){
-//			if(exprArray_[i][j].type==ExpressionItem::variable_type){
-//				seq++;
-//				exprArray_[i][j].return_type=input_->getcolumn(mappings_.getMapping()[i][seq]).type;
-//			}
-//		}
-		/*
-		//如果是获得输出的类型，就用原来的算一遍
-		data_type rt_type_per_expression=ExpressionCalculator::getOutputType(exprArray_[i]);
-		//只是试试：-》
-		column_type column_schema=*dataflow_.attribute_list_[mappings_.getMapping()[i][0]].attrType;
-
-		//TODO:设计一个功能，这个功能在输入的expressions选出schema，schema中是column_type
-//		column_type column_schema(rt_type_per_expression);*/
-
-		column_type column_schema=ExpressionCalculator::getOutputType_(exprArray_[i]);
-//		cout<<"column_type len: "<<column_schema.get_length()<<endl;
-		column_list.push_back(column_schema);
-	}
-	Schema *rt_schema=new SchemaFix(column_list);
-	return rt_schema;
+	Schema *schema=getSchema(dataflow_->attribute_list_);
+	return schema;
+//	//must scan the expression and get the output schema
+//	vector<column_type> column_list;
+//	Dataflow child_dataflow=child_->getDataflow();
+//	Schema *input_=getSchema(child_dataflow.attribute_list_);
+//	for(unsigned i=0;i<exprArray_.size();i++){
+////		int seq=-1;
+////		for(unsigned j=0;j<exprArray_[i].size();j++){
+////			if(exprArray_[i][j].type==ExpressionItem::variable_type){
+////				seq++;
+////				exprArray_[i][j].return_type=input_->getcolumn(mappings_.getMapping()[i][seq]).type;
+////			}
+////		}
+//		/*
+//		//如果是获得输出的类型，就用原来的算一遍
+//		data_type rt_type_per_expression=ExpressionCalculator::getOutputType(exprArray_[i]);
+//		//只是试试：-》
+//		column_type column_schema=*dataflow_.attribute_list_[mappings_.getMapping()[i][0]].attrType;
+//
+//		//TODO:设计一个功能，这个功能在输入的expressions选出schema，schema中是column_type
+////		column_type column_schema(rt_type_per_expression);*/
+//
+//		column_type column_schema=ExpressionCalculator::getOutputType_(exprArray_[i]);
+////		cout<<"column_type len: "<<column_schema.get_length()<<endl;
+//		column_list.push_back(column_schema);
+//	}
+//	Schema *rt_schema=new SchemaFix(column_list);
+//	return rt_schema;
 }
 
 Mapping LogicalProject::getMapping(){

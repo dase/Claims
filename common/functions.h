@@ -62,12 +62,9 @@ static void add_in_same_type(const ExpressionItem& left,const ExpressionItem& ri
 		}
 		case t_decimal:{
 			target.return_type=t_decimal;
-			string sl(left.content.data.value._decimal);
-			string sr(right.content.data.value._decimal);
-			NValue l=NValue::getDecimalValueFromString(sl);
-			NValue r=NValue::getDecimalValueFromString(sr);
-			string st=l.op_add(r).createStringFromDecimal();
-			strcpy(target.content.data.value._decimal,st.c_str());
+			NValue l=left._decimal;//data.value._decimal;
+			NValue r=right._decimal;//.content.data.value._decimal;
+			target._decimal=l.op_add(r);
 			break;
 		}
 		default:{
@@ -91,12 +88,9 @@ static void mins_in_same_type(const ExpressionItem& left,const ExpressionItem& r
 		}
 		case t_decimal:{
 			target.return_type=t_decimal;
-			string sl(left.content.data.value._decimal);
-			string sr(right.content.data.value._decimal);
-			NValue r=NValue::getDecimalValueFromString(sr);
-			NValue l=NValue::getDecimalValueFromString(sl);
-			string st=l.op_subtract(r).createStringFromDecimal();
-			strcpy(target.content.data.value._decimal,st.c_str());
+			NValue l=left._decimal;//data.value._decimal;
+			NValue r=right._decimal;//.content.data.value._decimal;
+			target._decimal=l.op_subtract(r);
 			break;
 		}
 		default:{
@@ -120,12 +114,9 @@ static void muls_in_same_type(const ExpressionItem& left,const ExpressionItem& r
 		}
 		case t_decimal:{
 			target.return_type=t_decimal;
-			string sl(left.content.data.value._decimal);
-			string sr(right.content.data.value._decimal);
-			NValue r=NValue::getDecimalValueFromString(sr);
-			NValue l=NValue::getDecimalValueFromString(sl);
-			string st=l.op_multiply(r).createStringFromDecimal();
-			strcpy(target.content.data.value._decimal,st.c_str());
+			NValue l=left._decimal;//data.value._decimal;
+			NValue r=right._decimal;//.content.data.value._decimal;
+			target._decimal=l.op_multiply(r);
 			break;
 		}
 		default:{
@@ -217,6 +208,7 @@ static void mins(ExpressionItemStack& stack, ExpressionItem& target){
 	if(target.return_type!=right.return_type){
 		TypeCast::type_cast_functions[right.return_type][target.return_type](right);
 	}
+//	cout<<"left.return_type: "<<left.content.data.value._decimal<<endl;
 	mins_in_same_type(left,right,target);
 }
 

@@ -77,7 +77,7 @@ static void test_add(){
 
 	ExpressionItem result;
 	ExpressionCalculator::calcuate(express_item_list,result);
-	string s(result.content.data.value._decimal);
+	string s=result._decimal.createStringFromDecimal();
 	print_test_name_result(is_equal(NValue::getDecimalValueFromString(s),NValue::getDecimalValueFromString("1.8"))&&result.return_type==t_decimal,"(+)");
 }
 
@@ -98,7 +98,7 @@ static void test_multiple(){
 
 	ExpressionItem result;
 	ExpressionCalculator::calcuate(express_item_list,result);
-	string s(result.content.data.value._decimal);
+	string s=result._decimal.createStringFromDecimal();
 	print_test_name_result(is_equal(NValue::getDecimalValueFromString(s),NValue::getDecimalValueFromString("5.40"))&&result.return_type==t_decimal,"(*)");
 }
 
@@ -357,8 +357,8 @@ static int test_expression_item(){
 	initialize_arithmetic_type_promotion_matrix();
 	initialize_type_cast_functions();
 
-//	test_add();
-	test_add_();
+	test_add();
+//	test_add_();
 //	test_com_less();
 //	test_case_exp();
 //	test_upper();

@@ -84,16 +84,18 @@ static void query_select_aggregation(){
 	ExpressionItem ei17;
 
 
-//	ei1_1.setVariable("LINEITEM","L_EXTENDEDPRICE");
-////	ei1_2.setIntValue("1");
-//	ei1_3.setVariable("LINEITEM","L_DISCOUNT");
-//	ei1_4.setOperator("-");
-//	ei1_5.setOperator("*");
-//	ei1_6.setIntValue("1");
-//	ei1_7.setVariable("LINEITEM","L_TEX");
-//	ei1_8.setOperator("+");
-//	ei1_9.setOperator("*");
-//	ei1.setVariable("LINEITEM","row_id");
+	ei1_1.setVariable("LINEITEM","L_EXTENDEDPRICE");
+	ei1_2.setIntValue("1");
+	ei1_3.setVariable("LINEITEM","L_DISCOUNT");
+	ei1_4.setOperator("-");
+	ei1_5.setOperator("*");
+	ei1_6.setIntValue("1");
+	ei1_7.setVariable("LINEITEM","L_TEX");
+	ei1_8.setOperator("+");
+	ei1_9.setOperator("*");
+
+
+	ei1.setVariable("LINEITEM","row_id");
 	ei2.setVariable("LINEITEM","L_ORDERKEY");
 	ei3.setVariable("LINEITEM","L_PARTKEY");
 	ei4.setVariable("LINEITEM","L_SUPPKEY");
@@ -116,18 +118,35 @@ static void query_select_aggregation(){
 	ei17.setVariable("LINEITEM","L_COMMENT");
 	ei17.size=44;
 
-//	expr1.push_back(ei1_1);
-////	expr1.push_back(ei1_2);
-//	expr1.push_back(ei1_3);
-//	expr1.push_back(ei1_4);
-//	expr1.push_back(ei1_5);
+
+
+	expr1.push_back(ei1_1);
+	expr1.push_back(ei1_2);
+	expr1.push_back(ei1_3);
+	expr1.push_back(ei1_4);
+	expr1.push_back(ei1_5);
+
 //	expr1.push_back(ei1_6);
 //	expr1.push_back(ei1_7);
 //	expr1.push_back(ei1_8);
 //	expr1.push_back(ei1_9);
 //	expr1.push_back(ei1);
-	expr2.push_back(ei2);
-	expr3.push_back(ei3);
+
+	expr2.push_back(ei1_1);
+	expr2.push_back(ei1_2);
+	expr2.push_back(ei1_3);
+	expr2.push_back(ei1_4);
+	expr2.push_back(ei1_5);
+	expr2.push_back(ei1_6);
+	expr2.push_back(ei1_7);
+	expr2.push_back(ei1_8);
+	expr2.push_back(ei1_9);
+
+	expr3.push_back(ei1_2);
+	expr3.push_back(ei1_3);
+	expr3.push_back(ei1_4);
+
+//	expr3.push_back(ei3);
 	expr4.push_back(ei4);
 	expr5.push_back(ei5);
 	expr6.push_back(ei6);
@@ -143,23 +162,29 @@ static void query_select_aggregation(){
 	expr16.push_back(ei16);
 	expr17.push_back(ei17);
 
-//	expr_list1.push_back(expr1);
-	expr_list1.push_back(expr2);
-	expr_list1.push_back(expr3);
-	expr_list1.push_back(expr4);
-	expr_list1.push_back(expr5);
-	expr_list1.push_back(expr6);
-	expr_list1.push_back(expr7);
-	expr_list1.push_back(expr8);
-	expr_list1.push_back(expr9);
 	expr_list1.push_back(expr10);
 	expr_list1.push_back(expr11);
-	expr_list1.push_back(expr12);
-	expr_list1.push_back(expr13);
-	expr_list1.push_back(expr14);
-	expr_list1.push_back(expr15);
-	expr_list1.push_back(expr16);
-	expr_list1.push_back(expr17);
+	expr_list1.push_back(expr6);
+	expr_list1.push_back(expr7);
+	expr_list1.push_back(expr1);
+	expr_list1.push_back(expr2);
+	expr_list1.push_back(expr8);
+	expr_list1.push_back(expr3);
+
+
+
+
+//	expr_list1.push_back(expr3);
+//	expr_list1.push_back(expr4);
+//	expr_list1.push_back(expr5);
+//	expr_list1.push_back(expr8);
+//	expr_list1.push_back(expr9);
+//	expr_list1.push_back(expr12);
+//	expr_list1.push_back(expr13);
+//	expr_list1.push_back(expr14);
+//	expr_list1.push_back(expr15);
+//	expr_list1.push_back(expr16);
+//	expr_list1.push_back(expr17);
 
 	LogicalOperator* project1=new LogicalProject(scan,expr_list1);
 

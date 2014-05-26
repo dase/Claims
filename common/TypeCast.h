@@ -45,12 +45,10 @@ inline bool int_to_ulong(ExpressionItem& in){
 }
 inline bool int_to_decimal(ExpressionItem& in){
 	assert(in.return_type==t_int);
-	cout<<"int_to_decimal"<<endl;
 	stringstream va;
 	va<<in.content.data.value._int;
-	cout<<"va : "<<va.str().c_str()<<endl;
 	in.return_type=t_decimal;
-	strcpy(in.content.data.value._decimal,va.str().c_str());
+	in._decimal=*((NValue*)va.str().c_str());
 	return true;
 }
 inline bool string_to_int(ExpressionItem& in){

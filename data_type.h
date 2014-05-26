@@ -903,14 +903,16 @@ public:
 	};
 	inline std::string toString( void* value)
 	{
-		char buf[39] = {"\0"};
-		ExportSerializeOutput out(buf, 39);
+//		string str((char *)value);
+//		return str;
+		char buf[100] = {"\0"};
+		ExportSerializeOutput out(buf, 100);
 		((NValue*)value)->serializeToExport(out,&number_of_decimal_digits_);
 		return std::string(buf+4);
 	};
 	static std::string toString(const NValue v,unsigned n_o_d_d=12){
-		char buf[39] = {"\0"};
-		ExportSerializeOutput out(buf, 39);
+		char buf[100] = {"\0"};
+		ExportSerializeOutput out(buf, 100);
 		(v).serializeToExport(out,&n_o_d_d);
 		return std::string(buf+4);
 	}
