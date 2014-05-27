@@ -8,15 +8,14 @@
 #include "ExpressionCalculator.h"
 #include "functions.h"
 ExpressionCalculator::ExpressionCalculator() {
-	// TODO Auto-generated constructor stub
+
 }
 
 ExpressionCalculator::~ExpressionCalculator() {
-	// TODO Auto-generated destructor stub
+
 }
 
 void ExpressionCalculator::compute(ExpressionItem operator_item,ExpressionItemStack& stack){
-//	assert(operator_item.content.op.num_of_parameter<=stack.size());
 	ExpressionItem result;
 	result.type=ExpressionItem::const_type;
 
@@ -195,11 +194,9 @@ column_type ExpressionCalculator::getOutputType_(std::vector<ExpressionItem> &ex
 		}
 	}
 	assert(stack.size()==1);
-	//区分string类型和其他数据类型
 	data_type dt=stack.top().return_type;
 	if(dt==t_string){
 		ct=new column_type(dt,exp[0].size);
-//		cout<<"exp: "<<exp[0].size<<endl;
 	}
 	else{
 		ct=new column_type(dt);

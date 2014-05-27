@@ -32,8 +32,8 @@ public:
 private:
 	Mapping getMapping();
 	Schema *getOutputSchema();
-	string recovereyName(Expression ei);
 	int getColumnSeq(ExpressionItem &ei);
+	string recovereyName(Expression ei);
 
 private:
 	Mapping mappings_;

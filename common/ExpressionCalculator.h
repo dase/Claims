@@ -14,10 +14,12 @@
 
 typedef std::stack<ExpressionItem> ExpressionItemStack;
 typedef std::vector<ExpressionItem> Expression;
+
 typedef struct{
 	Expression expr;
 	int op;
 }Exp_op;
+
 typedef vector<Exp_op> Exp_op_tmp;
 /**
  * print_expression is a good tool for debug.
@@ -49,38 +51,16 @@ public:
 	ExpressionCalculator();
 	virtual ~ExpressionCalculator();
 	static void calcuate(Expression &exp,ExpressionItem& result){
-//		if(exp.size()<=1){
-//			return;
-//		}
-//		else{
 			ExpressionItemStack stack;
-//			for(unsigned i=0;i<exp.size();i++){
-//				cout<<"after expr[i]: "<<exp[i].return_type<<"     "<<exp[i].type<<endl;
-//				if(exp[i].return_type==t_int){
-//					cout<<exp[i].content.data.value._int<<"  "<<endl;
-//				}
-//				if(exp[i].return_type==t_decimal){
-//					cout<<exp[i]._decimal.createStringFromDecimal().c_str()<<"  "<<endl;
-//				}
-//				if(exp[i].return_type==t_string){
-//					cout<<exp[i]._string<<"  "<<endl;
-//				}
-//			}
-//			getchar();
 			calcualte(exp,stack);
-
 			assert(stack.size()==1);
-//			printf("result:\n");
-//			stack.top().print();
 			result=stack.top();
-//		}
 	}
+
 	static void calcualte(Expression &exp,ExpressionItemStack& stack){
-//		print_expression(exp);
 		for(unsigned i=0;i<exp.size();i++){
 			if(exp[i].type!=ExpressionItem::operator_type){
 				stack.push(exp[i]);
-//				cout<<"data type: "<<exp[i].return_type<<endl;
 			}
 			else{
 				if(isComposeOperator(exp[i].content.op.op_)){
@@ -92,9 +72,6 @@ public:
 						if(exp[j].type==ExpressionItem::operator_type&&exp[j].content.op.op_==compose_op)
 						{
 							unsigned before = stack.size();
-
-//							print_expression(stack);
-
 							assert(stack.size()==before);
 							compute(exp[j],stack);
 							i=j+1;
@@ -113,18 +90,12 @@ public:
 				else{
 					compute(exp[i],stack);
 				}
-
 			}
 		}
 	}
 	static void compute(ExpressionItem operator_item,ExpressionItemStack& stack);
-
 	static void computes(ExpressionItem operator_item,ExpressionItemStack& stack);
-
 	static data_type getOutputType(vector<ExpressionItem> &exp);
-	/*
-	 * get the column type which has the data type and length
-	 * */
 	static column_type getOutputType_(vector<ExpressionItem> &exp);
 
 private:

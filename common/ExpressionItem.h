@@ -17,7 +17,6 @@ enum op_type{op_add,op_mins,op_multiple,op_cast_int,op_com_L,op_case,op_case_whe
 using namespace boost::gregorian;
 using namespace boost::posix_time;
 static std::string getReturnTypeName(data_type return_type){
-	//t_int,t_float,t_string,t_double,t_u_long, t_date, t_time, t_datetime, t_decimal, t_smallInt
 	switch(return_type){
 		case t_int:{
 			return std::string("int");
@@ -50,7 +49,7 @@ static std::string getReturnTypeName(data_type return_type){
 			return std::string("t_boolean");
 		}
 		default:{
-//			assert(false);
+			assert(false);
 			return std::string("Not given");
 		}
 	}
@@ -68,7 +67,6 @@ struct express_operator{
 	}
 	op_type op_;
 	unsigned num_of_parameter;
-//	data_type return_type;
 };
 
 struct data__{
@@ -78,10 +76,6 @@ struct data__{
 	double _double;
 	unsigned long _ulong;
 	bool _bool;
-//	char _date[4];//date
-//	char _time[8];//time
-//	char _datatime[8];//datetime
-//	char _decimal[16];//decimal
 	}value;
 };
 
@@ -165,10 +159,10 @@ public:
 	time_duration _time;
 	ptime _datatime;
 	NValue _decimal;
-	std::string _string;// string cannot be in unoin.
+	std::string _string;
 	std::string item_name;
 	data_type return_type;
-	unsigned size;//add by zhanglei
+	unsigned size;
 
 	friend class boost::serialization::access;
 	template<class Archive>
@@ -179,9 +173,8 @@ public:
 			ar& *start_of_union;
 			start_of_union++;
 		}
-
-
 	}
+
 private:
 	std::string getItemTypeName()const{
 		switch(type){
@@ -197,7 +190,6 @@ private:
 			default:{
 				assert(false);
 			}
-
 		}
 		return std::string();
 	}
@@ -205,7 +197,6 @@ private:
 	std::string data_value_to_string()const{
 		assert(type==const_type);
 		std::stringstream ss;
-
 		switch(return_type){
 			case t_int:{
 				ss<<content.data.value._int;

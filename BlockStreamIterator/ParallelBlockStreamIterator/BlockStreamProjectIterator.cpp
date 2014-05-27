@@ -8,7 +8,6 @@
 #include "BlockStreamProjectIterator.h"
 
 BlockStreamProjectIterator::BlockStreamProjectIterator() {
-	// TODO 自动生成的构造函数存根
 	sema_open_.set_value(1);
 	open_finished_=false;
 }
@@ -29,7 +28,6 @@ BlockStreamProjectIterator::State::State(Schema * input, Schema* output, BlockSt
 }
 
 bool BlockStreamProjectIterator::open(const PartitionOffset& partition_offset){
-	//first
 	state_.children_->open(partition_offset);
 	if(sema_open_.try_wait()){
 		BlockStreamBase *bsb=new BlockStreamFix(64*1024-sizeof(unsigned),state_.input_->getTupleMaxSize());
@@ -44,6 +42,10 @@ bool BlockStreamProjectIterator::open(const PartitionOffset& partition_offset){
 	return true;
 }
 
+/*
+ * now the expressions computing speed is slow because of the copy between among the expressions
+ * todo: seek the pointer of data and LLVM will be solved by wangli.
+ * */
 bool BlockStreamProjectIterator::next(BlockStreamBase *block){
 	unsigned total_length_=state_.output_->getTupleMaxSize();
 	void *tuple=0;
@@ -66,9 +68,8 @@ bool BlockStreamProjectIterator::next(BlockStreamBase *block){
 				rb.bsti_->reset();
 				cur=rb.bsti_->currentTuple();
 			}
-			void *cao=0;
+
 			if((tuple=block->allocateTuple(total_length_))>0){
-				cao=tuple;
 				for(unsigned i=0;i<state_.v_ei_.size();i++){
 					ExpressionItem result;
 					ExpressItem_List toCalc;
@@ -77,42 +78,22 @@ bool BlockStreamProjectIterator::next(BlockStreamBase *block){
 						ExpressionItem ei;
 						if(state_.v_ei_[i][j].type==ExpressionItem::variable_type){
 							int nth=state_.map_.atomicPopExpressionMapping(i).at(variable_); //n-th column in tuple
-//							int m=*(int*)state_.input_->getColumnAddess(nth,cur);
-							//put the nth column of the tuple into the Expression and turn it to a const
 							ei.setValue(state_.input_->getColumnAddess(nth,cur),state_.input_->getcolumn(nth).type);
-//							cout<<"====";
-//							ei.print_value();
-//							state_.input_->displayTuple(cur," ** ");
 							variable_++;
 						}
 						else if(state_.v_ei_[i][j].type==ExpressionItem::const_type){
-//							ei.setData(state_.v_ei_[i][j].content.data);
 							ei.return_type=state_.v_ei_[i][j].return_type;
 							ei.setData(state_.v_ei_[i][j].content.data);
-//							ei.setContent(state_.v_ei_[i][j].content);
 						}
 						else{
 							ei.setOperator(state_.v_ei_[i][j].getOperatorName().c_str());
 						}
 						toCalc.push_back(ei);
 					}
-//					for(unsigned i=0;i<toCalc.size();i++){
-//						cout<<"before expr[i]: "<<toCalc[i].return_type<<"     "<<toCalc[i].type<<endl;
-//					}
 					ExpressionCalculator::calcuate(toCalc,result);
-//					cout<<state_.output_->getcolumn(i).get_length()<<"=====";
-//					result.print_value();
-//					cout<<"state_.output_->getcolumn(i).get_length(): "<<state_.output_->getcolumn(i).get_length();
 					copyColumn(tuple,result,state_.output_->getcolumn(i).get_length());
-//					string str((char *)tuple);
-//					cout<<"str--tuple: "<<str.c_str()<<endl;
 					tuple=(char *)tuple+state_.output_->getcolumn(i).get_length();
 				}
-//				cout<<"zheli youcuo m ?"<<endl;
-//				state_.output_->displayTuple(cao," ++ ");
-//				getchar();
-				/* Recently, we can use choosing the first column
-				 * TODO:here we can do some mapping by using the func pointer in Expression*/
 				rb.bsti_->increase_cur_();
 			}
 			else{
@@ -121,7 +102,6 @@ bool BlockStreamProjectIterator::next(BlockStreamBase *block){
 			}
 		}
 	}
-
 
 	lock_.acquire();
 	BlockStreamBase * v_bsb;
@@ -136,9 +116,7 @@ bool BlockStreamProjectIterator::next(BlockStreamBase *block){
 
 	v_bsb->setEmpty();
 	BlockStreamBase::BlockStreamTraverseIterator* traverse_iterator=v_bsb->createIterator();
-
 	atomicPushRemainingBlock(remaining_block(v_bsb,traverse_iterator));
-
 	return next(block);
 }
 

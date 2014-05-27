@@ -8,18 +8,16 @@
 #include "ExpressionItem.h"
 
 ExpressionItem::ExpressionItem() {
-	// TODO Auto-generated constructor stub
 
 }
 
 ExpressionItem::~ExpressionItem() {
-	// TODO Auto-generated destructor stub
+
 }
 
 bool ExpressionItem::setValue(void* value_str,const data_type type){
 	switch(type){
 		case t_int:{
-//			cout<<"the value in the expressionitem is: "<<*(int *)value_str<<endl;
 			setIntValue((const char *)value_str);
 			break;
 		}
@@ -157,7 +155,6 @@ bool ExpressionItem::setDateValue(const char * date_str){
 }
 
 bool ExpressionItem::setOperator(const char* op_str){
-//	enum op_type{op_add,op_multiple,op_cast_int,op_com_L,op_case,op_case_when,op_case_then,op_case_else};
 	type=operator_type;
 	std::string tmp(op_str);
 	if(tmp=="+"){
@@ -207,11 +204,7 @@ bool ExpressionItem::setOperator(const char* op_str){
 bool ExpressionItem::setVariable(const char * table,const char * column){
 	this->type=variable_type;
 	this->content.var.table_name=table;
-	string table_(table);
-	string table_1(content.var.table_name);
 	this->content.var.column_name=column;
-	string column_(column);
-	string column_1(content.var.column_name);
 	stringstream item;
 	item<<string(table).c_str()<<"."<<string(column).c_str();
 	this->item_name=item.str();

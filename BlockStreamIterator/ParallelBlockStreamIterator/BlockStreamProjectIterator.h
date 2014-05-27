@@ -28,7 +28,6 @@ public:
 		remaining_block(BlockStreamBase * bsb,BlockStreamBase::BlockStreamTraverseIterator * bsti)
 		:bsb_(bsb),bsti_(bsti){};
 		remaining_block():bsb_(0),bsti_(0){};
-//        void * combinedTuple_;
         BlockStreamBase * bsb_;
         BlockStreamBase::BlockStreamTraverseIterator * bsti_;
 	};

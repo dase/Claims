@@ -11,7 +11,6 @@
 #include "TypePromotionMap.h"
 #include "../utility/test_tool.h"
 static void test_add_(){
-	//3+8.8+(-10)=1.8
 	std::vector<ExpressionItem> express_item_list;
 
 	ExpressionItem ei1;
@@ -52,7 +51,6 @@ static void test_add_(){
 }
 
 static void test_add(){
-	//3+8.8+(-10)=1.8
 	std::vector<ExpressionItem> express_item_list;
 
 	ExpressionItem ei1;
