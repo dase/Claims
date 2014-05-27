@@ -7,11 +7,12 @@
 
 #ifndef TYPECAST_H_
 #define TYPECAST_H_
+
 #include "ExpressionItem.h"
 #include <sstream>
 #include <stdlib.h>
 
-#include "../data_type.h"
+#include "data_type.h"
 
 typedef bool (*TypeCastFunction) (ExpressionItem& in);
 class TypeCast{

@@ -16,9 +16,9 @@
 #include "../LogicalQueryPlan/Test/testSort.cpp"
 #include "../LogicalQueryPlan/Test/testProject_wl.cpp"
 #include "../Parsetree/Test/parser_test.cpp"
-#include "../Schema/Test/SubTuple_test.cpp"
-#include "../Schema/Test/VariableSchema_test.cpp"
-#include "../Schema/Test/generateVariableData_test.cpp"
+#include "../common/Schema/Test/SubTuple_test.cpp"
+#include "../common/Schema/Test/VariableSchema_test.cpp"
+#include "../common/Schema/Test/generateVariableData_test.cpp"
 #include "../LogicalQueryPlan/Test/Aggregation_test.cpp"
 #include "../Catalog/Test/statistic_manager_test.cpp"
 #include "../LogicalQueryPlan/Test/query_optmization_based_on_statisitic_test.cpp"
@@ -29,7 +29,7 @@
 //#include "hashtable_test.cpp"
 
 #include "../Client/Test/TestSeverClient.cpp"
-#include "../types/Test/data_type_test.cpp"
+#include "../common/types/Test/data_type_test.h"
 #include "../common/Expression_item.cpp"
 #include "common/TestNew.cpp"
 #include "common/issue27.cpp"
@@ -49,7 +49,8 @@
 #include "TestSuit/tpc_h_test.cpp"
 #include "TestSuit/in_segment_scalability_test.cpp"
 #include "TestSuit/hash_table_test.h"
-int main(){
+#include "gtest.h"
+int main(int argc , char ** argv){
 
 //	return testGenerateIteratorTree();
 //	return iterator_test();
@@ -90,15 +91,18 @@ int main(){
 //	in_test();
 
 //	common_project_tcp_h_test_single_node();
-	issue27_single_node();
+//	issue27_single_node();
 
 //	common_project_tcp_h_test_multi_node();
 //	test_expanderFramework_single_node(1);
+
+	test_expanderFramework_single_node(5);
+
 //	test_multiple_expanderFramework_single_node(3);
-//	tcp_h_test();
 //	tcp_h_test_single_node();
 //	tcp_h_test_multi_nodes();
 //	in_segment_scalability_test();
 //	hash_table_test();
+//	g_test_main(argc,argv);
 //	sleep(1000);
 }
