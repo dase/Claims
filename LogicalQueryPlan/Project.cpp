@@ -112,8 +112,8 @@ int LogicalProject::getColumnSeq(ExpressionItem &ei){
 			return i;
 		}
 	}
-	printf("Variable ExpressItem fails to match any attribute in the dataflow!\n");
-	assert(false);
+//	printf("Variable ExpressItem fails to match any attribute in the dataflow!\n");
+//	assert(false);
 }
 
 string LogicalProject::recovereyName(Expression ei) {
@@ -257,4 +257,8 @@ string LogicalProject::recovereyName(Expression ei) {
 	}
 	ret=ss.str();
 	return ret;
+}
+
+void LogicalProject::print(int level)const{
+	printf("%*.project:\n",level*8," ");
 }

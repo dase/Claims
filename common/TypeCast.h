@@ -9,6 +9,7 @@
 #define TYPECAST_H_
 
 #include "ExpressionItem.h"
+
 #include <sstream>
 #include <stdlib.h>
 

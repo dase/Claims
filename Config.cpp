@@ -69,8 +69,7 @@ void Config::initialize() {
 	 * The following lines set the search attribute name and default value for each parameter.
 	 */
 
-	data_dir=getString("data","/home/imdb/data/zhanglei/");
-
+	data_dir=getString("data","/home/imdb/data/wangli/");
 	max_degree_of_parallelism=getInt("max_degree_of_parallelism",4);
 
 	expander_adaptivity_check_frequency=getInt("expander_adaptivity_check_frequency",1000);

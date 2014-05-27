@@ -67,6 +67,8 @@ int main(int argc , char ** argv){
 //	return variable_schema_test();
 //	return generateVariableData_test();
 //	return query_optimization_based_on_statistics_aggregation();
+//	return query_optimization_outputdata();
+
 //	return query_optimization_based_on_statistics();
 //	return daemon_test();
 //	return testServerClient();
@@ -76,25 +78,32 @@ int main(int argc , char ** argv){
 
 //	return testProject();
 //	return testSort();
+
+
 //	return testProject_wl();
 //	return Project_test();
 //	return expanded_iterators_test();
-//	return load_test();
+
 //	return test_load();
 //	return in_iterator_test();
+
 //	return test_csb_classes();
 //	return test_csb_indexing();
 //	return test_CSBIndexBuilding();		//for physical iterator testing and IndexManager testing
 //	return test_logical_csb_index_building();
 //	return test_index_scan_iterator();
 //	return test_index_manager();
+
 //	in_test();
 
 //	common_project_tcp_h_test_single_node();
 //	issue27_single_node();
 
 //	common_project_tcp_h_test_multi_node();
-//	test_expanderFramework_single_node(1);
+	test_expanderFramework_single_node(1);
+
+//	test_expanderFramework_single_node(5);
+
 
 //	test_expanderFramework_single_node(5);
 
