@@ -90,6 +90,11 @@ static void mins_in_same_type(const ExpressionItem& left,const ExpressionItem& r
 			target.return_type=t_decimal;
 			NValue l=left._decimal;//data.value._decimal;
 			NValue r=right._decimal;//.content.data.value._decimal;
+//			string ls=l.createStringFromDecimal();
+//			string rs=r.createStringFromDecimal();
+//			cout<<"l: "<<ls.c_str()<<endl;
+//			cout<<"r: "<<rs.c_str()<<endl;
+//			getchar();
 			target._decimal=l.op_subtract(r);
 			break;
 		}
@@ -116,6 +121,11 @@ static void muls_in_same_type(const ExpressionItem& left,const ExpressionItem& r
 			target.return_type=t_decimal;
 			NValue l=left._decimal;//data.value._decimal;
 			NValue r=right._decimal;//.content.data.value._decimal;
+//			string ls=l.createStringFromDecimal();
+//			string rs=r.createStringFromDecimal();
+//			cout<<"l: "<<ls.c_str()<<endl;
+//			cout<<"r: "<<rs.c_str()<<endl;
+//			getchar();
 			target._decimal=l.op_multiply(r);
 			break;
 		}

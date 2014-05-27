@@ -48,7 +48,7 @@ inline bool int_to_decimal(ExpressionItem& in){
 	stringstream va;
 	va<<in.content.data.value._int;
 	in.return_type=t_decimal;
-	in._decimal=*((NValue*)va.str().c_str());
+	in._decimal=NValue::getDecimalValueFromString(va.str());
 	return true;
 }
 inline bool string_to_int(ExpressionItem& in){

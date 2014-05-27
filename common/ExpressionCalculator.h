@@ -54,7 +54,21 @@ public:
 //		}
 //		else{
 			ExpressionItemStack stack;
+//			for(unsigned i=0;i<exp.size();i++){
+//				cout<<"after expr[i]: "<<exp[i].return_type<<"     "<<exp[i].type<<endl;
+//				if(exp[i].return_type==t_int){
+//					cout<<exp[i].content.data.value._int<<"  "<<endl;
+//				}
+//				if(exp[i].return_type==t_decimal){
+//					cout<<exp[i]._decimal.createStringFromDecimal().c_str()<<"  "<<endl;
+//				}
+//				if(exp[i].return_type==t_string){
+//					cout<<exp[i]._string<<"  "<<endl;
+//				}
+//			}
+//			getchar();
 			calcualte(exp,stack);
+
 			assert(stack.size()==1);
 //			printf("result:\n");
 //			stack.top().print();
@@ -65,9 +79,8 @@ public:
 //		print_expression(exp);
 		for(unsigned i=0;i<exp.size();i++){
 			if(exp[i].type!=ExpressionItem::operator_type){
-
 				stack.push(exp[i]);
-
+//				cout<<"data type: "<<exp[i].return_type<<endl;
 			}
 			else{
 				if(isComposeOperator(exp[i].content.op.op_)){

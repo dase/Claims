@@ -83,75 +83,75 @@ bool ExpressionItem::setIntValue(const char* int_str){
 }
 
 bool ExpressionItem::setIntValue(int value){
-	type=const_type;
-	return_type=t_int;
-	content.data.value._int=value;
+	this->type=const_type;
+	this->return_type=t_int;
+	this->content.data.value._int=value;
 	return true;
 }
 
 bool ExpressionItem::setFloatValue(const char* float_str){
-	type=const_type;
-	return_type=t_float;
-	content.data.value._float=atof(float_str);
+	this->type=const_type;
+	this->return_type=t_float;
+	this->content.data.value._float=atof(float_str);
 	return true;
 }
 
 bool ExpressionItem::setFloatValue(float &float_){
-	type=const_type;
-	return_type=t_float;
-	content.data.value._float=float_;
+	this->type=const_type;
+	this->return_type=t_float;
+	this->content.data.value._float=float_;
 	return true;
 }
 
 bool ExpressionItem::setDoubleValue(const char* double_str){
-	type=const_type;
-	return_type=t_double;
-	content.data.value._double=atof(double_str);
+	this->type=const_type;
+	this->return_type=t_double;
+	this->content.data.value._double=atof(double_str);
 	return true;
 }
 
 bool ExpressionItem::setDoubleValue(double &double_){
-	type=const_type;
-	return_type=t_double;
-	content.data.value._double=double_;
+	this->type=const_type;
+	this->return_type=t_double;
+	this->content.data.value._double=double_;
 	return true;
 }
 bool ExpressionItem::setULongValue(const char* u_long_str){
-	type=const_type;
-	return_type=t_u_long;
-	content.data.value._ulong=atol(u_long_str);
+	this->type=const_type;
+	this->return_type=t_u_long;
+	this->content.data.value._ulong=atol(u_long_str);
 	return true;
 }
 
 bool ExpressionItem::setULongValue(unsigned long &u_long){
-	type=const_type;
-	return_type=t_u_long;
-	content.data.value._ulong=u_long;
+	this->type=const_type;
+	this->return_type=t_u_long;
+	this->content.data.value._ulong=u_long;
 	return true;
 }
 
 bool ExpressionItem::setDecimalValue(const char * decimal_str){
-	type=const_type;
-	return_type=t_decimal;
+	this->type=const_type;
+	this->return_type=t_decimal;
 	NValue nvalue=*(NValue*)decimal_str;
-	_decimal=nvalue;
+	this->_decimal=nvalue;
 	string itemname(decimal_str);
-	item_name=itemname;
+	this->item_name=itemname;
 	return true;
 }
 
 bool ExpressionItem::setStringValue(std::string str){
-	type=const_type;
-	return_type=t_string;
-	_string=str;
-	item_name=str;
+	this->type=const_type;
+	this->return_type=t_string;
+	this->_string=str;
+	this->item_name=str;
 	return true;
 }
 
 bool ExpressionItem::setDateValue(const char * date_str){
-	type=const_type;
-	return_type=t_date;
-	_date=*(date*)date_str;
+	this->type=const_type;
+	this->return_type=t_date;
+	this->_date=*(date*)date_str;
 //	strcpy(content.data.value._date,date_str);
 	return true;
 }
@@ -205,15 +205,15 @@ bool ExpressionItem::setOperator(const char* op_str){
 }
 
 bool ExpressionItem::setVariable(const char * table,const char * column){
-	type=variable_type;
-	content.var.table_name=table;
+	this->type=variable_type;
+	this->content.var.table_name=table;
 	string table_(table);
 	string table_1(content.var.table_name);
-	content.var.column_name=column;
+	this->content.var.column_name=column;
 	string column_(column);
 	string column_1(content.var.column_name);
 	stringstream item;
 	item<<string(table).c_str()<<"."<<string(column).c_str();
-	item_name=item.str();
+	this->item_name=item.str();
 	return true;
 }

@@ -89,12 +89,16 @@ bool BlockStreamProjectIterator::next(BlockStreamBase *block){
 //							ei.setData(state_.v_ei_[i][j].content.data);
 							ei.return_type=state_.v_ei_[i][j].return_type;
 							ei.setData(state_.v_ei_[i][j].content.data);
+//							ei.setContent(state_.v_ei_[i][j].content);
 						}
 						else{
 							ei.setOperator(state_.v_ei_[i][j].getOperatorName().c_str());
 						}
 						toCalc.push_back(ei);
 					}
+//					for(unsigned i=0;i<toCalc.size();i++){
+//						cout<<"before expr[i]: "<<toCalc[i].return_type<<"     "<<toCalc[i].type<<endl;
+//					}
 					ExpressionCalculator::calcuate(toCalc,result);
 //					cout<<state_.output_->getcolumn(i).get_length()<<"=====";
 //					result.print_value();
