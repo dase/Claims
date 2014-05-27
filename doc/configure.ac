@@ -1,0 +1,41 @@
+AC_INIT([Claims], [0.3], [imdb@ecnu])
+AM_INIT_AUTOMAKE([-Wall -Werror foreign])
+AC_PROG_LIBTOOL
+AC_PROG_CXX
+AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_FILES([
+  Makefile
+  Block/Makefile
+  BlockIterator/Makefile
+  BufferManager/Makefile 
+  Catalog/Makefile
+  Catalog/stat/Makefile 
+  Client/Makefile 
+  common/Makefile 
+  Daemon/Makefile 
+  Executor/Makefile 
+  IndexManager/Makefile
+  iterator/Makefile
+  Loader/Makefile
+  LogicalQueryPlan/Makefile 
+  Parsetree/Makefile 
+  PerformanceMonitor/Makefile 
+  Resource/Makefile 
+  Scheduler/Makefile 
+  Schema/Makefile 
+  Serialization/Makefile
+  storage/Makefile 
+  Test/Makefile
+  Test/TestSuit/Makefile
+  ThirdParty/Makefile
+  ThirdParty/boost/Makefile
+  ThirdParty/boost/serialization/Makefile
+  try/Makefile 
+  types/Makefile
+  types/ttmath/Makefile 
+  utility/Makefile
+  BlockStreamIterator/Makefile 
+  BlockStreamIterator/ParallelBlockStreamIterator/Makefile 
+])
+AC_OUTPUT
+

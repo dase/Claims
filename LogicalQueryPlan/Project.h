@@ -16,6 +16,7 @@
 #include "LogicalOperator.h"
 #include "../BlockStreamIterator/ParallelBlockStreamIterator/BlockStreamProjectIterator.h"
 #include <vector>
+#include <sstream>
 
 class LogicalProject:public LogicalOperator{
 public:
@@ -32,10 +33,11 @@ private:
 	Mapping getMapping();
 	Schema *getOutputSchema();
 	int getColumnSeq(ExpressionItem &ei);
+	string recovereyName(Expression ei);
 
 private:
 	Mapping mappings_;
-	Dataflow dataflow_;
+	Dataflow *dataflow_;
 	LogicalOperator *child_;
 	std::vector<Expression> exprArray_;
 };

@@ -32,6 +32,7 @@
 #include "../common/types/Test/data_type_test.h"
 #include "../common/Expression_item.cpp"
 #include "common/TestNew.cpp"
+#include "common/issue27.cpp"
 #include "../Loader/Test/test_load.cpp"
 
 #include "../BlockStreamIterator/ParallelBlockStreamIterator/Test/in_iterator_test.cpp"
@@ -72,7 +73,9 @@ int main(int argc , char ** argv){
 //	return daemon_test();
 //	return testServerClient();
 //	return test_data_type();
+
 //	return test_expression_item();
+
 //	return testProject();
 //	return testSort();
 
@@ -92,12 +95,23 @@ int main(int argc , char ** argv){
 //	return test_index_manager();
 
 //	in_test();
-	test_expanderFramework_single_node(5);
+
+//	common_project_tcp_h_test_single_node();
+//	issue27_single_node();
+
+//	common_project_tcp_h_test_multi_node();
+	test_expanderFramework_single_node(1);
+
+//	test_expanderFramework_single_node(5);
+
+
+//	test_expanderFramework_single_node(5);
+
 //	test_multiple_expanderFramework_single_node(3);
 //	tcp_h_test_single_node();
 //	tcp_h_test_multi_nodes();
 //	in_segment_scalability_test();
 //	hash_table_test();
-//	g_test_main(argc,argv);
+	g_test_main(argc,argv);
 //	sleep(1000);
 }

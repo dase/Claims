@@ -27,8 +27,7 @@
 #include "../common/AttributeComparator.h"
 
 static LogicalOperator* parsetree2logicalplan(Node *parsetree);
-static void getfiltercondition(Node * wcexpr,Filter::Condition &filter_condition,char * tablename,bool &hasin,LogicalOperator* loperator)
-{
+static void getfiltercondition(Node * wcexpr,Filter::Condition &filter_condition,char * tablename,bool &hasin,LogicalOperator* loperator){
 	SQLParse_log("getfiltercondition   ");
 	//filter_condition.add(catalog->getTable(node->tablename)->getAttribute(4),AttributeComparator::EQ,&order_type_);
 	cout<<"wcexpr->type  "<<wcexpr->type<<endl;

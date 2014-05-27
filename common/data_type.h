@@ -18,12 +18,12 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
+#include "hash.h"
 
 using namespace boost::gregorian;
 using namespace boost::posix_time;
 
 #include "types/NValue.hpp"
-#include "hash.h"
 using namespace decimal;
 #define DATA_TYPE_NUMBER 11
 enum data_type{t_smallInt,t_int,t_u_long,t_float,t_double,t_string, t_date, t_time, t_datetime, t_decimal, t_boolean, t_u_smallInt};
@@ -41,6 +41,11 @@ template<typename T>
 inline void ADD(void* target, void* increment)
 {
 	*(T*)target+=*(T*)increment;
+}
+template<typename T>
+inline void MULTIPLE(void *target,void *increment)
+{
+	(*(T*)target)=(*(T*)target)*(*(T*)increment);
 }
 template<>
 inline void ADD<char*>(void* target, void* increment)
@@ -145,6 +150,7 @@ public:
 	virtual bool less(const void*& a, const void*& b)const=0;
 	virtual bool greate(const void*& a, const void*& b)const=0;
 	virtual void add(void* target, void* increment)=0;
+	virtual void multiple(void* target, void* increment)=0;
 	virtual int compare(const void* a,const void* b)const=0;
 	virtual fun GetADDFunction()=0;
 	virtual fun GetMINFunction()=0;
@@ -189,6 +195,10 @@ public:
 	inline void add(void* target, void* increment)
 	{
 		ADD<int>(target,increment);
+	}
+	inline void multiple(void* target, void* increment)
+	{
+		MULTIPLE<int>(target, increment);
 	}
 	inline fun GetADDFunction()
 	{
@@ -257,6 +267,10 @@ public:
 	{
 		ADD<float>(target, increment);
 	}
+	inline void multiple(void* target, void* increment)
+	{
+		MULTIPLE<float>(target, increment);
+	}
 	inline fun GetADDFunction()
 	{
 		return ADD<float>;
@@ -323,6 +337,10 @@ public:
 	{
 		ADD<double>(target, increment);
 	}
+	inline void multiple(void* target, void* increment)
+	{
+		MULTIPLE<double>(target, increment);
+	}
 	inline fun GetADDFunction()
 	{
 		return ADD<double>;
@@ -388,6 +406,10 @@ public:
 	inline void add(void* target, void* increment)
 	{
 		ADD<unsigned long>(target, increment);
+	}
+	inline void multiple(void* target, void* increment)
+	{
+		MULTIPLE<unsigned long>(target, increment);
 	}
 	inline fun GetADDFunction()
 	{
@@ -458,6 +480,11 @@ public:
 		//TODO: throw exception or implement the add for string.
 		printf("The sum for String is not current supported!\n");
 	}
+	inline void multiple(void* target, void* increment)
+	{
+		//TODO: throw exception or implement the add for string.
+		printf("The sum for String is not current supported!\n");
+	}
 	inline fun GetADDFunction()
 	{
 		return ADD<char*>;
@@ -503,7 +530,8 @@ public:
 	};
 	inline std::string toString(void* value)
 	{
-		return to_simple_string(*(date*)value);
+		std::string s=to_simple_string(*(date*)value);
+		return s;
 	};
 	void toValue(void* target, const char* string){
 		std::string s(string);
@@ -532,6 +560,11 @@ public:
 	inline void add(void* target, void* increment)
 	{
 		ADD<date*>(target, increment);
+	}
+	inline void multiple(void* target, void* increment)
+	{
+		//TODO: throw exception or implement the add for string.
+		printf("The sum for String is not current supported!\n");
 	}
 	inline fun GetADDFunction()
 	{
@@ -604,6 +637,11 @@ public:
 	{
 		ADD<time_duration*>(target, increment);
 	}
+	inline void multiple(void* target, void* increment)
+	{
+		//TODO: throw exception or implement the add for string.
+		printf("The sum for String is not current supported!\n");
+	}
 	inline fun GetADDFunction()
 	{
 		return ADD<time_duration*>;
@@ -675,6 +713,11 @@ public:
 	{
 		ADD<ptime*>(target, increment);
 	}
+	inline void multiple(void* target, void* increment)
+	{
+		//TODO: throw exception or implement the add for string.
+		printf("The sum for String is not current supported!\n");
+	}
 	inline fun GetADDFunction()
 	{
 		return ADD<ptime*>;
@@ -745,6 +788,10 @@ public:
 	{
 		ADD<short>(target,increment);
 	}
+	inline void multiple(void* target, void* increment)
+	{
+		MULTIPLE<short>(target, increment);
+	}
 	inline fun GetADDFunction()
 	{
 		return ADD<short>;
@@ -811,6 +858,10 @@ public:
 	{
 		ADD<unsigned short>(target,increment);
 	}
+	inline void multiple(void* target, void* increment)
+	{
+		MULTIPLE<unsigned short>(target, increment);
+	}
 	inline fun GetADDFunction()
 	{
 		return ADD<unsigned short>;
@@ -852,14 +903,16 @@ public:
 	};
 	inline std::string toString( void* value)
 	{
-		char buf[39] = {"\0"};
-		ExportSerializeOutput out(buf, 39);
+//		string str((char *)value);
+//		return str;
+		char buf[100] = {"\0"};
+		ExportSerializeOutput out(buf, 100);
 		((NValue*)value)->serializeToExport(out,&number_of_decimal_digits_);
 		return std::string(buf+4);
 	};
 	static std::string toString(const NValue v,unsigned n_o_d_d=12){
-		char buf[39] = {"\0"};
-		ExportSerializeOutput out(buf, 39);
+		char buf[100] = {"\0"};
+		ExportSerializeOutput out(buf, 100);
 		(v).serializeToExport(out,&n_o_d_d);
 		return std::string(buf+4);
 	}
@@ -897,6 +950,10 @@ public:
 	{
 		ADD<NValue*>(target, increment);
 //		((NValue*)target)->op_add(*(NValue*)increment);
+	}
+	inline void multiple(void* target, void* increment)
+	{
+		(*(NValue*)target)=((NValue*)target)->op_multiply(*(NValue*)increment);
 	}
 	inline fun GetADDFunction()
 	{
@@ -1012,8 +1069,10 @@ public:
 	}
 public:
 	Operate* operate;
+	//这个data_type是什么type
 	data_type type;
 private:
+	//且这个data_type的size是多少
 	unsigned size;
 	friend class boost::serialization::access;
 	template<class Archive>
