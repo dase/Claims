@@ -3186,7 +3186,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 /* Line 936 of glr.c  */
 #line 557 "sql.ypp"
     {
-		((*yyvalp).ast_node)=newOrderbyList(t_groupby_list, NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.ast_node));
+		((*yyvalp).ast_node)=newOrderbyList(t_orderby_list, NULL, (((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (3))].yystate.yysemantics.yysval.ast_node));
 		/*puts("opt_orederby2");*/
 	;}
     break;
