@@ -2,7 +2,7 @@ AM_CPPFLAGS= -fPIC \
 -I/home/NewHadoop/hadoop/hadoop-1.0.3/src/c++/libhdfs\
 -I/home/NewHadoop/java/jdk1.7.0_45/include\
 -I/home/NewHadoop/java/jdk1.7.0_45/include/linux \
--I/home/imdb/tools/Theron-5.01.01/Include \
+-I/home/imdb/supports/Theron-5.01.01/Include \
 -I/home/imdb/supports/boost_1_53_0 \
 -I/home/imdb/supports/boost_1_53_0/boost/serialization
 
@@ -20,7 +20,7 @@ noinst_LIBRARIES=libparsetree.a
 libparsetree_a_SOURCES = \
 	ExecuteLogicalQueryPlan.cpp  		ExecuteLogicalQueryPlan.h \
 	function.cpp \
-	lex.yy.cpp \
+	lex.yy.cpppp \
 	parsetree2logicalplan.cpp \
 	runparsetree.cpp \
 	semantic_analysis.cpp \

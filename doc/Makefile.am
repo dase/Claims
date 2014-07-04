@@ -3,7 +3,7 @@ AM_CPPFLAGS= -fPIC\
 -I/home/NewHadoop/hadoop/hadoop-1.0.3/src/c++/libhdfs\
 -I/home/NewHadoop/java/jdk1.7.0_45/include\
 -I/home/NewHadoop/java/jdk1.7.0_45/include/linux \
--I/home/imdb/tools/Theron-5.01.01/Include \
+-I/home/imdb/supports/Theron-5.01.01/Include \
 -I/home/imdb/supports/boost_1_53_0 \
 -I/home/imdb/supports/boost_1_53_0/boost/serialization
 
@@ -11,7 +11,7 @@ AM_LDFLAGS= -lc -lm -lrt -lpthread -lboost_serialization -lboost_date_time -lboo
 
 
 LDADD =  \
-	Test/TestSuit/libtestsuite.a \
+	Test/TestSuit/libtestsuit.a \
 	LogicalQueryPlan/liblogicalqueryplan.a \
 	Serialization/libserialization.a \
 	Catalog/stat/libstat.a \
@@ -44,7 +44,7 @@ LDADD =  \
 	/home/NewHadoop/hadoop/hadoop-1.0.3/c++/Linux-amd64-64/lib/libhdfs.so \
 	/home/NewHadoop/hadoop/hadoop-1.0.3/c++/Linux-amd64-64/lib/libhdfs.a \
 	/home/NewHadoop/java/jdk1.7.0_45/jre/lib/amd64/server/libjvm.so\
-	/home/imdb/tools/Theron-5.01.01/Lib/libtherond.a
+	/home/imdb/supports/Theron-5.01.01/Lib/libtherond.a
 
 include_HEADERS = A.h \
 			AdaptiveEndPoint.h \
@@ -136,7 +136,7 @@ server_SOURCES = Server.cpp \
 #	/home/NewHadoop/hadoop/hadoop-1.0.3/c++/Linux-amd64-64/lib/libhdfs.so \
 #	/home/NewHadoop/hadoop/hadoop-1.0.3/c++/Linux-amd64-64/lib/libhdfs.a \
 #	/home/NewHadoop/java/jdk1.7.0_45/jre/lib/amd64/server/libjvm.so\
-#	/home/imdb/tools/Theron-5.01.01/Lib/libtherond.a
+#	/home/imdb/supports/Theron-5.01.01/Lib/libtherond.a
 	
 
 SUBDIRS=Block BlockIterator BlockStreamIterator BufferManager Catalog Client common Daemon Executor IndexManager\

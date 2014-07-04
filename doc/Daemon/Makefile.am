@@ -1,5 +1,5 @@
 AM_CPPFLAGS= -fPIC \
--I/home/imdb/tools/Theron-5.01.01/Include \
+-I/home/imdb/supports/Theron-5.01.01/Include \
 -I/home/imdb/supports/boost_1_53_0 \
 -I/home/imdb/supports/boost_1_53_0/boost/serialization \
 -I/home/NewHadoop/hadoop/hadoop-1.0.3/src/c++/libhdfs\
