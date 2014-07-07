@@ -9,7 +9,7 @@
 
 CMysqlServer::CMysqlServer() {
 	threadpool=new Thread_Pool();
-	threadpool->Thread_Pool_init(1,1);
+	threadpool->Thread_Pool_init(2,2);
 }
 
 CMysqlServer::~CMysqlServer() {

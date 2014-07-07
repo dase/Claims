@@ -142,29 +142,12 @@ int CMysqlCallback::process(easy_request_t* r) {
 	Args *ar=new Args();
 	ar->cserver=server;
 	ar->r=r;
-	if(debug_>=1){
-		server->threadpool->Thread_Pool_add(&(server->do_com_query),ar);
-		r->ms->c->pool->ref++;
-		easy_atomic_inc(&r->ms->pool->ref);
-		ret=-11;
-		debug_++;
-	}
-	else{
-		char *buffer=(char *)malloc(2*1024*1024);
-		ObDataBuffer out_buffer(buffer,2*1024*1024);
-
-		uint8_t n=4;
-		CMysqlSPRPacket *packet=new CMysqlSPRPacket();
-		server->post_packet(r,packet,n);
-		r->ms->c->pool->ref++;
-		easy_atomic_inc(&r->ms->pool->ref);
-		ret=-11;
-		debug_++;
-	}
-	if(debug_<=2)
-		return ret;
-	else
-		getchar();
+	server->threadpool->Thread_Pool_add(&(server->do_com_query),ar);
+	r->ms->c->pool->ref++;
+	easy_atomic_inc(&r->ms->pool->ref);
+	ret=-11;
+	cout<<"already put the task into threads pool!"<<endl;
+	return ret;
 }
 
 uint64_t CMysqlCallback::get_packet_id(easy_connection_t* c, void* packet) {
