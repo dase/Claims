@@ -1,0 +1,1 @@
+TestNew.o: TestNew.cpp
