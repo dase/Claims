@@ -166,6 +166,12 @@ int CMysqlUtil::store_length(char *buf, int64_t len, uint64_t length, int64_t &p
    return ret;
  }
 
+int CMysqlUtil::store_str(char *buf, int64_t len, const char *str, int64_t &pos)
+{
+  uint64_t length = strlen(str);
+  return store_str_v(buf, len, str, length, pos);
+}
+
 int CMysqlUtil::store_str_vzt(char *buf, int64_t len, const char *str,const uint64_t length, int64_t &pos){
   int ret = C_SUCCESS;
   if (len > 0 && pos > 0 && len > pos && static_cast<uint64_t>(len - pos) > length){
@@ -181,6 +187,34 @@ int CMysqlUtil::store_str_vzt(char *buf, int64_t len, const char *str,const uint
     //          len, pos, length, ret);
   }
   return ret;
+}
+
+int CMysqlUtil::store_str_v(char *buf, int64_t len, const char *str,
+                const uint64_t length, int64_t &pos){
+  int ret = C_SUCCESS;
+  int64_t pos_bk = pos;
+
+  if (C_SUCCESS != (ret = store_length(buf, len, length, pos))){
+    cout<<"TBSYS_LOG(WARN, Store length fail!len: [%ld], pos: [%ld], length: [%ld], ret: [%d],len, pos, length, ret";
+  }
+  else if (len >= pos && length <= static_cast<uint64_t>(len - pos)){
+    memcpy(buf + pos, str, length);
+    pos += length;
+  }
+  else{
+    pos = pos_bk;        // roll back
+    ret = -19;
+  }
+
+  return ret;
+}
+
+int CMysqlUtil::get_mysql_type(EMySQLFieldType &field_type, uint8_t &num_decimals, uint32_t &length){
+	num_decimals=0;
+	length=0;
+	field_type=MYSQL_TYPE_LONGLONG;
+	length = 20;
+	return C_SUCCESS;
 }
 
 void CMysqlUtil::get_uint3(char *&pos, uint32_t &v){

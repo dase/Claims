@@ -8,7 +8,7 @@
 #ifndef C_MYSQL_LOGINER_H_
 #define C_MYSQL_LOGINER_H_
 
-#include <easy_io.h>
+#include "easy_io.h"
 
 #include "c_mysql_ok_packet.h"
 #include "data_buffer.h"

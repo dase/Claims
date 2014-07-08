@@ -13,7 +13,7 @@ using namespace std;
 
 #include "c_mysql_server.h"
 
-#include <easy_io_struct.h>
+#include "easy_io_struct.h"
 
 class CMysqlCallback {
 public:

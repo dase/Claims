@@ -6,6 +6,8 @@
  */
 
 #include "c_mysql_server.h"
+#include "c_mysql_field_packet.h"
+#include "c_mysql_eof_packet.h"
 
 CMysqlServer::CMysqlServer() {
 	threadpool=new Thread_Pool();
@@ -118,7 +120,7 @@ void CMysqlServer::send_response(easy_request_t* req, int type){
 //    int number = packet->get_packet_header().seq_;
     //在此先构造一下server_status
     uint16_t server_status =0;
-    uint16_t charset;
+    uint16_t charset=1;
 	cout<<"=======before is ok!=======in send_response"<<endl;
 	send_result_set(req,type,server_status,charset);
 }
@@ -137,21 +139,21 @@ void CMysqlServer::send_result_set(easy_request_t *req,int type,uint16_t server_
 
     /* result 在这里模拟result */
 	cout<<"=======before is ok!=======in send_result_set"<<endl;
+	cout<<">>>>>>>>>>>>>>send header packet"<<endl;
 	process_res_header_packet(buf, buffer_pos, req);
-//	process_field_packet(buf, buffer_pos, req, result, true, charset);
-//	process_eof_packet(buf, buffer_pos, req, result, server_status);
+	cout<<">>>>>>>>>>>>>>send field packet"<<endl;
+	process_field_packet(buf, buffer_pos, req, true, 1);
+	cout<<">>>>>>>>>>>>>>send eof packet"<<endl;
+	process_eof_packet(buf, buffer_pos, req, server_status);
 //	process_row_packet(buf, buffer_pos, req, result, type);
-//	process_eof_packet(buf, buffer_pos, req, result, server_status);
+	process_eof_packet(buf, buffer_pos, req, server_status);
 }
 
-void CMysqlServer::process_eof_packet(){
+void CMysqlServer::process_eof_packet(easy_buf_t *&buff, int64_t &buff_pos, easy_request_t *req, uint16_t server_status){
 	cout<<"send eof packet!"<<endl;
-//	process_single_packet();
-}
-
-void CMysqlServer::process_field_packet(){
-	cout<<"send field packet!"<<endl;
-//	process_single_packet();
+	int ret=C_SUCCESS;
+	CMysqlEOFPacket *eof=new CMysqlEOFPacket();
+	ret=process_single_packet(buff,buff_pos,req,eof);
 }
 
 void CMysqlServer::process_res_header_packet(easy_buf_t *&buff, int64_t &buff_pos, easy_request_t *req){
@@ -160,16 +162,26 @@ void CMysqlServer::process_res_header_packet(easy_buf_t *&buff, int64_t &buff_po
 	CMysqlResHeaderPacket *header=new CMysqlResHeaderPacket();
 	/* 在此模拟发送两个列 */
 	header->set_field_count(2);
-	cout<<"=======before is ok!=======in process_res_header_packet"<<endl;
 	//getchar();
 	/* 设置seq */
 	ret=process_single_packet(buff,buff_pos,req,header);
 	cout<<"check ret here: "<<ret<<endl;
 }
 
+void CMysqlServer::process_field_packet(easy_buf_t *&buff, int64_t &buff_pos, easy_request_t *req, bool is_field, uint16_t charset){
+	cout<<"send field packet!"<<endl;
+	int ret=C_SUCCESS;
+	easy_addr_t addr=get_easy_addr(req);
+	CMysqlFieldPacket *field=new CMysqlFieldPacket();
+	ret=process_single_packet(buff,buff_pos,req,field);
+}
+
 void CMysqlServer::process_row_packet(){
 	cout<<"send row packet!"<<endl;
-//	process_single_packet();
+//	int ret=C_SUCCESS;
+//	easy_addr_t addr=get_easy_addr(req);
+//	CMysqlRowPacket *row=new CMysqlRowPacket();
+//	ret=process_single_packet(buff,buff_pos,req,row);
 }
 
 int CMysqlServer::process_single_packet(easy_buf_t *&buff, int64_t &buff_pos, easy_request_t *req, CMysqlSQLPacket *packet){
