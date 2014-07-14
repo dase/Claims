@@ -1,3 +1,0 @@
-BlockMessage.o: BlockMessage.cpp BlockMessage.h
-
-BlockMessage.h:

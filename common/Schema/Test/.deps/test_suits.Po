@@ -1,1 +1,0 @@
-test_suits.o: test_suits.cpp

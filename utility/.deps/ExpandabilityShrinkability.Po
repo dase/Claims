@@ -1,4 +1,0 @@
-ExpandabilityShrinkability.o: ExpandabilityShrinkability.cpp \
- ExpandabilityShrinkability.h
-
-ExpandabilityShrinkability.h:
