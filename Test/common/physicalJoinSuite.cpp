@@ -25,14 +25,39 @@ int SortmergejoinSuite(){
 	LogicalOperator* scan1=new LogicalScan(table1->getProjectoin(0));
 	LogicalOperator* scan2=new LogicalScan(table2->getProjectoin(0));
 
-	LogicalOperator* root=new LogicalQueryPlanRoot(0,project1,LogicalQueryPlanRoot::PERFORMANCE);
+	LogicalOperator* sort1=new LogicalSort();
+	LogicalOperator* sort2=new LogicalSort();
+
+	BlockStreamIteratorBase *left=sort1->getIteratorTree(64*1024);
+	BlockStreamIteratorBase *right=sort2->getIteratorTree(64*1024);
+
+	std::vector<column_type> column_list_left;
+	std::vector<column_type> column_list_right;
+	std::vector<column_type> column_list_out;
+	column_list_left.push_back(column_type(t_int));
+	column_list_right.push_back(column_type(t_int));
+	column_list_out.push_back(column_type(t_int));
+	Schema *input_schema_left=new SchemaFix(column_list_left);
+	Schema *input_schema_right=new SchemaFix(column_list_right);
+	Schema *output_schema=new SchemaFix(column_list_out);
+
+	std::vector<unsigned> joinIndex_left;
+	std::vector<unsigned> joinIndex_right;
+	std::vector<unsigned> payload_left;
+	std::vector<unsigned> payload_right;
+
+	joinIndex_left.push_back(1);
+	joinIndex_right.push_back(1);
+	payload_left.push_back(1);
+	payload_left.push_back(1);
+
+	SortmergeJoin::state sortmergejoin_state(left,right,input_schema_left,input_schema_right,output_schema,joinIndex_left,joinIndex_right,payload_left,payload_right);
+	SortmergeJoin *smj=new SortmergeJoin(sortmergejoin_state);
 
 	cout<<"performance is ok!"<<endl;
-	BlockStreamIteratorBase* physical_iterator_tree=root->getIteratorTree(64*1024);
-//	physical_iterator_tree->print();
-	physical_iterator_tree->open();
-	while(physical_iterator_tree->next(0));
-	physical_iterator_tree->close();
+	smj->open();
+	while(smj->next(0));
+	smj->close();
 	printf("Q1: execution time: %4.4f second.\n",getSecond(start));
 
 	return 0;
