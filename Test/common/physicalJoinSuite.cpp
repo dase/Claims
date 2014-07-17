@@ -19,11 +19,11 @@ int SortmergejoinSuite(){
 	 * notation: p a p s
 	 * */
 	unsigned long long int start=curtick();
-	TableDescriptor* table=Environment::getInstance()->getCatalog()->getTable("LINEITEM");
+	TableDescriptor* table1=Environment::getInstance()->getCatalog()->getTable("LINEITEM");
+	TableDescriptor* table2=Environment::getInstance()->getCatalog()->getTable("LINEITEM");
 	//===========================scan===========================
-	LogicalOperator* scan=new LogicalScan(table->getProjectoin(0));
-
-	LogicalOperator* project1=new LogicalProject(scan,expr_list1);
+	LogicalOperator* scan1=new LogicalScan(table1->getProjectoin(0));
+	LogicalOperator* scan2=new LogicalScan(table2->getProjectoin(0));
 
 	LogicalOperator* root=new LogicalQueryPlanRoot(0,project1,LogicalQueryPlanRoot::PERFORMANCE);
 
