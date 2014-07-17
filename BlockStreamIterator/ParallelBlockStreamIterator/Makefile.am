@@ -41,7 +41,8 @@ libparallelblockstreamiterator_a_SOURCES = \
 	ExpandableBlockStreamRandomDiskAccess.cpp 		ExpandableBlockStreamRandomDiskAccess.h \
 	ExpandableBlockStreamRandomMemAccess.cpp 		ExpandableBlockStreamRandomMemAccess.h \
 	ExpandableBlockStreamSingleColumnScan.cpp 		ExpandableBlockStreamSingleColumnScan.h \
-	ExpandableBlockStreamSingleColumnScanDisk.cpp 		ExpandableBlockStreamSingleColumnScanDisk.h
+	ExpandableBlockStreamSingleColumnScanDisk.cpp 		ExpandableBlockStreamSingleColumnScanDisk.h \
+	SortmergeJoin.cpp									SortmergeJoin.h
 
 SUBDIRS = Test
 DIST_SUBDIRS = Test
