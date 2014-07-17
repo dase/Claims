@@ -1,4 +1,4 @@
-AM_CPPFLAGS= -fPIC \
+AM_CPPFLAGS= -fPIC -fpermissive \
 -I${BOOST_HOME} \
 -I${THERON_HOME}/Include \
 -I${GTEST_HOME}/include

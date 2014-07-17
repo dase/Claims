@@ -23,6 +23,13 @@ string gete(){
 	return sp.str();
 }
 
+string get_default_logfile_name(){
+	char *p=getenv("CLAIMS_HOME");
+	stringstream sp;
+	sp<<string(p).c_str()<<"/log/claims.log";
+	return sp.str();
+}
+
 std::string Config::config_file=gete().c_str();
 Config* Config::instance_=0;
 
@@ -57,9 +64,13 @@ int Config::initial_degree_of_parallelism;
 
 int Config::scan_batch;
 
+std::string Config::logfile;
+
 std::string Config::hdfs_master_ip;
 
 int Config::hdfs_master_port;
+
+bool Config::master;
 
 Config* Config::getInstance() {
 	if(instance_==0){
@@ -103,6 +114,9 @@ void Config::initialize() {
 
 	hdfs_master_port=getInt("hdfs_master_port",9000);
 
+	logfile=getString("log",get_default_logfile_name().c_str());
+
+	master=getBoolean("master",true);
 
 
 #ifdef DEBUG_Config
@@ -146,6 +160,8 @@ bool Config::getBoolean(std::string attribute_name, bool defalut_value) {
 }
 
 void Config::print_configure() const {
+	std::cout<<"configure file :"<<config_file<<std::endl;
+	std::cout<<"The configure is as follows."<<std::endl;
 	std::cout<<"data:"<<data_dir<<std::endl;
 	std::cout<<"max_degree_of_parallelism:"<<max_degree_of_parallelism<<std::endl;
 	std::cout<<"expander_adaptivity_check_frequency:"<<expander_adaptivity_check_frequency<<std::endl;
@@ -153,6 +169,6 @@ void Config::print_configure() const {
 	std::cout<<"initial_degree_of_parallelism:"<<initial_degree_of_parallelism<<std::endl;
 	std::cout<<"hdfs master ip:"<<hdfs_master_ip<<std::endl;
 	std::cout<<"hdfs_master_port:"<<hdfs_master_port<<std::endl;
-
-
+	std::cout<<"log:"<<logfile<<std::endl;
+	std::cout<<"master:"<<master<<std::endl;
 }

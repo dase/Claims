@@ -1,4 +1,4 @@
-AM_CPPFLAGS=-fPIC\
+AM_CPPFLAGS=-fPIC -fpermissive -DTHERON_XS\
 -I${HADOOP_HOME}/src/c++/libhdfs\
 -I${JAVA_HOME}/include\
 -I${JAVA_HOME}/include/linux \
@@ -6,7 +6,6 @@ AM_CPPFLAGS=-fPIC\
 -I${BOOST_HOME}/boost/serialization \
 -I${BOOST_HOME}/ \
 -I${GTEST_HOME}/include
-
 AM_LDFLAGS= -lc -lm -lrt -lpthread -lboost_serialization -lboost_date_time -lboost_system -lconfig++ -lxs
 
 LDADD =  \

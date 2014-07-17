@@ -1,4 +1,4 @@
-AM_CPPFLAGS= -fPIC \
+AM_CPPFLAGS= -fPIC -fpermissive \
 -I${BOOST_HOME} \
 -I${BOOST_HOME}/boost/serialization \
 -I${THERON_HOME}/Include \
@@ -41,8 +41,8 @@ libparallelblockstreamiterator_a_SOURCES = \
 	ExpandableBlockStreamRandomDiskAccess.cpp 		ExpandableBlockStreamRandomDiskAccess.h \
 	ExpandableBlockStreamRandomMemAccess.cpp 		ExpandableBlockStreamRandomMemAccess.h \
 	ExpandableBlockStreamSingleColumnScan.cpp 		ExpandableBlockStreamSingleColumnScan.h \
-	ExpandableBlockStreamSingleColumnScanDisk.cpp 		ExpandableBlockStreamSingleColumnScanDisk.h \
-	SortmergeJoin.cpp									SortmergeJoin.h
+	ExpandableBlockStreamSingleColumnScanDisk.cpp 		ExpandableBlockStreamSingleColumnScanDisk.h
+#	SortmergeJoin.cpp									SortmergeJoin.h
 
 SUBDIRS = Test
 DIST_SUBDIRS = Test

@@ -1,4 +1,4 @@
-AM_CPPFLAGS= -fPIC
+AM_CPPFLAGS= -fPIC -fpermissive
 
 AM_LDFLAGS=-lc -lm -lrt -lxs
 

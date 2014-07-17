@@ -1,7 +1,7 @@
 AC_INIT([Claims], [0.3], [imdb@ecnu])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 AC_PROG_LIBTOOL
-CPPFLAGS="-w -O0"
+CPPFLAGS="-w -O0 -DTHERON_XS"
 CXXFLAGS=${CXXFLAGS="-g"}
 AC_PROG_CXX
 AC_CONFIG_HEADERS([config.h])

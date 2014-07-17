@@ -4,6 +4,7 @@ Default
 .cproject
 .project
 .settings
+<<<<<<< HEAD
 Config.cpp
 Makefile
 autom4te.cache/
@@ -21,6 +22,20 @@ ltmain.sh
 missing
 stamp-h1
 *.a
+=======
+autom4te.cache/
+claimsserver
+config.guess
+config.status
+config.sub
+depcomp
+install-sh
+libtool
+aclocal.m4
+ltmain.sh
+missing
+stamp-h1
+>>>>>>> refs/remotes/0717-wangli/alpha
 Makefile.in
 *.Po
 Debug.h
