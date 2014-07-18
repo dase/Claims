@@ -198,6 +198,10 @@ bool BlockStreamProjectIterator::copyColumn(void *&tuple,ExpressionItem &result,
 			memcpy(tuple,&result.content.data.value._sint,length);
 			break;
 		}
+		case t_boolean:{
+			memcpy(tuple,&result.content.data.value._bool_,length);
+			break;
+		}
 		default:{
 			cout<<"missing the operator!!!"<<endl;
 			break;

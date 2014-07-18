@@ -59,7 +59,7 @@ bool ExpressionItem::setValue(void* value_str,const data_type type){
 			break;
 		}
 		case t_boolean:{
-			setBooleanValue(*(bool *)value_str);
+			setBooleanValue(*(int *)value_str);
 			break;
 		}
 		default:{
@@ -208,10 +208,10 @@ bool ExpressionItem::setTimeValue(const char * time_str){
 	return true;
 }
 
-bool ExpressionItem::setBooleanValue(bool value){
+bool ExpressionItem::setBooleanValue(int value){
 	this->type=const_type;
 	this->return_type=t_boolean;
-	this->content.data.value._bool=value;
+	this->content.data.value._bool_=value;
 	return true;
 }
 

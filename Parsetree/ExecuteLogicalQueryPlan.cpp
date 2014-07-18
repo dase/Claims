@@ -88,6 +88,7 @@ LogicalOperator* convert_sql_to_logical_operator_tree(const char* sql)
 		}
 	}
 }
+
 void ExecuteLogicalQueryPlan()	// 2014-3-4---因为根结点的结构已经改变，相关代码进行修改---by余楷
 {
 
@@ -183,6 +184,20 @@ void ExecuteLogicalQueryPlan()	// 2014-3-4---因为根结点的结构已经改�
 						Datatype * datatype = (Datatype *)data->datatype;
 						switch (datatype->datatype)	// add more type --- 2014-4-2
 						{
+						case 2:
+						{
+							if (column_atts && (column_atts->datatype && 01)){
+								new_table->addAttribute(colname, data_type(t_boolean), 0, true, false);
+							}
+							else if (column_atts && (column_atts->datatype && 02)){
+								new_table->addAttribute(colname, data_type(t_boolean), 0, true, true);
+							}
+							else{
+								new_table->addAttribute(colname, data_type(t_boolean), 0, true);
+							}
+							cout<<colname<<" is created"<<endl;
+							break;
+						}
 						case 3:
 						{
 							if (column_atts && (column_atts->datatype && 01)){

@@ -141,7 +141,6 @@ vector<string> HdfsLoader::get_file_list(){
 	return file_list;
 }
 
-
 bool HdfsLoader::insertRecords(){
 	//transfer the string tuple to void* according to its schema <tuple_buffer>
 	if (s_record.length() == 0)

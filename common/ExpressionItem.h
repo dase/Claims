@@ -90,6 +90,7 @@ struct data__{
 	unsigned long _ulong;
 	bool _bool;
 	short _sint;
+	int _bool_;
 	}value;
 };
 
@@ -169,7 +170,7 @@ public:
 	bool setDatetimeValue(const char *);
 	bool setTimeValue(const char *);
 
-	bool setBooleanValue(bool );////////////
+	bool setBooleanValue(int );////////////
 	bool setSmallIntValue(short &);
 public:
 	union {
