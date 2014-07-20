@@ -18,11 +18,13 @@ using namespace std;
 class SortmergeJoin:public ExpandableBlockStreamIteratorBase{
 public:
 	struct remaining_context{
-		remaining_context()
-		:left_block_(left_block),
-		 right_block_(right_block),
-		 left_iterator_(left_iterator),
-		 right_iterator_(right_iterator){}
+//		remaining_context(BlockStreamBase *left_block,BlockStreamBase *right_block,
+//		BlockStreamBase::BlockStreamTraverseIterator *left_iterator,
+//		BlockStreamBase::BlockStreamTraverseIterator *right_iterator)
+//		:left_block_(left_block),
+//		 right_block_(right_block),
+//		 left_iterator_(left_iterator),
+//		 right_iterator_(right_iterator){}
 		BlockStreamBase *left_block_;BlockStreamBase *right_block_;
 		BlockStreamBase::BlockStreamTraverseIterator *left_iterator_;
 		BlockStreamBase::BlockStreamTraverseIterator *right_iterator_;
@@ -56,7 +58,7 @@ public:
 		friend class boost::serialization::access;
 		template<class Archive>
 		void serialize(Archive & ar, const unsigned int version){
-			ar & child_left & child_right & input_schema_left & input_schema_right & output_schema & joinIndex_left & joinIndex_right & payload_left & payload_right;
+			ar & _child_left & _child_right & _input_schema_left & _input_schema_right & _output_schema & _joinIndex_left & _joinIndex_right & _payload_left & _payload_right;
 		}
 	public:
 		//input and output
@@ -80,14 +82,21 @@ public:
 	bool close();
 	void print();
 
+	void assemble(void *, void *, void *&);
+
 	bool isMatch(void*, void *);
-	bool atomicPopRemainingContext(remaining_context &rc);
-	bool atomicPushRemainingContext(remaining_context rc);
+	bool isleftLargerThanright(void *, void *);
+	bool atomicPopRemainingContext(SortmergeJoin::remaining_context &rc);
+	void atomicPushRemainingContext(SortmergeJoin::remaining_context rc);
 
 private:
 	State state_;
 	Lock lock_;
 	list<remaining_context> remaining_context_list_;
+
+//	std::map<unsigned, unsigned> join_index_left_to_output_;
+//	std::map<unsigned, unsigned> join_payload_left_to_output_;
+//	std::map<unsigned, unsigned> join_payload_right_to_output_;
 
     friend class boost::serialization::access;
     template<class Archive>
