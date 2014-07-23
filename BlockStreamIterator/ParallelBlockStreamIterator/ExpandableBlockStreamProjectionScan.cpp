@@ -75,10 +75,8 @@ bool ExpandableBlockStreamProjectionScan::open(const PartitionOffset& partition_
 		else{
 			partition_reader_iterator_=partition_handle_->createAtomicReaderIterator();
 		}
-
 #ifdef AVOID_CONTENTION_IN_SCAN
 		unsigned long long start=curtick();
-
 		ChunkReaderIterator* chunk_reader_it;
 		ChunkReaderIterator::block_accessor* ba;
 		while(chunk_reader_it=partition_reader_iterator_->nextChunk()){
@@ -87,7 +85,6 @@ bool ExpandableBlockStreamProjectionScan::open(const PartitionOffset& partition_
 				input_dataset_.input_data_blocks.push_back(ba);
 			}
 		}
-//		printf("%lf seconds for initializing!\n",getSecond(start));
 #endif
 		open_ret_=true;
 		ExpanderTracker::getInstance()->addNewStageEndpoint(pthread_self(),LocalStageEndPoint(stage_src,"Scan",0));
@@ -98,11 +95,6 @@ bool ExpandableBlockStreamProjectionScan::open(const PartitionOffset& partition_
 		/* this is not the first thread, so it will wait for the first thread finishing initialization*/
 		waitForOpenFinished();
 	}
-
-
-
-
-
 }
 
 bool ExpandableBlockStreamProjectionScan::next(BlockStreamBase* block) {

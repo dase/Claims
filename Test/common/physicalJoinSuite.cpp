@@ -37,47 +37,59 @@ int SortmergejoinSuite(){
 	LogicalOperator* sort2=new LogicalSort(scan2,vo2);
 
 	////////////////////////////////////////////////////sortmerge join
-//	BlockStreamIteratorBase *left=sort1->getIteratorTree(64*1024);
-//	BlockStreamIteratorBase *right=sort2->getIteratorTree(64*1024);
-//
-//	std::vector<column_type> column_list_left;
-//	std::vector<column_type> column_list_right;
-//	std::vector<column_type> column_list_out;
-//	column_list_left.push_back(column_type(t_int));
-//	column_list_right.push_back(column_type(t_int));
-//	column_list_out.push_back(column_type(t_int));
-//	Schema *input_schema_left=new SchemaFix(column_list_left);
-//	Schema *input_schema_right=new SchemaFix(column_list_right);
-//	Schema *output_schema=new SchemaFix(column_list_out);
-//
-//	std::vector<unsigned> joinIndex_left;
-//	std::vector<unsigned> joinIndex_right;
+	BlockStreamIteratorBase *left=sort1->getIteratorTree(64*1024);
+	BlockStreamIteratorBase *right=sort2->getIteratorTree(64*1024);
+
+	std::vector<column_type> column_list_left;
+	column_list_left.push_back(column_type(t_int));  //0
+	column_list_left.push_back(column_type(t_date)); //1
+	column_list_left.push_back(column_type(t_int));  //2
+	column_list_left.push_back(column_type(t_int));  //3
+	column_list_left.push_back(column_type(t_int));  //4
+	std::vector<column_type> column_list_right;
+	column_list_right.push_back(column_type(t_int)); //0
+	column_list_right.push_back(column_type(t_int)); //1
+	column_list_right.push_back(column_type(t_int)); //2
+	std::vector<column_type> column_list_out;
+	column_list_out.push_back(column_type(t_int));
+	column_list_out.push_back(column_type(t_date));
+	column_list_out.push_back(column_type(t_int));
+	column_list_out.push_back(column_type(t_int));
+	column_list_out.push_back(column_type(t_int));
+	column_list_out.push_back(column_type(t_int));
+	column_list_out.push_back(column_type(t_int));
+	column_list_out.push_back(column_type(t_int));
+
+	Schema *input_schema_left=new SchemaFix(column_list_left);
+	Schema *input_schema_right=new SchemaFix(column_list_right);
+	Schema *output_schema=new SchemaFix(column_list_out);
+
+	std::vector<unsigned> joinIndex_left;
+	joinIndex_left.push_back(2);
+	std::vector<unsigned> joinIndex_right;
+	joinIndex_right.push_back(0);
+
 //	std::vector<unsigned> payload_left;
 //	std::vector<unsigned> payload_right;
-//
-//	joinIndex_left.push_back(1);
-//	joinIndex_right.push_back(1);
-//	payload_left.push_back(1);
-//	payload_left.push_back(1);
-//
-//	SortmergeJoin::State sortmergejoin_state(left,right,input_schema_left,input_schema_right,output_schema,joinIndex_left,joinIndex_right,payload_left,payload_right);
-//	SortmergeJoin *smj=new SortmergeJoin(sortmergejoin_state);
-//
-//	cout<<"performance is ok!"<<endl;
-//	smj->open();
-//	while(smj->next(0));
-//	smj->close();
-//	printf("Q1: execution time: %4.4f second.\n",getSecond(start));
+
+	SortmergeJoin::State sortmergejoin_state(left,right,input_schema_left,input_schema_right,output_schema,joinIndex_left,joinIndex_right,64*1024);
+	BlockStreamIteratorBase *smj=new SortmergeJoin(sortmergejoin_state);
+
+	cout<<"performance is ok!"<<endl;
+	smj->open();
+	while(smj->next(0));
+	smj->close();
+	printf("Q1: execution time: %4.4f second.\n",getSecond(start));
 
 	//===========================root===========================
-	cout<<"performance is ok!"<<endl;
-	LogicalOperator* root=new LogicalQueryPlanRoot(0,sort1,LogicalQueryPlanRoot::PRINT);
-
-	BlockStreamIteratorBase* physical_iterator_tree=root->getIteratorTree(64*1024);
-	physical_iterator_tree->open();
-	while(physical_iterator_tree->next(0));
-	physical_iterator_tree->close();
-	printf("Q1: execution time: %4.4f second.\n",getSecond(start));
+//	cout<<"performance is ok!"<<endl;
+//	LogicalOperator* root=new LogicalQueryPlanRoot(0,sort2,LogicalQueryPlanRoot::PRINT);
+//
+//	BlockStreamIteratorBase* physical_iterator_tree=root->getIteratorTree(64*1024);
+//	physical_iterator_tree->open();
+//	while(physical_iterator_tree->next(0));
+//	physical_iterator_tree->close();
+//	printf("Q1: execution time: %4.4f second.\n",getSecond(start));
 	return 0;
 }
 

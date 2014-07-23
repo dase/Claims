@@ -19,6 +19,24 @@ SortmergeJoin::~SortmergeJoin() {
 
 }
 
+SortmergeJoin::State::State(BlockStreamIteratorBase *child_left,
+	  BlockStreamIteratorBase *child_right,
+	  Schema *input_schema_left,
+	  Schema *input_schema_right,
+	  Schema *output_schema,
+	  std::vector<unsigned> joinIndex_left,
+	  std::vector<unsigned> joinIndex_right,
+	  unsigned block_size
+	  ):_child_left(child_left),
+		_child_right(child_right),
+		_input_schema_left(input_schema_left),
+		_input_schema_right(input_schema_right),
+		_output_schema(output_schema),
+		_joinIndex_left(joinIndex_left),
+		_joinIndex_right(joinIndex_right),
+		_block_size(block_size)
+{};
+
 bool SortmergeJoin::open(const PartitionOffset &partition_offset){
 	state_._child_left->open(partition_offset);
 	state_._child_right->open(partition_offset);
@@ -38,15 +56,33 @@ bool SortmergeJoin::next(BlockStreamBase *block){
 	int child_flag=0;
 	void *tuple=0;void *left_tuple=0;void *right_tuple=0;
 	remaining_context rc;
-	if(atomicPopRemainingContext(rc)){
-		while(1){
-			if(child_flag==1){if(state_._child_left->next(rc.left_block_)==0){break;}}
-			if(child_flag==2){if(state_._child_right->next(rc.right_block_)==0){break;}}
+	while(1){
+		if(atomicPopRemainingContext(rc)){
+			if(child_flag==1){
+				if(state_._child_left->next(rc.left_block_)==0){
+					if(block->Empty()){
+						return true;
+					}
+					else{
+						return false;
+					}
+				}
+			}
+			if(child_flag==2){
+				if(state_._child_right->next(rc.right_block_)==0){
+					if(block->Empty()){
+						return true;
+					}
+					else{
+						return false;
+					}
+				}
+			}
 			for(;(left_tuple=rc.left_iterator_->currentTuple())!=0;){
 				for(;(right_tuple=rc.right_iterator_->currentTuple())!=0;){
 					/* 如果match了，输出到block中 */
 					if(isMatch(left_tuple,right_tuple)){
-						if((tuple=block->allocateTuple(total_length))>0){
+						if((tuple=block->allocateTuple(total_length))!=0){
 							/* 组装 */
 							assemble(left_tuple,right_tuple,joinedTuple);
 							/* 复制 */
@@ -66,21 +102,22 @@ bool SortmergeJoin::next(BlockStreamBase *block){
 						else{
 							/* 如果不match，当left<right，外++ */
 							rc.left_iterator_->increase_cur_();
+							break;
 						}
 					}
 
 				}
 			}
 		}
-	}
-	else{
-		rc.left_block_=BlockStreamBase::createBlock(state_._input_schema_left,state_._block_size);
-		rc.right_block_=BlockStreamBase::createBlock(state_._input_schema_right,state_._block_size);
-		state_._child_left->next(rc.left_block_);
-		state_._child_right->next(rc.right_block_);
-		rc.left_iterator_=rc.left_block_->createIterator();
-		rc.right_iterator_=rc.right_block_->createIterator();
-		atomicPushRemainingContext(rc);
+		else{
+			rc.left_block_=BlockStreamBase::createBlock(state_._input_schema_left,state_._block_size);
+			rc.right_block_=BlockStreamBase::createBlock(state_._input_schema_right,state_._block_size);
+			state_._child_left->next(rc.left_block_);
+			state_._child_right->next(rc.right_block_);
+			rc.left_iterator_=rc.left_block_->createIterator();
+			rc.right_iterator_=rc.right_block_->createIterator();
+			atomicPushRemainingContext(rc);
+		}
 	}
 }
 
@@ -107,8 +144,8 @@ bool SortmergeJoin::isMatch(void *left, void *right){
 
 bool SortmergeJoin::isleftLargerThanright(void *left, void *right){
 	bool llr=false;
-	void *aleft;
-	void *aright;
+	const void *aleft;
+	const void *aright;
 	for(unsigned i=0;i<state_._joinIndex_left.size();i++){
 		aleft=state_._input_schema_left->getColumnAddess(state_._joinIndex_left[i],left);
 		aright=state_._input_schema_right->getColumnAddess(state_._joinIndex_right[i],right);
@@ -142,5 +179,5 @@ void SortmergeJoin::atomicPushRemainingContext(SortmergeJoin::remaining_context 
  * */
 void SortmergeJoin::assemble(void *left, void *right, void *&assembledTuple){
 	unsigned left_tuple_size=state_._input_schema_left->copyTuple(left,assembledTuple);
-	state_._input_schema_left->copyTuple(right,assembledTuple+left_tuple_size);
+	state_._input_schema_right->copyTuple(right,assembledTuple+left_tuple_size);
 }

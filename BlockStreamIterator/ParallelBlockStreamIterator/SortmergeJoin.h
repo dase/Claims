@@ -39,40 +39,25 @@ public:
 			  Schema *output_schema,
 			  std::vector<unsigned> joinIndex_left,
 			  std::vector<unsigned> joinIndex_right,
-			  std::vector<unsigned> payload_left,
-			  std::vector<unsigned> payload_right,
 			  unsigned block_size
-			  ):_child_left(child_left),
-				_child_right(child_right),
-				_input_schema_left(input_schema_left),
-				_input_schema_right(input_schema_right),
-				_output_schema(output_schema),
-				_joinIndex_left(joinIndex_left),
-				_joinIndex_right(joinIndex_right),
-				_payload_left(payload_left),
-				_payload_right(payload_right),
-				_block_size(block_size)
-		{};
+			  );
 		State(){};
-
 		friend class boost::serialization::access;
 		template<class Archive>
 		void serialize(Archive & ar, const unsigned int version){
-			ar & _child_left & _child_right & _input_schema_left & _input_schema_right & _output_schema & _joinIndex_left & _joinIndex_right & _payload_left & _payload_right;
+			ar & _child_left & _child_right & _input_schema_left & _input_schema_right & _output_schema & _joinIndex_left & _joinIndex_right;
 		}
 	public:
 		//input and output
 		BlockStreamIteratorBase *_child_left,*_child_right;
 		Schema *_input_schema_left,*_input_schema_right;
 		Schema *_output_schema;
-
 		//how to join
 		std::vector<unsigned> _joinIndex_left;
 		std::vector<unsigned> _joinIndex_right;
-		std::vector<unsigned> _payload_left;
-		std::vector<unsigned> _payload_right;
 		unsigned _block_size;
 	};
+
 	SortmergeJoin(State state);
 	SortmergeJoin();
 	virtual ~SortmergeJoin();
