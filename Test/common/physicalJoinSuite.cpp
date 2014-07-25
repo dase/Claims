@@ -93,6 +93,65 @@ int SortmergejoinSuite(){
 	return 0;
 }
 
+int HashjoinSuite(){
+	/*
+	 * select sum(a+1)+count(a),b
+	 * from T
+	 * group by b
+	 *
+	 * notation: p a p s
+	 * */
+	unsigned long long int start=curtick();
+	TableDescriptor* table1=Environment::getInstance()->getCatalog()->getTable("timeseries");
+	TableDescriptor* table2=Environment::getInstance()->getCatalog()->getTable("frienddistributionF");
+	//===========================scan===========================
+	LogicalOperator* scan1=new LogicalScan(table1->getProjectoin(0));
+	LogicalOperator* scan2=new LogicalScan(table2->getProjectoin(0));
+
+	Attribute a(table1->get_table_id(),3,"AllTweet",t_int);
+	Attribute b(table2->get_table_id(),1,"EventId",t_int);
+	EqualJoin::JoinPair jp(a,b);
+	vector<EqualJoin::JoinPair> vej;
+	vej.push_back(jp);
+
+	LogicalOperator *join=new EqualJoin(vej,scan1,scan2);
+
+	//===========================root===========================
+	cout<<"performance is ok!"<<endl;
+	LogicalOperator* root=new LogicalQueryPlanRoot(0,join,LogicalQueryPlanRoot::PERFORMANCE);
+
+	BlockStreamIteratorBase* physical_iterator_tree=root->getIteratorTree(64*1024);
+	physical_iterator_tree->open();
+	while(physical_iterator_tree->next(0));
+	physical_iterator_tree->close();
+	printf("Q1: execution time: %4.4f second.\n",getSecond(start));
+	return 0;
+}
+
+int distributedSort(){
+	unsigned long long int start=curtick();
+	TableDescriptor* table=Environment::getInstance()->getCatalog()->getTable("isVDistributionF");
+	//===========================scan===========================
+	LogicalOperator* scan=new LogicalScan(table->getProjectoin(0));
+
+	vector<LogicalSort::OrderByAttr*> vo;
+	LogicalSort::OrderByAttr tmp=LogicalSort::OrderByAttr("isVDistributionF.UserCount");
+	vo.push_back(&tmp);
+
+	LogicalOperator* sort=new LogicalSort(scan,vo);
+
+	//===========================root===========================
+	cout<<"performance is ok!"<<endl;
+	LogicalOperator* root=new LogicalQueryPlanRoot(0,sort,LogicalQueryPlanRoot::PERFORMANCE);
+
+	BlockStreamIteratorBase* physical_iterator_tree=root->getIteratorTree(64*1024);
+	physical_iterator_tree->open();
+	while(physical_iterator_tree->next(0));
+	physical_iterator_tree->close();
+	printf("Q1: execution time: %4.4f second.\n",getSecond(start));
+	return 0;
+}
+
 static void init_single_node(bool master=true){
 	Environment::getInstance(master);
 	printf("Press any key to continue!\n");
@@ -106,7 +165,9 @@ static int JoinSuite(){
 	unsigned repeated_times=1;
 	init_single_node();
 	for(unsigned i=0;i<repeated_times;i++){
-		SortmergejoinSuite();
+//		HashjoinSuite();
+//		SortmergejoinSuite();
+		distributedSort();
 		cout<<"***************************"<<endl;
 	}
 	Environment::getInstance()->~Environment();

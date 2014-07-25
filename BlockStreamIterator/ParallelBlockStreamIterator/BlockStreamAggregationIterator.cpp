@@ -78,26 +78,19 @@ bool BlockStreamAggregationIterator::open(const PartitionOffset& partition_offse
 	barrierArrive(0);
 	state_.child->open(partition_offset);
 	if(ExpanderTracker::getInstance()->isExpandedThreadCallBack(pthread_self())){
-//		printf("<<<<<<<<<<<<<<<<<Aggregation detected call back signal before constructing hash table!>>>>>>>>>>>>>>>>>\n");
 		unregisterNewThreadToAllBarriers();
 		return true;
 	}
 
-//	AtomicPushFreeHtBlockStream(BlockStreamBase::createBlock(state_.input,state_.block_size));
 	if(tryEntryIntoSerializedSection(1)){
-
-
-
 		unsigned outputindex=0;
 		for(unsigned i=0;i<state_.groupByIndex.size();i++)
 		{
 				inputGroupByToOutput_[i]=outputindex++;
-//				cout<<"i= "<<i<<" gbi= "<<state_.groupByIndex[i]<<"  igtoi= "<<inputGroupByToOutput_[i]<<endl;
 		}
 		for(unsigned i=0;i<state_.aggregationIndex.size();i++)
 		{
 				inputAggregationToOutput_[i]=outputindex++;
-//				cout<<"i= "<<i<<" ai= "<<state_.aggregationIndex[i]<<"  iatoi= "<<inputAggregationToOutput_[i]<<endl;
 		}
 		for(unsigned i=0;i<state_.aggregations.size();i++)
 		{
@@ -132,12 +125,8 @@ bool BlockStreamAggregationIterator::open(const PartitionOffset& partition_offse
 		hash_=PartitionFunctionFactory::createGeneralModuloFunction(state_.nbuckets);
 		hashtable_=new BasicHashTable(state_.nbuckets,state_.bucketsize,state_.hashSchema->getTupleMaxSize());//
 		open_finished_=true;
-
 	}
-
-
 	barrierArrive(1);
-
 	void *cur=0;
 	unsigned bn;
 	bool key_exist;
@@ -151,16 +140,14 @@ bool BlockStreamAggregationIterator::open(const PartitionOffset& partition_offse
 	BasicHashTable::Iterator ht_it=hashtable_->CreateIterator();
 
 	unsigned long long one=1;
-//	BlockStreamBase *bsb=AtomicPopFreeHtBlockStream();
 	BlockStreamBase *bsb=BlockStreamBase::createBlock(state_.input,state_.block_size);
 	bsb->setEmpty();
 
 	unsigned consumed_tuples=0;
 	unsigned matched_tuples=0;
-
-		/*
-		 * group-by aggregation
-		 */
+	/*
+	 * group-by aggregation
+	 */
 	if(!state_.groupByIndex.empty())
 	{
 		while(state_.child->next(bsb))
@@ -228,7 +215,6 @@ bool BlockStreamAggregationIterator::open(const PartitionOffset& partition_offse
 					key_in_hash_table=state_.hashSchema->getColumnAddess(inputGroupByToOutput_[i],new_tuple_in_hash_table);
 					state_.input->getcolumn(state_.groupByIndex[i]).operate->assignment(key_in_input_tuple,key_in_hash_table);
 				}
-
 				for(unsigned i=0;i<state_.aggregationIndex.size();i++)
 				{
 					/**

@@ -23,12 +23,12 @@ BlockStreamSortIterator::~BlockStreamSortIterator(){
 }
 
 BlockStreamSortIterator::State::State()
-:input_(0),orderbyKey_(0),child_(0),block_size_(0),partition_offset_(0){
+:input_(0),orderbyKey_(0),child_(0),block_size_(0){
 
 }
 
-BlockStreamSortIterator::State::State(Schema* input,unsigned orderbyKey,BlockStreamIteratorBase* child,const unsigned block_size,const PartitionOffset partition_offset)
-:input_(input),orderbyKey_(orderbyKey),child_(child),block_size_(block_size),partition_offset_(partition_offset){
+BlockStreamSortIterator::State::State(Schema* input,unsigned orderbyKey,BlockStreamIteratorBase* child,const unsigned block_size)
+:input_(input),orderbyKey_(orderbyKey),child_(child),block_size_(block_size){
 
 }
 
@@ -78,9 +78,7 @@ bool BlockStreamSortIterator::open(const PartitionOffset& part_off){
 	 * */
     BlockStreamBase* block_for_asking;
 
-    state_.partition_offset_=part_off;
-
-    state_.child_->open(state_.partition_offset_);
+    state_.child_->open(part_off);
 
 	if(sema_open_.try_wait()){
 	block_buffer_iterator_=block_buffer_.createIterator();

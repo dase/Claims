@@ -6,6 +6,7 @@
  */
 
 #include "Sort.h"
+#include "../BlockStreamIterator/ParallelBlockStreamIterator/ExpandableBlockStreamExchangeMaterialized.h"
 LogicalSort::LogicalSort(LogicalOperator *child,std::vector<LogicalSort::OrderByAttr*>oba)
 :child_(child),oba_(oba){
 
@@ -23,17 +24,40 @@ Dataflow LogicalSort::getDataflow(){
 BlockStreamIteratorBase *LogicalSort::getIteratorTree(const unsigned& blocksize){
 	getDataflow();
 	BlockStreamIteratorBase *child=child_->getIteratorTree(blocksize);
-	BlockStreamSortIterator::State state;
-	state.block_size_=blocksize;
-	state.child_=child;
+	BlockStreamSortIterator::State mapper_state;
+	mapper_state.block_size_=blocksize;
+	mapper_state.child_=child;
 	for(unsigned i=0;i<oba_.size();i++){
 //		state.orderbyKey_.push_back(getOrderByKey(oba_[i]->tbl_,oba_[i]->attr_));
-		state.orderbyKey_.push_back(getOrderByKey(oba_[i]->ta_));
+		mapper_state.orderbyKey_.push_back(getOrderByKey(oba_[i]->ta_));
 	}
-	state.input_=getSchema(dataflow_.attribute_list_);
-	return new BlockStreamSortIterator(state);
-}
+	mapper_state.input_=getSchema(dataflow_.attribute_list_);
+	BlockStreamIteratorBase *mapper_sort=new BlockStreamSortIterator(mapper_state);
 
+	ExpandableBlockStreamExchangeMaterialized::State exchange_state;
+	exchange_state.block_size_=blocksize;
+	exchange_state.child_=mapper_sort;
+	exchange_state.exchange_id_=1;
+	exchange_state.schema_=getSchema(dataflow_.attribute_list_);
+	vector<NodeID> lower_ip_list=getInvolvedNodeID(dataflow_.property_.partitioner);
+	exchange_state.lower_ip_list_=convertNodeIDListToNodeIPList(lower_ip_list);//upper
+	/* todo: compute the upper_ip_list to do reduce side sort */
+	vector<NodeID> upper_ip_list;
+	upper_ip_list.push_back(0);
+	exchange_state.upper_ip_list_=convertNodeIDListToNodeIPList(upper_ip_list);//lower
+	BlockStreamIteratorBase *exchange=new ExpandableBlockStreamExchangeMaterialized(exchange_state);
+
+	BlockStreamSortIterator::State reducer_state;
+	reducer_state.block_size_=blocksize;
+	reducer_state.child_=exchange;
+	for(unsigned i=0;i<oba_.size();i++){
+		reducer_state.orderbyKey_.push_back(getOrderByKey(oba_[i]->ta_));
+	}
+	reducer_state.input_=getSchema(dataflow_.attribute_list_);
+	BlockStreamIteratorBase *reducer_sort=new BlockStreamSortIterator(reducer_state);
+
+	return reducer_sort;
+}
 
 int LogicalSort::getOrderByKey(const char *tbe, const char *attr){
 	for(unsigned i=0;i<dataflow_.attribute_list_.size();i++){
@@ -53,6 +77,7 @@ int LogicalSort::getOrderByKey(const char *ta){
 		}
 	}
 }
+
 void LogicalSort::printOrderByAttr()const
 {
 	cout<<"OrderByAttr:"<<endl;
@@ -62,6 +87,7 @@ void LogicalSort::printOrderByAttr()const
 
 	}
 }
+
 void LogicalSort::print(int level)const
 {
 	printOrderByAttr();

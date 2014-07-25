@@ -9,6 +9,7 @@
 #define BLOCKSTREAMEXCHANGEBASE_H_
 #include <vector>
 #include <string>
+using namespace std;
 #ifdef DMALLOC
 #include "dmalloc.h"
 #endif

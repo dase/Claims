@@ -123,3 +123,8 @@ static int testSort(){
 	}
 	return 0;
 }
+
+static int testDistributedSort(){
+
+	return 0;
+}

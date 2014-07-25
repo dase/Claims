@@ -21,7 +21,6 @@ EqualJoin::EqualJoin(std::vector<JoinPair> joinpair_list,LogicalOperator* left_i
 		left_join_key_list_.push_back(joinpair_list[i].first);
 		right_join_key_list_.push_back(joinpair_list[i].second);
 	}
-//	print();
 	setOperatortype(l_equal_join);
 }
 
@@ -33,7 +32,6 @@ EqualJoin::~EqualJoin() {
 	if(right_child_>0){
 		right_child_->~LogicalOperator();
 	}
-	// TODO Auto-generated destructor stub
 }
 
 Dataflow EqualJoin::getDataflow(){
@@ -41,14 +39,14 @@ Dataflow EqualJoin::getDataflow(){
 		/* the data flow has been computed*/
 		return *dataflow_;
 	}
-
-
 	/** in the current implementation, only the hash join is considered**/
 	Dataflow left_dataflow=left_child_->getDataflow();
 	Dataflow right_dataflow=right_child_->getDataflow();
 	Dataflow ret;
 
+	/* if left dataflow partition key is same as left_dataflow's partition keys, return true */
 	const bool left_dataflow_key_partitioned=canLeverageHashPartition(left_join_key_list_,left_dataflow.property_.partitioner);
+	/* if right dataflow partition key is same as right_dataflow's partition keys, return true */
 	const bool right_dataflow_key_partitioned=canLeverageHashPartition(right_join_key_list_,right_dataflow.property_.partitioner);
 
 	const Attribute left_partition_key=left_dataflow.property_.partitioner.getPartitionKey();
@@ -58,8 +56,6 @@ Dataflow EqualJoin::getDataflow(){
 			/** the best situation**/
 			if(left_dataflow.property_.partitioner.hasSamePartitionLocation(right_dataflow.property_.partitioner)){
 				join_police_=no_repartition;
-//				join_police_=left_repartition;
-
 			}
 			else{
 				join_police_=decideLeftOrRightRepartition(left_dataflow,right_dataflow);
@@ -473,19 +469,6 @@ std::vector<unsigned> EqualJoin::getLeftPayloadIndexList()const{
 		}
 	}
 	return ret;
-
-//	for(unsigned i=0;i<joinkey_pair_list_.size();i++){
-//		for(unsigned j=0;j<dataflow.attribute_list_.size();j++){
-//			if(joinkey_pair_list_[i].first==dataflow.attribute_list_[j]){
-//				break;
-//			}
-//			else{
-//				ret.push_back(j);
-//			}
-//		}
-//	}
-//	return ret;
-
 }
 
 std::vector<unsigned> EqualJoin::getRightPayloadIndexList()const{
@@ -503,8 +486,8 @@ std::vector<unsigned> EqualJoin::getRightPayloadIndexList()const{
 		ret.push_back(i);
 	}
 	return ret;
-
 }
+
 int EqualJoin::getIndexInLeftJoinKeyList(const Attribute& attribute)const{
 	for(unsigned i=0;i<joinkey_pair_list_.size();i++){
 		if(joinkey_pair_list_[i].first==attribute){
@@ -514,6 +497,7 @@ int EqualJoin::getIndexInLeftJoinKeyList(const Attribute& attribute)const{
 	assert(false);
 	return -1;
 }
+
 int EqualJoin::getIndexInLeftJoinKeyList(const Attribute& attribute,const std::vector<Attribute> shadow_attribute_list )const{
 	for(unsigned i=0;i<joinkey_pair_list_.size();i++){
 		if(joinkey_pair_list_[i].first==attribute){
@@ -529,14 +513,13 @@ int EqualJoin::getIndexInLeftJoinKeyList(const Attribute& attribute,const std::v
 			}
 		}
 	}
-
 	/*
 	 * neither the partition attribute nor the shadow partition attribute could match any join key.
 	 */
 	assert(false);
 	return -1;
-
 }
+
 int EqualJoin::getIndexInRightJoinKeyList(const Attribute& attribute)const{
 	for(unsigned i=0;i<joinkey_pair_list_.size();i++){
 		if(joinkey_pair_list_[i].second==attribute){
@@ -546,6 +529,7 @@ int EqualJoin::getIndexInRightJoinKeyList(const Attribute& attribute)const{
 	assert(false);
 	return -1;
 }
+
 int EqualJoin::getIndexInRightJoinKeyList(const Attribute& attribute,const std::vector<Attribute> shadow_attribute_list )const{
 	for(unsigned i=0;i<joinkey_pair_list_.size();i++){
 		if(joinkey_pair_list_[i].second==attribute){
@@ -568,6 +552,7 @@ int EqualJoin::getIndexInRightJoinKeyList(const Attribute& attribute,const std::
 	assert(false);
 	return -1;
 }
+
 int EqualJoin::getIndexInAttributeList(const std::vector<Attribute>& attributes,const Attribute& attribute)const{
 	for(unsigned i=0;i<attributes.size();i++){
 		if(attributes[i]==attribute){
@@ -577,11 +562,9 @@ int EqualJoin::getIndexInAttributeList(const std::vector<Attribute>& attributes,
 	assert(false);
 	return -1;
 }
+
 DataflowPartitioningDescriptor EqualJoin::decideOutputDataflowProperty(const Dataflow& left_dataflow,const Dataflow& right_dataflow)const{
 	DataflowPartitioningDescriptor ret;
-
-//	const unsigned l_data_cardinality=left_dataflow.getAggregatedDatasize();
-//	const unsigned r_datasize=right_dataflow.getAggregatedDatasize();
 	const unsigned long  l_data_cardinality=left_dataflow.getAggregatedDataCardinality();
 	const unsigned long  r_data_cardinality=right_dataflow.getAggregatedDataCardinality();
 
@@ -609,6 +592,7 @@ DataflowPartitioningDescriptor EqualJoin::decideOutputDataflowProperty(const Dat
 	return ret;
 
 }
+
 void EqualJoin::print(int level)const{
 	printf("%*.sEqualJoin:",level*8," ");
 	switch(join_police_){
@@ -639,6 +623,7 @@ void EqualJoin::print(int level)const{
 	left_child_->print(level+1);
 	right_child_->print(level+1);
 }
+
 double EqualJoin::predictEqualJoinSelectivity(const Dataflow& left_dataflow,const Dataflow& right_dataflow)const{
 	/**
 	 * Currently, we assume that we do not know the joint distribution of join attributes.
@@ -650,6 +635,7 @@ double EqualJoin::predictEqualJoinSelectivity(const Dataflow& left_dataflow,cons
 	}
 	return ret;
 }
+
 double EqualJoin::predictEqualJoinSelectivityOnSingleJoinAttributePair(const Attribute& a_l,const Attribute& a_r)const{
 	double ret;
 	TableStatistic* t_l_stat=StatManager::getInstance()->getTableStatistic(a_l.table_id_);
