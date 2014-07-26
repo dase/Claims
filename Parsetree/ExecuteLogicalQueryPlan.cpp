@@ -377,7 +377,7 @@ void ExecuteLogicalQueryPlan()	// 2014-3-4---因为根结点的结构已经改�
 				index.push_back(1);
 				cout<<"Name:"<<new_table->getAttribute(0).getName()<<endl;
 
-				new_table->createHashPartitionedProjectionOnAllAttribute(new_table->getAttribute(1).getName(), 4);
+				new_table->createHashPartitionedProjectionOnAllAttribute(new_table->getAttribute(1).getName(), 1);
 
 				catalog->add_table(new_table);
 

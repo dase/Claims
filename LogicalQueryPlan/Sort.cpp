@@ -56,7 +56,7 @@ BlockStreamIteratorBase *LogicalSort::getIteratorTree(const unsigned& blocksize)
 	reducer_state.input_=getSchema(dataflow_.attribute_list_);
 	BlockStreamIteratorBase *reducer_sort=new BlockStreamSortIterator(reducer_state);
 
-	return reducer_sort;
+	return mapper_sort;
 }
 
 int LogicalSort::getOrderByKey(const char *tbe, const char *attr){

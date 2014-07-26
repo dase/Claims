@@ -85,7 +85,6 @@ int maina(){
 
 //	return query_optimization_outputdata();//sql
 	return JoinSuite();//doing
-//	return testSort();
 
 //	return query_optimization_based_on_statistics();
 //	return daemon_test();

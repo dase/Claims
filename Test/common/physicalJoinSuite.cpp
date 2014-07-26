@@ -142,7 +142,7 @@ int distributedSort(){
 
 	//===========================root===========================
 	cout<<"performance is ok!"<<endl;
-	LogicalOperator* root=new LogicalQueryPlanRoot(0,sort,LogicalQueryPlanRoot::PERFORMANCE);
+	LogicalOperator* root=new LogicalQueryPlanRoot(0,sort,LogicalQueryPlanRoot::PRINT);
 
 	BlockStreamIteratorBase* physical_iterator_tree=root->getIteratorTree(64*1024);
 	physical_iterator_tree->open();

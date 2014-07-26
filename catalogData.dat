@@ -1,60 +1,28 @@
-22 serialization::archive 10 0 0 0 0 2 0 0 2 16 0 0 0 5 tfidf 4 1 0
-0 5 tfidf 0 0 5 0 1 0
-1 12 tfidf.row_id 7 1 0
-2 2 0 1 0 1 1
-3 13 tfidf.EventId 7
-4 1 0 1 1 1 1
-5 15 tfidf.EventTime 7
-6 6 0 1 2 1 1
-7 10 tfidf.Term 7
-8 5 300 1 3 1 1
-9 12 tfidf.TF_IDF 7
-10 3 0 1 4 1 1 1 0 0 1 0 9 1 0
-11 0 0 1 0 0 0 5 0 1 0
-12
-13 12 tfidf.row_id 7
-14 2 0 1 0 1 1 0 0 1 0 0
-15
-16 13 tfidf.EventId 7
-17 1 0 1 1 1 1 1 0 1
-18
-19 15 tfidf.EventTime 7
-20 6 0 1 2 1 1 1 0 2
-21
-22 10 tfidf.Term 7
-23 5 300 1 3 1 1 1 0 3
-24
-25 12 tfidf.TF_IDF 7
-26 3 0 1 4 1 1 1 0 4 14 1 0
-27 6
-28 13 tfidf.EventId 7
-29 1 0 1 1 1 1 16 1 0
-30 0 0 0 -1 1 1 0 1 0 0 1 0 21 1 0
-31 0 0 6 T1G0P0 513 0 0 0 1 0 0 0 1 0 0  104457 16 isVDistributionF 4
-32 16 isVDistributionF 4 0
-33 23 isVDistributionF.row_id 7
-34 2 0 1 0 0 1
-35 24 isVDistributionF.EventId 7
-36 1 0 1 1 0 1
-37 20 isVDistributionF.isV 7
-38 10 0 1 2 0 1
-39 26 isVDistributionF.UserCount 7
-40 1 0 1 3 0 1 0 1 0 9
-41 0 0 4 0
-42
-43 23 isVDistributionF.row_id 7
-44 2 0 1 0 0 1 0 0 0
-45
-46 24 isVDistributionF.EventId 7
-47 1 0 1 1 0 1 0 0 1
-48
-49 20 isVDistributionF.isV 7
-50 10 0 1 2 0 1 0 0 2
-51
-52 26 isVDistributionF.UserCount 7
-53 1 0 1 3 0 1 0 0 3 14
-54 6
-55 24 isVDistributionF.EventId 7
-56 1 0 1 1 0 1 16
-57 0 -1 1 1 0 1 1 0 21
-58 6 T0G0P0 1 0 0 0 0 0 0 0 0  382 0 0 2 16 0 0 0 1 4 0 0 4 32
+22 serialization::archive 10 0 0 0 0 1 0 0 1 16 0 0 0 16 isVDistributionF 4 1 0
+0 16 isVDistributionF 0 0 4 0 1 0
+1 23 isVDistributionF.row_id 7 1 0
+2 2 0 1 0 0 1
+3 24 isVDistributionF.EventId 7
+4 1 0 1 1 0 1
+5 20 isVDistributionF.isV 7
+6 0 0 1 2 0 1
+7 26 isVDistributionF.UserCount 7
+8 1 0 1 3 0 1 0 0 0 1 0 9 1 0
+9 0 0 0 0 0 0 4 0 1 0
+10
+11 23 isVDistributionF.row_id 7
+12 2 0 1 0 0 1 0 0 0 0 0
+13
+14 24 isVDistributionF.EventId 7
+15 1 0 1 1 0 1 0 0 1
+16
+17 20 isVDistributionF.isV 7
+18 0 0 1 2 0 1 0 0 2
+19
+20 26 isVDistributionF.UserCount 7
+21 1 0 1 3 0 1 0 0 3 14 1 0
+22 6
+23 24 isVDistributionF.EventId 7
+24 1 0 1 1 0 1 16 1 0
+25 0 0 0 -1 1 1 0 1 0 0 1 0 21 1 0
+26 0 0 6 T0G0P0 1 0 0 0 0 0 0 0 0 0 0  382 0 0 1 16 0 0 0 0 4 0

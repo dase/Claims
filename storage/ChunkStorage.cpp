@@ -66,7 +66,8 @@ ChunkReaderIterator* ChunkStorage::createChunkReaderIterator(){
 						BlockManager::getInstance()->getMemoryChunkStore()->returnChunk(chunk_id_);
 						ret=0;
 						break;
-//						return 0;
+//						return 0;Load table isVDistributionF from "/home/casa/data/data/isVDistributionF.csv" with '\t' , '\n';
+
 					}
 //					BlockManager::getInstance()->getMemoryChunkStore()->putChunk(chunk_id_,chunk_info);
 					current_storage_level_=MEMORY;
