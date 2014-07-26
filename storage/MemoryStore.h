@@ -123,6 +123,8 @@ public:
 	}
 
 	bool ensureFreeSpace(){
+//		if()
+//			LRU
 		// todo: 基于LRU的column-based交换
 		return true;
 	}

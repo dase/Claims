@@ -57,9 +57,10 @@ public:
 	bool close();
 
 private:
-	ListNode *cmsort(ListNode *);
 	ListNode *findMiddle(ListNode *);
 	ListNode *mergeTwoList(ListNode *, ListNode *);
+	ListNode *cmsort(ListNode *);
+	bool CompareTwoTuple(ListNode *, ListNode *);
 	bool createBlockStream(BlockStreamBase*&)const;
 
 private:

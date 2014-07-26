@@ -91,7 +91,7 @@ bool BlockStreamSortIterator::open(const PartitionOffset& part_off){
      * */
     unsigned long long int time=curtick();
 //    order();
-	curse=cmsort(root->next);
+    curse=cmsort(root->next);
     return true;
 }
 
@@ -105,18 +105,38 @@ ListNode* BlockStreamSortIterator::findMiddle(ListNode *head){
 	return slow;
 }
 
+bool BlockStreamSortIterator::CompareTwoTuple(ListNode *left, ListNode* right){
+	int flag;
+	const void *lt,*rt;
+	for(unsigned i=0;i<state_.orderbyKey_.size();i++){
+		lt=state_.input_->getColumnAddess(state_.orderbyKey_[i],left->tuple);
+		rt=state_.input_->getColumnAddess(state_.orderbyKey_[i],right->tuple);
+		if(state_.input_->getcolumn(state_.orderbyKey_[i]).operate->equal(lt,rt)){
+			flag=0;
+		}
+		else if(state_.input_->getcolumn(state_.orderbyKey_[i]).operate->less(lt,rt)){
+			flag=1;
+		}
+		else{
+			flag=2;
+		}
+		if(flag==0)
+			continue;
+		if(flag==1)
+			return true;
+		if(flag==2)
+			return false;
+	}
+	return true;
+}
+
 ListNode *BlockStreamSortIterator::mergeTwoList(ListNode *left, ListNode *right){
 	ListNode *ret=(ListNode *)malloc(sizeof(ListNode));
 	ret->tuple=0;ret->next=0;
 	ListNode *r=ret;
-	const void *lt;
-	const void *rt;
 	while(left!=0&&right!=0){
 		/* compare the two tuple by using the schema. */
-		lt=state_.input_->getColumnAddess(state_.orderbyKey_[0],left->tuple);
-		rt=state_.input_->getColumnAddess(state_.orderbyKey_[0],right->tuple);
-//		cout<<"left and right: "<<*(int *)state_.input_->getColumnAddess(state_.orderbyKey_[0],l)<<" "<<*(int *)state_.input_->getColumnAddess(state_.orderbyKey_[0],r)<<endl;
-		if(state_.input_->getcolumn(state_.orderbyKey_[0]).operate->less(lt,rt)){
+		if(CompareTwoTuple(left,right)){
 			ret->next=left;
 			ret=left;
 			left=left->next;

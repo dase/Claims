@@ -135,8 +135,10 @@ int distributedSort(){
 	LogicalOperator* scan=new LogicalScan(table->getProjectoin(0));
 
 	vector<LogicalSort::OrderByAttr*> vo;
-	LogicalSort::OrderByAttr tmp=LogicalSort::OrderByAttr("isVDistributionF.UserCount");
-	vo.push_back(&tmp);
+	LogicalSort::OrderByAttr tmp1=LogicalSort::OrderByAttr("isVDistributionF.UserCount");
+	LogicalSort::OrderByAttr tmp2=LogicalSort::OrderByAttr("isVDistributionF.EventId");
+	vo.push_back(&tmp2);
+	vo.push_back(&tmp1);
 
 	LogicalOperator* sort=new LogicalSort(scan,vo);
 
@@ -162,12 +164,14 @@ static void init_single_node(bool master=true){
 }
 
 static int JoinSuite(){
-	unsigned repeated_times=1;
+	unsigned repeated_times=10;
 	init_single_node();
 	for(unsigned i=0;i<repeated_times;i++){
 //		HashjoinSuite();
 //		SortmergejoinSuite();
 		distributedSort();
+		getchar();
+		getchar();
 		cout<<"***************************"<<endl;
 	}
 	Environment::getInstance()->~Environment();
