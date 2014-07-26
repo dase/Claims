@@ -44,26 +44,6 @@ ExpandableBlockStreamProjectionScan::State::State(ProjectionID projection_id,Sch
 
 
 bool ExpandableBlockStreamProjectionScan::open(const PartitionOffset& partition_offset) {
-	////////////////////THE VERSION BEFORE USING ExpandableBlockStrreamIteratorBase ///////////////////////////
-	//	if (sema_open_.try_wait()) {
-	//		PartitionStorage* partition_handle_;
-	//		if((partition_handle_=BlockManager::getInstance()->getPartitionHandle(PartitionID(state_.projection_id_,partition_offset)))==0){
-	//			printf("The partition[%s] does not exists!\n",PartitionID(state_.projection_id_,partition_offset).getName().c_str());
-	//			open_ret_=false;
-	//		}
-	//		else{
-	//			partition_reader_iterator_=partition_handle_->createAtomicReaderIterator();
-	//		}
-	//		open_ret_=true;
-	//		open_finished_ = true;
-	//
-	//	} else {
-	//		while (!open_finished_) {
-	//			usleep(1);
-	//		}
-	//	}
-	//	return open_ret_;
-	///////////////////////////////////////////// END ////////////////////////////////////////////////
 	if(tryEntryIntoSerializedSection()){
 		/* this is the first expanded thread*/
 		PartitionStorage* partition_handle_;
@@ -99,44 +79,23 @@ bool ExpandableBlockStreamProjectionScan::open(const PartitionOffset& partition_
 
 bool ExpandableBlockStreamProjectionScan::next(BlockStreamBase* block) {
 	unsigned long long total_start=curtick();
-//	unsigned long long int context_start=curtick();
 	scan_thread_context* stc=(scan_thread_context*)getContext();
-//	printf("%ld\n",curtick()-context_start);
 	if(stc==0){
 		stc=new scan_thread_context();
 		initContext(stc);
 	}
 	if(ExpanderTracker::getInstance()->isExpandedThreadCallBack(pthread_self())){
-		//		printf("<<<<<<<<<<<<<<<<<Scan detected call back signal!>>>>>>%lx>>>>>>>>>>>\n",pthread_self());
 		input_dataset_.atomicPut(stc->assigned_data_);
 		delete stc;
 		destorySelfContext();
 		perf_info->report_instance_performance_in_millibytes();
 		return false;
 	}
-
 	if(!stc->assigned_data_.empty()){
 		ChunkReaderIterator::block_accessor* ba=stc->assigned_data_.front();
 		stc->assigned_data_.pop_front();
-//		const unsigned long long int start=curtick();
-
 		ba->getBlock(block);
-//
-//		void* start_addr=((ChunkReaderIterator::InMemeryBlockAccessor*)ba)->getTargetBlockStartAddress();
-//		memcpy(block->getBlock(),
-//				start_addr,block->getSerializedBlockSize()-4);
-//		const unsigned tuple_count=*(unsigned*)(start_addr+block->getSerializedBlockSize()-4);
-////		printf("tuple count=%d",tuple_count);
-//		((BlockStreamFix*)block)->free_=(char*)((BlockStreamFix*)block)->getBlock()+tuple_count*state_.schema_->getTupleMaxSize();
-
-
-//		warmup(block->getBlock(),block->getSerializedBlockSize());
-//		printf("%ld cycles\n",curtick()-start);
-
-//		printf("scan_call %ld cycles\n",curtick()-total_start);
 		perf_info->processed_one_block();
-//		printf("[]");
-//		perf_info->report_instance_performance_in_millibytes();
 		return true;
 	}
 	else{
@@ -145,80 +104,15 @@ bool ExpandableBlockStreamProjectionScan::next(BlockStreamBase* block) {
 		else
 			delete stc;
 			destorySelfContext();
-//			printf("scan_call %ld cycles\n",curtick()-total_start);
-//			perf_info->report_instance_performance_in_millibytes();
 			return false;
-
 	}
-
-
-
-//////////////////////////////////
-//	if(ExpanderTracker::getInstance()->isExpandedThreadCallBack(pthread_self())){
-//		//		printf("<<<<<<<<<<<<<<<<<Scan detected call back signal!>>>>>>%lx>>>>>>>>>>>\n",pthread_self());
-//		return false;
-//	}
-//	perf_info->processed_one_block();
-//	return partition_reader_iterator_->nextBlock(block);
-
-
-//////////////////////////////////
-
-
-
-//	//	return false;
-//	allocated_block allo_block_temp;
-//	ChunkReaderIterator* chunk_reader_iterator;
-//	if(atomicPopChunkReaderIterator(chunk_reader_iterator)){
-//		/* there is unused ChunkReaderIterator*/
-//		//		if(chunk_reader_iterator->nextBlock(block)){
-//
-//		bool next;
-//		if(passSample()){
-//			next=chunk_reader_iterator->nextBlock(block);
-//		}
-//		else{
-//			next=chunk_reader_iterator->nextBlock();
-//		}
-//		if(next){
-//			/* there is still unread block*/
-//			atomicPushChunkReaderIterator(chunk_reader_iterator);
-//			lock_.acquire();
-//			return_blocks_++;
-//			lock_.release();
-//			printf("r!!!\n");
-//			perf_info->processed_one_block();
-//			return true;
-//		}
-//		else{
-//			/* the ChunkReaderIterator is exhausted, so we destructe it.*/
-//
-//			//			printf("Chunk(%d,%d,%d,%d) is exhausted!\n",chunk_reader_iterator->chunk_id_.partition_id.projection_id.table_id,chunk_reader_iterator->chunk_id_.partition_id.projection_id.projection_off,chunk_reader_iterator->chunk_id_.partition_id.partition_off,chunk_reader_iterator->chunk_id_.chunk_off);
-//			chunk_reader_iterator->~ChunkReaderIterator();
-//
-//		}
-//	}
-//	/* there isn't any unused ChunkReaderIterator or the ChunkReaderIterator is exhausted,
-//	 * so we create new one*/
-//	if((chunk_reader_iterator=partition_reader_iterator_->nextChunk())!=0){
-//		atomicPushChunkReaderIterator(chunk_reader_iterator);
-//		return next(block);
-//	}
-//	else{
-//		printf("**********Scan is exhausted!\n");
-//		return false;
-//	}
 }
 
 bool ExpandableBlockStreamProjectionScan::close() {
-	//	printf("ProjectoinScan[%d]: returned %ld blocks\n",state_.projection_id_.projection_off,return_blocks_);
-	//	sema_open_.post();
 	delete partition_reader_iterator_;
 	open_finished_ = false;
-
 	/* reset the expanded status in that open and next will be re-invoked.*/
 	initialize_expanded_status();
-
 	return true;
 }
 

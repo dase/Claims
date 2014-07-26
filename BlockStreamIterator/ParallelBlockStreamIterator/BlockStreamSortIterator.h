@@ -49,13 +49,6 @@ public:
 		}
 	};
 
-	typedef struct SNode{
-		State *state_;
-		void * tuple;
-		Operate *op;
-		int orderKey;
-	}SNode;
-
 	BlockStreamSortIterator();
 	BlockStreamSortIterator(State state);
 	virtual ~BlockStreamSortIterator();
@@ -63,18 +56,10 @@ public:
 	bool next(BlockStreamBase* block);
 	bool close();
 
-	void cssort();
-
 private:
-	void swap(void *& desc,void *& src);
-	//TODO:	just quick sort, and maybe other sort algorithms
-	void cqsort(int front,int end,Operate *);
 	ListNode *cmsort(ListNode *);
 	ListNode *findMiddle(ListNode *);
 	ListNode *mergeTwoList(ListNode *, ListNode *);
-	static bool compare(const SNode *,const SNode *);
-	void order(unsigned column,unsigned tuple_count);
-	void order();
 	bool createBlockStream(BlockStreamBase*&)const;
 
 private:
@@ -92,11 +77,9 @@ private:
 	unsigned temp_cur;
 	volatile bool open_finished_;
 	semaphore sema_open_finished_;
-	//TODO: use malloc to get the continuous memory
-	vector<void *> secondaryArray;
-	vector<SNode *> secondaryArray_;
 
 	ListNode *root;
+	ListNode *curse;
 
 private:
 	friend class boost::serialization::access;
