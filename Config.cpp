@@ -17,9 +17,9 @@ using namespace std;
 #define DEBUG_Config
 
 string gete(){
-	char *p=getenv("CLAIMS_HOME");
+//	char *p=getenv("CLAIMS_HOME");
 	stringstream sp;
-	sp<<string(p).c_str()<<"/conf/config";
+	sp<<"/home/claims/zhanglei/config/config";
 	return sp.str();
 }
 

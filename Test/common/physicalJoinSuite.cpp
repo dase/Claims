@@ -163,17 +163,34 @@ static void init_single_node(bool master=true){
 	catalog->restoreCatalog();
 }
 
+static void startup_multiple_node(bool master){
+	Environment::getInstance(master);
+	ResourceManagerMaster *rmms=Environment::getInstance()->getResourceManagerMaster();
+	Catalog* catalog=Environment::getInstance()->getCatalog();
+	catalog->restoreCatalog();
+}
+
 static int JoinSuite(){
-	unsigned repeated_times=10;
-	init_single_node();
-	for(unsigned i=0;i<repeated_times;i++){
-//		HashjoinSuite();
-//		SortmergejoinSuite();
-		distributedSort();
+	unsigned repeated_times=1;
+	printf("Master or slave?\n");
+	int input;
+	scanf("%d",&input);
+
+	if(input==0){
+		startup_multiple_node(true);
+		cout<<"go on? "<<endl;
 		getchar();
 		getchar();
-		cout<<"***************************"<<endl;
+		for(unsigned i=0;i<repeated_times;i++){
+			distributedSort();
+		}
 	}
+	else{
+		startup_multiple_node(false);
+		while(true)
+			sleep(1);
+	}
+
 	Environment::getInstance()->~Environment();
 	return 0;
 }

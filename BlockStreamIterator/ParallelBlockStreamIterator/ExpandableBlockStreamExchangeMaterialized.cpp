@@ -102,12 +102,12 @@ bool ExpandableBlockStreamExchangeMaterialized::SerializeAndSendToMulti(){
 		EIEL->~BlockStreamIteratorBase();
 	}
 
-	BlockStreamIteratorBase *EIEL=new ExpandableBlockStreamExchangeLowerMaterialized(EIELstate);
-
-	if(IEM->ExecuteBlockStreamIteratorsOnSites(EIEL,state_.lower_ip_list_)==false){
-		printf("Cannot send the serialized iterator tree to the remote node!\n");
-		return false;
-	}
+//	BlockStreamIteratorBase *EIEL=new ExpandableBlockStreamExchangeLowerMaterialized(EIELstate);
+//
+//	if(IEM->ExecuteBlockStreamIteratorsOnSites(EIEL,state_.lower_ip_list_)==false){
+//		printf("Cannot send the serialized iterator tree to the remote node!\n");
+//		return false;
+//	}
 	return true;
 }
 

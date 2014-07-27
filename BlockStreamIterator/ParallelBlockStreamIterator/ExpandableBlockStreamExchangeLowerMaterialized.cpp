@@ -222,12 +222,12 @@ void ExpandableBlockStreamExchangeLowerMaterialized::Send(){
 
 			sendedblocks++;
 
-			Logging_ExpandableBlockStreamExchangeLM("Waiting the connection notification from [%s]",state_.upper_ip_list_[partition_id].c_str());
+//			Logging_ExpandableBlockStreamExchangeLM("Waiting the connection notification from [%s]",state_.upper_ip_list_[partition_id].c_str());
 //			Pthis->WaitingForNotification(Pthis->socket_fd_upper_list[partition_id]);
 			readsendedblocks++;
-			Logging_ExpandableBlockStreamExchangeLM("The block is received the upper[%s].",state_.upper_ip_list_[partition_id].c_str());
+//			Logging_ExpandableBlockStreamExchangeLM("The block is received the upper[%s].",state_.upper_ip_list_[partition_id].c_str());
 //		}
-			Logging_ExpandableBlockStreamExchangeLM("sent blocks=%d",readsendedblocks);
+//			Logging_ExpandableBlockStreamExchangeLM("sent blocks=%d",readsendedblocks);
 	}
 
 
