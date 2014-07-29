@@ -26,18 +26,20 @@ bool ProjectionBinding::BindingEntireProjection(Partitioner* part,const StorageL
 		allocate_cur=rand()%node_id_list.size();
 		for(unsigned i=0;i<part->getNumberOfPartitions();i++){
 			NodeID target=node_id_list[allocate_cur];
-
 			/*check whether target node has enough resource*/
 			bool check_passed=false;
 			unsigned buget=part->getPartitionDataSize(i);
-//			printf("_____BUDGET:%d\n",buget);
 			unsigned failures=0;
 			while(!check_passed){
-//				if(target==0){
-//					allocate_cur=(allocate_cur+1)%node_id_list.size();
-//					target=node_id_list[allocate_cur];
-//					continue;
-//				}
+				/* 这地方注释掉是为了在单个节点的时候调试用的
+				 * 在集群环境中，需要打开，不然master节点会参与计算
+				 *
+				 * if(target==0){
+				 *	   allocate_cur=(allocate_cur+1)%node_id_list.size();
+				 *	   target=node_id_list[allocate_cur];
+				 *	   continue;
+				 * }
+				 * */
 				switch(desriable_storage_level){
 					case MEMORY:{
 						if(rmm->ApplyMemoryBuget(target,buget)==true){
@@ -62,7 +64,6 @@ bool ProjectionBinding::BindingEntireProjection(Partitioner* part,const StorageL
 						break;
 					}
 				}
-
 				if(!check_passed){
 					allocate_cur=(allocate_cur+1)%node_id_list.size();
 					target=node_id_list[allocate_cur];
@@ -77,20 +78,10 @@ bool ProjectionBinding::BindingEntireProjection(Partitioner* part,const StorageL
 						return false;
 					}
 				}
-
 			}
-
 			/* store the binding information in the list*/
 			partition_id_to_nodeid_list.push_back(std::pair<unsigned,NodeID>(i,target));
-
 			allocate_cur=(allocate_cur+1)%node_id_list.size();
-			/*bind*/
-//			part->bindPartitionToNode(i,node_id_list[allocate_cur]);
-//
-//
-//
-//
-//			BlockManagerMaster::getInstance()->SendBindingMessage(partition_id,number_of_chunks,MEMORY,target);
 		}
 		/* conduct the binding according to the bingding information list*/
 		for(unsigned i=0;i<partition_id_to_nodeid_list.size();i++){
@@ -98,7 +89,6 @@ bool ProjectionBinding::BindingEntireProjection(Partitioner* part,const StorageL
 			const NodeID node_id=partition_id_to_nodeid_list[i].second;
 			/* update the information in Catalog*/
 			part->bindPartitionToNode(partition_off,node_id);
-
 			/* notify the StorageManger of the target node*/
 			PartitionID partition_id(part->getProejctionID(),partition_off);
 			const unsigned number_of_chunks=part->getPartitionChunks(partition_off);

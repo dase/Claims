@@ -24,4 +24,5 @@ libblock_a_SOURCES = 	\
 	MonitorableBuffer.cpp 			MonitorableBuffer.h \
 	PartitionedBlockBuffer.cpp 		PartitionedBlockBuffer.h \
 	PartitionedBlockContainer.cpp 	PartitionedBlockContainer.h \
-	ResultSet.cpp 				    ResultSet.h
+	ResultSet.cpp 				    ResultSet.h \
+	SortedBlockStreamBuffer.cpp		SortedBlockStreamBuffer.h

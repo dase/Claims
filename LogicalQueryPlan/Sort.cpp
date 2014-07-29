@@ -63,10 +63,11 @@ BlockStreamIteratorBase *LogicalSort::getIteratorTree(const unsigned& blocksize)
 	exchange_state.block_size_=blocksize;
 	exchange_state.child_=expander_lower;
 	exchange_state.exchange_id_=1;
+	exchange_state.orderbyKey_=mapper_state.orderbyKey_;
 	exchange_state.schema_=getSchema(dataflow_.attribute_list_);
 	vector<NodeID> lower_ip_list=getInvolvedNodeID(dataflow_.property_.partitioner);
 	exchange_state.lower_ip_list_=convertNodeIDListToNodeIPList(lower_ip_list);//upper
-	cout<<exchange_state.lower_ip_list_[0]<<":tail!<<<>>>"<<endl;
+	cout<<exchange_state.lower_ip_list_.size()<<":tail!<<<>>>"<<endl;
 	/* todo: compute the upper_ip_list to do reduce side sort */
 	vector<NodeID> upper_ip_list;
 	upper_ip_list.push_back(0);
@@ -83,7 +84,7 @@ BlockStreamIteratorBase *LogicalSort::getIteratorTree(const unsigned& blocksize)
 	reducer_state.input_=getSchema(dataflow_.attribute_list_);
 	BlockStreamIteratorBase *reducer_sort=new BlockStreamSortIterator(reducer_state);
 
-	return reducer_sort;
+	return exchange;
 }
 
 int LogicalSort::getOrderByKey(const char *tbe, const char *attr){

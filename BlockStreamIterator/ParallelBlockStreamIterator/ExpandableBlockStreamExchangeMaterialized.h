@@ -15,6 +15,8 @@
 #include "../../common/Schema/Schema.h"
 #include "../../utility/lock.h"
 #include "../../common/Block/BlockStreamBuffer.h"
+#include "../../common/Block/SortedBlockStreamBuffer.h"
+
 class ExpandableBlockStreamExchangeMaterialized: public BlockStreamExchangeBase {
 public:
 	struct State{
@@ -24,16 +26,17 @@ public:
 		unsigned long long int exchange_id_;
 		std::vector<std::string> lower_ip_list_;
 		std::vector<std::string> upper_ip_list_;
-		State(Schema* schema, BlockStreamIteratorBase* child,unsigned block_size,std::vector<std::string> lower_ip_list,std::vector<std::string> upper_ip_list,unsigned long long int exchange_id)
-		:schema_(schema),child_(child),block_size_(block_size),exchange_id_(exchange_id),lower_ip_list_(lower_ip_list),upper_ip_list_(upper_ip_list){}
+		vector<unsigned> orderbyKey_;
+		State(Schema* schema, BlockStreamIteratorBase* child,unsigned block_size,std::vector<std::string> lower_ip_list,std::vector<std::string> upper_ip_list,vector<unsigned> orderbyKey,unsigned long long int exchange_id)
+		:schema_(schema),child_(child),block_size_(block_size),exchange_id_(exchange_id),lower_ip_list_(lower_ip_list),upper_ip_list_(upper_ip_list),orderbyKey_(orderbyKey){}
 		State(){};
 		friend class boost::serialization::access;
 		template<class Archive>
 		void serialize(Archive & ar, const unsigned int version){
-			ar & schema_ & child_ & block_size_ & exchange_id_ & lower_ip_list_ & upper_ip_list_;
+			ar & schema_ & child_ & block_size_ & exchange_id_ & lower_ip_list_ & upper_ip_list_ & orderbyKey_;
 		}
-
 	};
+
 	ExpandableBlockStreamExchangeMaterialized(State state);
 	ExpandableBlockStreamExchangeMaterialized(){};
 	virtual ~ExpandableBlockStreamExchangeMaterialized();
@@ -43,6 +46,7 @@ public:
 private:
 	bool SerializeAndSendToMulti();
 	static void* receiver(void* arg);
+
 private:
 	State state_;
 	semaphore sem_open_;
@@ -52,6 +56,16 @@ private:
 	BlockStreamBase* received_block_stream_;
 	BlockStreamBuffer* buffer;
 	pthread_t receiver_tid;
+	pthread_t insert_tid;
+	SortedBlockStreamBuffer *sorted_buffer_;
+	unsigned flags_;
+
+private:
+	friend class boost::serialization::access;
+	template<class Archive>
+	void serialize(Archive & ar, const unsigned int version){
+		ar & boost::serialization::base_object<BlockStreamIteratorBase>(*this) & state_ ;
+	}
 };
 
 #endif /* EXPANDABLEBLOCKSTREAMEXCHANGEMATERIALIZED_H_ */
