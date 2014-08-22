@@ -17,6 +17,8 @@
 #include "../ParallelBlockStreamIterator/ExpandableBlockStreamExchangeLowerMaterialized.h"
 #include "../ParallelBlockStreamIterator/BlockStreamCombinedIterator.h"
 #include "../ParallelBlockStreamIterator/BlockStreamJoinIterator.h"
+#include "../ParallelBlockStreamIterator/BlockStreamSortShuffleMapper.h"
+#include "../ParallelBlockStreamIterator/BlockStreamSortShuffleReducer.h"
 #include "../ParallelBlockStreamIterator/ExpandableBlockStreamHdfsScan.h"
 #include "../ParallelBlockStreamIterator/ExpandableBlockStreamExchangeMaterialized.h"
 #include "../ParallelBlockStreamIterator/ExpandableBlockStreamRandomMemAccess.h"
@@ -61,15 +63,14 @@ void Register_Block_Stream_Iterator(Archive & ar){
 	ar.register_type(static_cast<ExpandableBlockStreamExchangeLowerMaterialized*>(NULL));
 //	ar.register_type(static_cast<BlockStreamExchangeBase*>(NULL));
 	ar.register_type(static_cast<ExpandableBlockStreamExchangeMaterialized*>(NULL));
-
 	ar.register_type(static_cast<ExpandableBlockStreamRandomMemAccess*>(NULL));
 	ar.register_type(static_cast<ExpandableBlockStreamProjectionScan*>(NULL));
 	ar.register_type(static_cast<BlockStreamPerformanceMonitorTop*>(NULL));
 	ar.register_type(static_cast<BlockStreamPrint*>(NULL));
 	ar.register_type(static_cast<BlockStreamAggregationIterator*>(NULL));
-
 	ar.register_type(static_cast<BlockStreamSortIterator*>(NULL));
-
+	ar.register_type(static_cast<BlockStreamSortShuffleMapper*>(NULL));
+	ar.register_type(static_cast<BlockStreamSortShuffleReducer*>(NULL));
 	ar.register_type(static_cast<ExpandableBlockStreamBuffer*>(NULL));
 	ar.register_type(static_cast<BlockStreamLimit*>(NULL));
 	ar.register_type(static_cast<BlockStreamProjectIterator*>(NULL));

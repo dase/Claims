@@ -93,6 +93,8 @@ private:
 //	std::vector<std::ofstream> disk_fd_out_list_;
 //	std::vector<std::ifstream> disk_fd_in_list_;
 	bool child_exhausted_;
+	unsigned count;
+	unsigned partition_off;
 private:
 	friend class boost::serialization::access;
 	template<class Archive>

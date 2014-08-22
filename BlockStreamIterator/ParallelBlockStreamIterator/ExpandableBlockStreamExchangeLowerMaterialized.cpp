@@ -36,6 +36,7 @@ ExpandableBlockStreamExchangeLowerMaterialized::~ExpandableBlockStreamExchangeLo
 
 bool ExpandableBlockStreamExchangeLowerMaterialized::open(const PartitionOffset& ){
 	state_.child_->open(state_.partition_off_);
+	partition_off=state_.partition_off_;
 	nuppers_=state_.upper_ip_list_.size();
 	child_exhausted_=false;
 	socket_fd_upper_list_=new int[nuppers_];
@@ -73,14 +74,19 @@ bool ExpandableBlockStreamExchangeLowerMaterialized::next(BlockStreamBase*){
 		Logging_ExpandableBlockStreamExchangeLM("->next: enter the next function\n");
 		BlockStreamBase::BlockStreamTraverseIterator* traverse_iterator=block_stream_for_asking_->createIterator();
 		while((tuple_from_child=traverse_iterator->nextTuple())>0){
-			const unsigned partition_id=hash(tuple_from_child);
+//			cout<<"get a tuple from iterator."<<endl;
+			const unsigned partition_id=hash(reinterpret_cast<char*>(tuple_from_child)+8);
 			const unsigned bytes=state_.schema_->getTupleActualSize(tuple_from_child);
 			while(!(tuple_in_cur_block_stream=cur_block_stream_list_[partition_id]->allocateTuple(bytes))){
 				cur_block_stream_list_[partition_id]->serialize(*block_for_inserting_to_buffer_);
+				cout<<"insert into the buffer!"<<endl;
 				buffer_->insertBlockToPartitionedList(block_for_inserting_to_buffer_,partition_id);
 				cur_block_stream_list_[partition_id]->setEmpty();
+//				tuple_in_cur_block_stream=cur_block_stream_list_[partition_id]->allocateTuple(bytes);
+				Logging_ExpandableBlockStreamExchangeLM("->next: a block is inserted into the buffer\n");
 			}
 			state_.schema_->copyTuple(tuple_from_child,tuple_in_cur_block_stream);
+//			cout<<"count: "<<count++<<endl;
 		}
 		return true;
 	}
@@ -162,7 +168,7 @@ void ExpandableBlockStreamExchangeLowerMaterialized::Send(){
 	std::string temp_file_dir="/home/claims/temp/exchange/";
 	for(unsigned i=0;i<nuppers_;i++){
 		std::ostringstream file_name;
-		file_name<<temp_file_dir<<"exchange_"<<state_.exchange_id_<<"_"<<i;
+		file_name<<temp_file_dir<<"exchange_"<<state_.exchange_id_<<"_"<<i<<"_"<<partition_off;
 		lseek(disk_fd_list_[i],0,SEEK_SET);
 		disk_file_length_list_[i]=lseek(disk_fd_list_[i],0,SEEK_END);
 		disk_file_cur_list_[i]=0;
@@ -198,7 +204,7 @@ bool ExpandableBlockStreamExchangeLowerMaterialized::Materialize(){
 	std::string temp_file_dir="/home/claims/temp/exchange/";
 	for(unsigned i=0;i<nuppers_;i++){
 		std::ostringstream file_name;
-		file_name<<temp_file_dir<<"exchange_"<<state_.exchange_id_<<"_"<<i;
+		file_name<<temp_file_dir<<"exchange_"<<state_.exchange_id_<<"_"<<i<<"_"<<partition_off;
 		disk_fd_list_[i]=FileOpen(file_name.str().c_str(),O_RDWR|O_APPEND|O_TRUNC|O_CREAT,S_IWUSR|S_IRUSR);
 		if(disk_fd_list_[i]==-1){
 			printf("Cannot open file %s! Reason: %s\n",file_name.str().c_str(),strerror(errno));

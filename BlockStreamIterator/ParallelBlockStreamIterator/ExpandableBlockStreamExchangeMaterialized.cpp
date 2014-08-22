@@ -136,8 +136,10 @@ void* ExpandableBlockStreamExchangeMaterialized::receiver(void* arg){
 					Pthis->received_block_stream_->deserialize(Pthis->block_for_socket_);
 					const bool isLastBlock=	Pthis->received_block_stream_->Empty();
 //					Pthis->buffer->insertBlock(Pthis->received_block_stream_);
-					if(!isLastBlock)
+					if(!isLastBlock){
 						Pthis->sorted_buffer_->insertIntoSortedLists(Pthis->received_block_stream_,seed);
+						cout<<"recieve the block!!! "<<endl;
+					}
 					if(isLastBlock){
 						Logging_ExpandableBlockStreamExchangeMaterialized("*****This block is the last one.");
 						Pthis->nexhausted_lowers_++;

@@ -128,7 +128,7 @@ int HashjoinSuite(){
 	return 0;
 }
 
-int distributedSort(){
+int distributedSort1(){
 	unsigned long long int start=curtick();
 	TableDescriptor* table=Environment::getInstance()->getCatalog()->getTable("isVDistributionF");
 	//===========================scan===========================
@@ -138,6 +138,30 @@ int distributedSort(){
 	LogicalSort::OrderByAttr tmp1=LogicalSort::OrderByAttr("isVDistributionF.UserCount");
 	LogicalSort::OrderByAttr tmp2=LogicalSort::OrderByAttr("isVDistributionF.EventId");
 	vo.push_back(&tmp2);
+	vo.push_back(&tmp1);
+
+	LogicalOperator* sort=new LogicalSort(scan,vo);
+
+	//===========================root===========================
+	cout<<"performance is ok!"<<endl;
+	LogicalOperator* root=new LogicalQueryPlanRoot(0,sort,LogicalQueryPlanRoot::PRINT);
+
+	BlockStreamIteratorBase* physical_iterator_tree=root->getIteratorTree(64*1024);
+	physical_iterator_tree->open();
+	while(physical_iterator_tree->next(0));
+	physical_iterator_tree->close();
+	printf("Q1: execution time: %4.4f second.\n",getSecond(start));
+	return 0;
+}
+
+int distributedSort(){
+	unsigned long long int start=curtick();
+	TableDescriptor* table=Environment::getInstance()->getCatalog()->getTable("l");
+	//===========================scan===========================
+	LogicalOperator* scan=new LogicalScan(table->getProjectoin(0));
+
+	vector<LogicalSort::OrderByAttr*> vo;
+	LogicalSort::OrderByAttr tmp1=LogicalSort::OrderByAttr("l.f0");
 	vo.push_back(&tmp1);
 
 	LogicalOperator* sort=new LogicalSort(scan,vo);
