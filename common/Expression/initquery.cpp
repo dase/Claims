@@ -328,28 +328,28 @@ QNode * transformqual(Node *node,LogicalOperator* child)
 			else if(strcmp(funcnode->funname,"FSUM")==0)
 			{
 //				QNode *anext=transformqual(funcnode->parameter1,child);
-				data_type a_type=child->getDataflow().getAttribute(string(funcnode->str)).attrType->type;
+				data_type a_type=child->GetDataflow().getAttribute(string(funcnode->str)).attrType->type;
 				QNode *aggnode=new QColcumns("",funcnode->str,a_type,funcnode->str);
 				return aggnode;
 			}
 			else if(strcmp(funcnode->funname,"FAVG")==0)
 			{
 //				QNode *anext=transformqual(funcnode->parameter1,child);
-				data_type a_type=child->getDataflow().getAttribute(string(funcnode->str)).attrType->type;
+				data_type a_type=child->GetDataflow().getAttribute(string(funcnode->str)).attrType->type;
 				QNode *aggnode=new QColcumns("",funcnode->str,a_type,funcnode->str);
 				return aggnode;
 			}
 			else if(strcmp(funcnode->funname,"FMIN")==0)
 			{
 //				QNode *anext=transformqual(funcnode->parameter1,child);
-				data_type a_type=child->getDataflow().getAttribute(string(funcnode->str)).attrType->type;
+				data_type a_type=child->GetDataflow().getAttribute(string(funcnode->str)).attrType->type;
 				QNode *aggnode=new QColcumns("",funcnode->str,a_type,funcnode->str);
 				return aggnode;
 			}
 			else if(strcmp(funcnode->funname,"FMAX")==0)
 			{
 //				QNode *anext=transformqual(funcnode->parameter1,child);
-				data_type a_type=child->getDataflow().getAttribute(string(funcnode->str)).attrType->type;
+				data_type a_type=child->GetDataflow().getAttribute(string(funcnode->str)).attrType->type;
 				QNode *aggnode=new QColcumns("",funcnode->str,a_type,funcnode->str);
 				return aggnode;
 			}
@@ -446,7 +446,7 @@ QNode * transformqual(Node *node,LogicalOperator* child)
 		{
 			Columns *col=(Columns *)node;
 //			data_type a_type=Environment::getInstance()->getCatalog()->name_to_table[col->parameter1]->getAttribute2(col->parameter2).attrType->type;
-			data_type a_type=child->getDataflow().getAttribute(string(col->parameter2)).attrType->type;
+			data_type a_type=child->GetDataflow().getAttribute(string(col->parameter2)).attrType->type;
 			if(col->parameter1==NULL)//for temporary variable
 			{
 				col->parameter1="";
@@ -643,11 +643,11 @@ void InitExprAtPhysicalPlan(QNode *node)
 		{
 			QExpr_binary * cmpnode=(QExpr_binary *)(node);
 			cmpnode->FuncId=Exec_cmp;
-			cmpnode->actual_type=t_boolean;//
+//			cmpnode->actual_type=t_boolean;//
 			InitExprAtPhysicalPlan(cmpnode->lnext);
 			InitExprAtPhysicalPlan(cmpnode->rnext);
 			cmpnode->function_call=ExectorFunction::operator_function[cmpnode->actual_type][cmpnode->op_type];
-			cmpnode->type_cast_func=TypeCast::type_cast_func[cmpnode->actual_type][cmpnode->return_type];
+			cmpnode->type_cast_func=TypeCast::type_cast_func[t_boolean][cmpnode->return_type];
 			cmpnode->value=memalign(cacheline_size,cmpnode->length);
 		}break;
 		case t_qexpr_unary:

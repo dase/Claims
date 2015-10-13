@@ -66,9 +66,9 @@ static void test_logical_index_building()
 	TableDescriptor* table = Catalog::getInstance()->getTable("cj");
 	LogicalOperator* csb_building = new LogicalCSBIndexBuilding(table->getProjectoin(0)->getProjectionID(), table->getAttribute(3), "sec_code_index");
 	const NodeID collector_node_id=0;
-	LogicalOperator* root=new LogicalQueryPlanRoot(collector_node_id,csb_building,LogicalQueryPlanRoot::RESULTCOLLECTOR);
-	root->print();
-	BlockStreamIteratorBase* executable_query_plan=root->getIteratorTree(1024*64);
+	LogicalOperator* root=new LogicalQueryPlanRoot(collector_node_id,csb_building,LogicalQueryPlanRoot::kResultCollector);
+	root->Print();
+	BlockStreamIteratorBase* executable_query_plan=root->GetIteratorTree(1024*64);
 	executable_query_plan->open();
 	while (executable_query_plan->next(0));
 	executable_query_plan->close();
@@ -114,8 +114,8 @@ static void test_logical_index_scan()
 
 		LogicalOperator* index_scan = new LogicalIndexScan(table->getProjectoin(0)->getProjectionID(), table->getAttribute("sec_code"), q_range);
 		const NodeID collector_node_id = 0;
-		LogicalOperator* root = new LogicalQueryPlanRoot(collector_node_id, index_scan, LogicalQueryPlanRoot::PRINT);
-		BlockStreamIteratorBase* executable_query_plan = root->getIteratorTree(1024 * 64);
+		LogicalOperator* root = new LogicalQueryPlanRoot(collector_node_id, index_scan, LogicalQueryPlanRoot::kPrint);
+		BlockStreamIteratorBase* executable_query_plan = root->GetIteratorTree(1024 * 64);
 		executable_query_plan->open();
 		while (executable_query_plan->next(0));
 		executable_query_plan->close();
@@ -151,8 +151,8 @@ static void bulk_test_logical_index_scan()
 
 		LogicalOperator* index_scan = new LogicalIndexScan(table->getProjectoin(0)->getProjectionID(), table->getAttribute("sec_code"), q_range);
 		const NodeID collector_node_id = 0;
-		LogicalOperator* root = new LogicalQueryPlanRoot(collector_node_id, index_scan, LogicalQueryPlanRoot::RESULTCOLLECTOR);
-		BlockStreamIteratorBase* executable_query_plan = root->getIteratorTree(1024 * 64);
+		LogicalOperator* root = new LogicalQueryPlanRoot(collector_node_id, index_scan, LogicalQueryPlanRoot::kResultCollector);
+		BlockStreamIteratorBase* executable_query_plan = root->GetIteratorTree(1024 * 64);
 		executable_query_plan->open();
 		while (executable_query_plan->next(0));
 		executable_query_plan->close();
@@ -178,15 +178,15 @@ static void test_scan_filter_performance(int value)
 	TableDescriptor* table=Catalog::getInstance()->getTable("cj");
 	LogicalOperator* cj_scan=new LogicalScan(table->getProjectoin(0));
 
-	Filter::Condition filter_condition_1;
+	LogicalFilter::Condition filter_condition_1;
 	filter_condition_1.add(table->getAttribute(3),AttributeComparator::GEQ,std::string("10107"));
 	filter_condition_1.add(table->getAttribute(3),AttributeComparator::L,(void*)&value);
-	LogicalOperator* filter_1=new Filter(filter_condition_1,cj_scan);
+	LogicalOperator* filter_1=new LogicalFilter(filter_condition_1,cj_scan);
 
 	const NodeID collector_node_id=0;
 	LogicalOperator* root=new LogicalQueryPlanRoot(collector_node_id,filter_1,LogicalQueryPlanRoot::PERFORMANCE);
 
-	BlockStreamPerformanceMonitorTop* executable_query_plan=(BlockStreamPerformanceMonitorTop*)root->getIteratorTree(1024*64);
+	BlockStreamPerformanceMonitorTop* executable_query_plan=(BlockStreamPerformanceMonitorTop*)root->GetIteratorTree(1024*64);
 //	executable_query_plan->print();
 	executable_query_plan->open();
 	while(executable_query_plan->next(0));
@@ -228,7 +228,7 @@ static void test_index_filter_performance(int value_high)
 	const NodeID collector_node_id = 0;
 	LogicalOperator* root = new LogicalQueryPlanRoot(collector_node_id, index_scan, LogicalQueryPlanRoot::PERFORMANCE);
 //	root->print();
-	BlockStreamPerformanceMonitorTop* executable_query_plan = (BlockStreamPerformanceMonitorTop*)root->getIteratorTree(1024 * 64);
+	BlockStreamPerformanceMonitorTop* executable_query_plan = (BlockStreamPerformanceMonitorTop*)root->GetIteratorTree(1024 * 64);
 	executable_query_plan->open();
 	while (executable_query_plan->next(0));
 	executable_query_plan->close();

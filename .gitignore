@@ -1,8 +1,8 @@
+!thirdparty/
 *.Po
 *.a
 *.dat*
 *.o
-*sql.output
 .cproject
 .gitignore.swp
 .history
@@ -43,3 +43,5 @@ ltmain.sh
 missing
 stamp-h1
 缺省值
+*sql.output
+*.doxyfile

@@ -20,7 +20,7 @@
 #include "../../common/data_type.h"
 
 #include "../../LogicalQueryPlan/Aggregation.h"
-#include "../../LogicalQueryPlan/LogicalQueryPlanRoot.h"
+#include "../../LogicalQueryPlan/logical_query_plan_root.h"
 #include "../../LogicalQueryPlan/Scan.h"
 
 #include "../Catalog.h"
@@ -85,9 +85,9 @@ void Analyzer::analyse(const AttributeID &attrID) {
 	const NodeID collector_node_id = 0;
 
 	LogicalOperator* root = new LogicalQueryPlanRoot(collector_node_id,
-			aggregation, LogicalQueryPlanRoot::RESULTCOLLECTOR);
+			aggregation, LogicalQueryPlanRoot::kResultCollector);
 
-	BlockStreamIteratorBase* collector = root->getIteratorTree(
+	BlockStreamIteratorBase* collector = root->GetIteratorTree(
 			1024 * 64 - sizeof(unsigned));
 
 	collector->open();
@@ -256,9 +256,9 @@ void Analyzer::compute_table_stat(const TableID& tab_id){
 			BlockStreamAggregationIterator::State::count);
 	LogicalOperator* agg=new Aggregation(group_by_attributes,aggregation_attributes,aggregation_function,scan);
 	LogicalOperator* root = new LogicalQueryPlanRoot(0,
-			agg, LogicalQueryPlanRoot::RESULTCOLLECTOR);
+			agg, LogicalQueryPlanRoot::kResultCollector);
 
-	BlockStreamIteratorBase* collector = root->getIteratorTree(
+	BlockStreamIteratorBase* collector = root->GetIteratorTree(
 			1024 * 64 - sizeof(unsigned));
 	collector->open();
 	collector->next(0);
@@ -384,9 +384,9 @@ unsigned long Analyzer::getDistinctCardinality(const AttributeID& attr_id){
 
 
 	LogicalOperator* root = new LogicalQueryPlanRoot(0,
-			count_agg, LogicalQueryPlanRoot::RESULTCOLLECTOR);
+			count_agg, LogicalQueryPlanRoot::kResultCollector);
 
-	BlockStreamIteratorBase* collector = root->getIteratorTree(
+	BlockStreamIteratorBase* collector = root->GetIteratorTree(
 			1024 * 64 - sizeof(unsigned));
 	collector->open();
 	collector->next(0);
@@ -444,9 +444,9 @@ Histogram* Analyzer::computeHistogram(const AttributeID& attr_id,const unsigned 
 	const NodeID collector_node_id = 0;
 
 	LogicalOperator* root = new LogicalQueryPlanRoot(collector_node_id,
-			aggregation, LogicalQueryPlanRoot::RESULTCOLLECTOR);
+			aggregation, LogicalQueryPlanRoot::kResultCollector);
 
-	BlockStreamIteratorBase* collector = root->getIteratorTree(
+	BlockStreamIteratorBase* collector = root->GetIteratorTree(
 			1024 * 64 - sizeof(unsigned));
 
 	collector->open();

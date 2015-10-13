@@ -36,10 +36,10 @@ liblogicalqueryplan_a_SOURCES = \
 	DataflowPartitionDescriptor.cpp 	DataflowPartitionDescriptor.h \
 	Dataflow.cpp				Dataflow.h\
 	EqualJoin.cpp 				EqualJoin.h \
-	Filter.cpp 					Filter.h \
+	logical_filter.cpp 			logical_filter.h \
 	LogicalOperator.cpp 			LogicalOperator.h \
-	LogicalQueryPlanRoot.cpp 		LogicalQueryPlanRoot.h \
-	Project.cpp 				Project.h \
+	logcial_query_plan_root.h	logical_query_plan_root.cpp \
+	logical_project.cpp 				logical_project.h \
 	Requirement.cpp 				Requirement.h \
 	Scan.cpp 					Scan.h \
 	Sort.cpp 					Sort.h \
