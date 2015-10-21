@@ -59,7 +59,7 @@ void ResultSet::print() const {
 		void * tuple;
 		while(tuple=tuple_it->nextTuple()){
 			for(unsigned i=0;i<column_header_list_.size();i++){
-				int wide=utf8_strlen(schema_->getcolumn(i).operate->toString(schema_->getColumnAddess(i,tuple)))+space_per_column;
+				int wide=utf8_strlen(schema_->getcolumn(i).operate->toString(schema_->getColumnAddress(i,tuple)))+space_per_column;
 				column_wides[i]=max(column_wides[i],wide);
 			}
 			sample_times++;
@@ -107,11 +107,11 @@ void ResultSet::print() const {
 		void * tuple;
 		while(tuple=tuple_it->nextTuple()){
 			for(unsigned i=0;i<column_header_list_.size();i++){
-				int current_value_length=utf8_strlen(schema_->getcolumn(i).operate->toString(schema_->getColumnAddess(i,tuple)));
+				int current_value_length=utf8_strlen(schema_->getcolumn(i).operate->toString(schema_->getColumnAddress(i,tuple)));
 				column_wides[i]=max(column_wides[i],current_value_length);
 				printf("| ");
 				printNChar((column_wides[i]-current_value_length)/2, ' ');
-				printf("%s",schema_->getcolumn(i).operate->toString(schema_->getColumnAddess(i,tuple)).c_str());
+				printf("%s",schema_->getcolumn(i).operate->toString(schema_->getColumnAddress(i,tuple)).c_str());
 				printNChar(column_wides[i]-current_value_length-(column_wides[i]-current_value_length)/2,' ');
 				printf(" ");
 			}

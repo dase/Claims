@@ -65,9 +65,9 @@ bool bottomLayerCollecting::Next(BlockStreamBase* block) {
 			{
 				// construct tuple_new <chunk_offset, key_index, block_offset, tuple_offset>
 				output_schema_->getcolumn(0).operate->assignment((void*)(& rb.chunk_offset), tuple_new);
-				output_schema_->getcolumn(1).operate->assignment(state_.schema_->getColumnAddess(state_.key_indexing_, original_tuple), output_schema_->getColumnAddess(1, tuple_new));
-				output_schema_->getcolumn(2).operate->assignment((void*)(& rb.block_offset), output_schema_->getColumnAddess(2, tuple_new));
-				output_schema_->getcolumn(3).operate->assignment((void*)(& rb.tuple_offset), output_schema_->getColumnAddess(3, tuple_new));
+				output_schema_->getcolumn(1).operate->assignment(state_.schema_->getColumnAddress(state_.key_indexing_, original_tuple), output_schema_->getColumnAddress(1, tuple_new));
+				output_schema_->getcolumn(2).operate->assignment((void*)(& rb.block_offset), output_schema_->getColumnAddress(2, tuple_new));
+				output_schema_->getcolumn(3).operate->assignment((void*)(& rb.tuple_offset), output_schema_->getColumnAddress(3, tuple_new));
 				rb.iterator->increase_cur_();
 				rb.tuple_offset++;
 
@@ -100,9 +100,9 @@ bool bottomLayerCollecting::Next(BlockStreamBase* block) {
 			{
 				// construct tuple_new <chunk_offset, key_index, block_offset, tuple_offset>
 				output_schema_->getcolumn(0).operate->assignment((void*)(& rb.chunk_offset), tuple_new);
-				output_schema_->getcolumn(1).operate->assignment(state_.schema_->getColumnAddess(state_.key_indexing_, original_tuple), output_schema_->getColumnAddess(1, tuple_new));
-				output_schema_->getcolumn(2).operate->assignment((void*)(& rb.block_offset), output_schema_->getColumnAddess(2, tuple_new));
-				output_schema_->getcolumn(3).operate->assignment((void*)(& rb.tuple_offset), output_schema_->getColumnAddess(3, tuple_new));
+				output_schema_->getcolumn(1).operate->assignment(state_.schema_->getColumnAddress(state_.key_indexing_, original_tuple), output_schema_->getColumnAddress(1, tuple_new));
+				output_schema_->getcolumn(2).operate->assignment((void*)(& rb.block_offset), output_schema_->getColumnAddress(2, tuple_new));
+				output_schema_->getcolumn(3).operate->assignment((void*)(& rb.tuple_offset), output_schema_->getColumnAddress(3, tuple_new));
 				rb.iterator->increase_cur_();
 				rb.tuple_offset++;
 
@@ -418,8 +418,8 @@ bool bottomLayerSorting::Close()
 
 bool bottomLayerSorting::compare(const compare_node* a, const compare_node* b)
 {
-	const void* left = a->vector_schema_->getColumnAddess(0, a->tuple_);
-	const void* right = b->vector_schema_->getColumnAddess(0, b->tuple_);
+	const void* left = a->vector_schema_->getColumnAddress(0, a->tuple_);
+	const void* right = b->vector_schema_->getColumnAddress(0, b->tuple_);
 	return a->op_->less(left, right);
 
 }
@@ -431,9 +431,9 @@ CSBPlusTree<T>* bottomLayerSorting::indexBuilding(vector<compare_node*> chunk_tu
 ///*for testing*/	cout << "chunk data size: " << chunk_tuples.size() << endl << endl;
 	for (unsigned i = 0; i < chunk_tuples.size(); i++)
 	{
-		aray[i]._key = *(T*)(vector_schema_->getColumnAddess(0, chunk_tuples[i]->tuple_));
-		aray[i]._block_off = *(unsigned short*)(vector_schema_->getColumnAddess(1, chunk_tuples[i]->tuple_));
-		aray[i]._tuple_off = *(unsigned short*)(vector_schema_->getColumnAddess(2, chunk_tuples[i]->tuple_));
+		aray[i]._key = *(T*)(vector_schema_->getColumnAddress(0, chunk_tuples[i]->tuple_));
+		aray[i]._block_off = *(unsigned short*)(vector_schema_->getColumnAddress(1, chunk_tuples[i]->tuple_));
+		aray[i]._tuple_off = *(unsigned short*)(vector_schema_->getColumnAddress(2, chunk_tuples[i]->tuple_));
 ///*for testing*/		cout << aray[i]._key << "\t" << aray[i]._block_off << "\t" << aray[i]._tuple_off << endl;
 	}
 	CSBPlusTree<int>* csb_tree = new CSBPlusTree<int>();

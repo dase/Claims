@@ -77,7 +77,7 @@ void *getConst(Node *cinfo,void *tuple,Schema *schema)//TODO string=>actual_type
 void *getcol(Node *cinfo,void *tuple,Schema *schema)//TODO need actual_type=>return_type
 {
 	QColcumns *qcol=(QColcumns *)(cinfo);
-	void *result=schema->getColumnAddess(qcol->id,tuple);
+	void *result=schema->getColumnAddress(qcol->id,tuple);
 	return qcol->type_cast_func(result,qcol->value);
 }
 void *Exec_case_when(Node *cinfo,void *tuple,Schema *schema)

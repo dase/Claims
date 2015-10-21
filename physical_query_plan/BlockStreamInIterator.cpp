@@ -78,9 +78,9 @@ bool BlockStreamInIterator::Open(const PartitionOffset& partition_offset)
 		bsti->reset();
 		while (cur_tuple = bsti->nextTuple())
 		{
-			bn = state_.schema_child_set->getcolumn(state_.index_child_set).operate->getPartitionValue(state_.schema_child_set->getColumnAddess(state_.index_child_set, cur_tuple), state_.ht_nbuckets);
+			bn = state_.schema_child_set->getcolumn(state_.index_child_set).operate->getPartitionValue(state_.schema_child_set->getColumnAddress(state_.index_child_set, cur_tuple), state_.ht_nbuckets);
 			tuple_in_hashtable = hashtable->atomicAllocate(bn);
-			state_.schema_child_set->getcolumn(state_.index_child_set).operate->assignment(state_.schema_child_set->getColumnAddess(state_.index_child_set, cur_tuple), tuple_in_hashtable);
+			state_.schema_child_set->getcolumn(state_.index_child_set).operate->assignment(state_.schema_child_set->getColumnAddress(state_.index_child_set, cur_tuple), tuple_in_hashtable);
 		}
 		bsb->setEmpty();
 	}
@@ -105,11 +105,11 @@ bool BlockStreamInIterator::Next (BlockStreamBase* block)
 		while ((tuple_from_child_in = rb.blockstream_iterator->currentTuple()) > 0)
 		{
 			passIn = false;
-			bn = state_.schema_child_in->getcolumn(state_.index_child_in).operate->getPartitionValue(state_.schema_child_in->getColumnAddess(state_.index_child_in, tuple_from_child_in), state_.ht_nbuckets);
+			bn = state_.schema_child_in->getcolumn(state_.index_child_in).operate->getPartitionValue(state_.schema_child_in->getColumnAddress(state_.index_child_in, tuple_from_child_in), state_.ht_nbuckets);
 			hashtable->placeIterator(hashtable_iterator, bn);
 			while ((tuple_in_hashtable = hashtable_iterator.readnext()) > 0)
 			{
-				key_in_input = state_.schema_child_in->getColumnAddess(state_.index_child_in, tuple_from_child_in);
+				key_in_input = state_.schema_child_in->getColumnAddress(state_.index_child_in, tuple_from_child_in);
 				if (state_.schema_child_in->getcolumn(state_.index_child_in).operate->equal(tuple_in_hashtable, key_in_input))
 				{
 					passIn = true;
@@ -143,11 +143,11 @@ bool BlockStreamInIterator::Next (BlockStreamBase* block)
 		while ((tuple_from_child_in = traverse_iterator->currentTuple()) > 0)
 		{
 			passIn = false;
-			bn = state_.schema_child_in->getcolumn(state_.index_child_in).operate->getPartitionValue(state_.schema_child_in->getColumnAddess(state_.index_child_in, tuple_from_child_in), state_.ht_nbuckets);
+			bn = state_.schema_child_in->getcolumn(state_.index_child_in).operate->getPartitionValue(state_.schema_child_in->getColumnAddress(state_.index_child_in, tuple_from_child_in), state_.ht_nbuckets);
 			hashtable->placeIterator(hashtable_iterator, bn);
 			while ((tuple_in_hashtable = hashtable_iterator.readCurrent()) != 0)
 			{
-				key_in_input = state_.schema_child_in->getColumnAddess(state_.index_child_in, tuple_from_child_in);
+				key_in_input = state_.schema_child_in->getColumnAddress(state_.index_child_in, tuple_from_child_in);
 				if (state_.schema_child_in->getcolumn(state_.index_child_in).operate->equal(tuple_in_hashtable, key_in_input))
 				{
 					passIn = true;
