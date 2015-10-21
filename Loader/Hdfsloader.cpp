@@ -202,7 +202,7 @@ bool HdfsLoader::insertRecords(){
 		//determine the partition to write the tuple "target"
 		int part = 0;
 		const int partition_key_local_index=partition_key_index[i];
-		void* partition_key_addr=projection_schema[i]->getColumnAddess(partition_key_local_index,target);
+		void* partition_key_addr=projection_schema[i]->getColumnAddress(partition_key_local_index,target);
 		part=projection_schema[i]->getcolumn(partition_key_local_index).operate->getPartitionValue(partition_key_addr, partition_functin_list_[i]->getNumberOfPartitions());
 		tuples_per_partition[i][part]++;
 		void* block_tuple_addr = pj_buffer[i][part]->allocateTuple(projection_schema[i]->getTupleMaxSize());

@@ -91,7 +91,7 @@ inline DynamicBlockBuffer* generateBlockStreamBuffer(vector<column_metadata> col
 
 			for(unsigned i=0;i<columns.size();i++){
 				if(columns[i].dis!=0){
-					columns[i].dis->giveRandomValue(schema->getColumnAddess(i,tuple));
+					columns[i].dis->giveRandomValue(schema->getColumnAddress(i,tuple));
 				}
 			}
 

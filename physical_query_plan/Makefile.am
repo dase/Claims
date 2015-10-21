@@ -39,9 +39,9 @@ libphysicalqueryplan_a_SOURCES = \
 	BlockStreamCombinedIterator.cpp 				BlockStreamCombinedIterator.h \
 	BlockStreamExpander.cpp 						BlockStreamExpander.h \
 	BlockStreamInIterator.cpp 						BlockStreamInIterator.h \
-	BlockStreamJoinIterator.cpp 						BlockStreamJoinIterator.h \
+	physical_join.cpp 								physical_join.h \
 	BlockStreamProjectIterator.cpp 						BlockStreamProjectIterator.h \
-	BlockStreamSortIterator.cpp 						BlockStreamSortIterator.h \
+	physical_sort.cpp 									physical_sort.h \
 	ExpandableBlockStreamBuffer.cpp 					ExpandableBlockStreamBuffer.h \
 	ExpandableBlockStreamExchangeEpoll.cpp 				ExpandableBlockStreamExchangeEpoll.h \
 	ExpandableBlockStreamExchangeLowerEfficient.cpp 		ExpandableBlockStreamExchangeLowerEfficient.h \
