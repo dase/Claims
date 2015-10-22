@@ -138,10 +138,11 @@ bool PhysicalJoin::Open(const PartitionOffset& partition_offset) {
     }
     if (eftt_) {
       cff_ = PhysicalJoin::IsMatchCodegen;
-      printf("Codegen(Join) succeed(%4.3fms)!\n", getMilliSecond(start));
+      LOG(INFO) << "Codegen(Join) succeed(" << setw(8) << fixed
+                << setprecision(3) << getMilliSecond(start) << endl;
     } else {
       cff_ = PhysicalJoin::IsMatch;
-      printf("Codegen(Join) failed!\n");
+      LOG(INFO) << "Codegen(Join) failed!" << endl;
     }
     delete expr;
   }
@@ -335,9 +336,11 @@ bool PhysicalJoin::Next(BlockStreamBase* block) {
 bool PhysicalJoin::Close() {
 #ifdef TIME
   stopTimer(&timer);
-  printf("time consuming: %lld, %f\n", timer, timer / (double)CPU_FRE);
+  LOG(INFO) << "time consuming: " << timer << ", "
+            << timer / static_cast<double> CPU_FRE << endl;
 #endif
-  BlockStreamJoinLogging::log("Consumes %ld tuples from left child!");
+  LOG(INFO) << "Consumes" << consumed_tuples_from_left
+            << "tuples from left child!" << endl;
   InitExpandedStatus();
   DestoryAllContext();
   delete hashtable_;
@@ -347,10 +350,10 @@ bool PhysicalJoin::Close() {
 }
 
 void PhysicalJoin::Print() {
-  printf("Join: buckets:%d\n", state_.hashtable_bucket_num_);
-  printf("------Join Left-------\n");
+  LOG(INFO) << "Join: buckets:" << state_.hashtable_bucket_num_ << endl;
+  LOG(INFO) << "------Join Left-------" << endl;
   state_.child_left_->Print();
-  printf("------Join Right-------\n");
+  LOG(INFO) << "------Join Right-------" << endl;
 
   state_.child_right_->Print();
 }

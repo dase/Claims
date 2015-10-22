@@ -32,6 +32,7 @@
 
 #include "../physical_query_plan/physical_sort.h"
 
+#include <glog/logging.h>
 namespace claims {
 namespace physical_query_plan {
 
@@ -132,6 +133,8 @@ bool PhysicalSort::Open(const PartitionOffset &part_off) {
   }
 
   if (CreateBlockStream(block_for_asking) == false) {
+    LOG(ERROR) << "error in the create block stream!!!" << endl;
+    return 0;
   }
   /**
    *  phase 1: store the data in the buffer!
@@ -150,7 +153,7 @@ bool PhysicalSort::Open(const PartitionOffset &part_off) {
     }
     block_offset++;
     if (CreateBlockStream(block_for_asking) == false) {
-      cout << "error in the create block stream!!!" << endl;
+      LOG(ERROR) << "error in the create block stream!!!" << endl;
       return 0;
     }
   }
@@ -194,12 +197,14 @@ bool PhysicalSort::Close() {
 }
 
 void PhysicalSort::Print() {
-  printf("Sort\n");
+  LOG(INFO) << "Sort" << endl;
   for (int i = 0; i < state_.direction_.size(); i++) {
-    printf("[%d]%s ", state_.order_by_key_[i],
-           state_.direction_[i] == 0 ? "asc" : "desc");
+    LOG(INFO) << "[" << state_.order_by_key_[i] << "]" << (0 ==
+            state_.direction_[i])
+        ? "asc"
+        : "desc";
   }
-  printf("\n");
+  LOG(INFO) << endl;
   state_.child_->Print();
 }
 
