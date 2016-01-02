@@ -56,7 +56,9 @@ class OperateTest : public ::testing::Test {
   static void TearDownTestCase() { cout << "finish operate test case" << endl; }
 };
 
-void test(string str, string exp1, RetCode exp2, Operate* op) {
+void test(string str, string exp1, RetCode exp2, Operate* op,string flag="") {
+  if (flag!="")
+    cout << "test case :" << flag <<endl;
   RetCode ret = op->CheckSet(str);
   EXPECT_EQ(exp1, str);
   EXPECT_EQ(exp2, ret);
@@ -243,14 +245,22 @@ TEST_F(OperateTest, DateTime) {
   OperateDatetime* opt = new OperateDatetime(true);
   OperateDatetime* opf = new OperateDatetime(false);
 
-  test("1000-01-01 00:00:00", "1400-01-01 00:00:00", rTooSmallData, opt);
+  test("1000-01-01 00:00:00", "1400-01-01 00:00:00", rTooSmallData, opt, "1");
   test("1000-01-01 00:00:00.000000", "1400-01-01 00:00:00.000000",
-       rTooSmallData, opt);
-  test("9999-31-31 23:59:59", "9999-12-31 23:59:59", rTooLargeData, opt);
-  test("9999-31-31 23:59:59.999999", "9999-12-31 23:59:59.999999",
-       rTooLargeData, opt);
-  test("", "", rSuccess, opt);
-  test("", "", rInvalidNullData, opf);
+       rTooSmallData, opt, "2");
+  test("9999-31-30 23:59:59", "9999-12-30 23:59:59", rTooLargeData, opt, "3");
+  test("9999-11-31 23:59:59.999999", "9999-11-31 23:59:59.999999",
+       rSuccess, opt, "4");
+  test("", "", rSuccess, opt, "5");
+  test("", "", rInvalidNullData, opf, "6");
+
+
+  test("2010", "2010-01-01 00:00:00", rSuccess, opt, "7");
+  test("2000-123-12 12", "2000-12-12 12:00:00", rTooLargeData, opt, "8");
+  test("2000-2-12", "2000-02-12 00:00:00", rSuccess, opt, "9");
+  test("2000-2-12 12", "2000-02-12 12:00:00", rSuccess, opt, "10");
+  test("2000-0-12 12", "2000-01-12 12:00:00", rTooSmallData, opt, "11");
+
   delete opt;
   delete opf;
 }

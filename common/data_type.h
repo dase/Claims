@@ -39,6 +39,7 @@ using boost::hash_combine;
 using decimal::NValue;
 using decimal::ExportSerializeOutput;
 using boost::lexical_cast;
+using std::string;
 using namespace decimal;
 #define DATA_TYPE_NUMBER 20
 enum data_type {
@@ -225,6 +226,8 @@ template <>
 inline void assigns<char*>(const void* const& src, void* const& desc) {
   strcpy((char*)desc, (char*)src);
 }
+
+
 class Operate {
  public:
   Operate(bool _nullable = true) : nullable(_nullable){};
@@ -922,6 +925,13 @@ class OperateDatetime : public Operate {
   RetCode CheckSet(string& str) const;
   void SetDefault(string& str) const { str = "1400-01-01 00:00:00.000000"; }
 };
+//function for datetime check
+std::string& trim(std::string &s);
+bool is_all_digit(const std::string &str);
+void str_to_int(const std::string &str,int &res);
+void int_to_str(std::string &str,int &res);
+std::string check_datetime_range(std::string datetime[],const bool &deci_sec_flag,RetCode &retcode);
+
 
 class OperateSmallInt : public Operate {
  public:

@@ -26,17 +26,11 @@
  *
  */
 
-#include <assert.h>
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <limits.h>
-#include <float.h>
-#include <glog/logging.h>
-#include <string>
-#include <sstream>
-#include "./data_type.h"
-#include "./error_define.h"
+#include "data_type.h"
+
+#include <cctype>
+#include <iterator>
+
 using claims::common::rSuccess;
 using claims::common::rTooSmallData;
 using claims::common::rTooLargeData;
@@ -59,7 +53,8 @@ RetCode OperateInt::CheckSet(string& str) const {
   /*
    * Input a null value, and it is valid (warning)
    */
-  if (str == "" && nullable) return rSuccess;
+  if (str == "" && nullable)
+    return rSuccess;
   /*
    * Input a null value, but it is inValid (error)
    */
@@ -110,7 +105,8 @@ RetCode OperateInt::CheckSet(string& str) const {
 
 RetCode OperateFloat::CheckSet(string& str) const {
   RetCode ret = rSuccess;
-  if (str == "" && nullable) return rSuccess;
+  if (str == "" && nullable)
+    return rSuccess;
   if (str == "" && !nullable) {
     ret = rInvalidNullData;
     ELOG(ret, str)
@@ -142,13 +138,15 @@ RetCode OperateFloat::CheckSet(string& str) const {
 }
 RetCode OperateDouble::CheckSet(string& str) const {
   RetCode ret = rSuccess;
-  if (str == "" && nullable) return rSuccess;
+  if (str == "" && nullable)
+    return rSuccess;
   if (str == "" && !nullable) {
     ret = rInvalidNullData;
     ELOG(ret, str);
     return ret;
   }
-  if (str == kDoubleMax && !nullable) return rSuccess;
+  if (str == kDoubleMax && !nullable)
+    return rSuccess;
   if (!isdigit(str[0]) && str[0] != '-') {
     ret = rIncorrectData;
     ELOG(ret, str);
@@ -166,7 +164,8 @@ RetCode OperateDouble::CheckSet(string& str) const {
    */
   auto len = 0;
   for (auto i = str.begin(); i != str.end(); i++, len++)
-    if (*i == '.') break;
+    if (*i == '.')
+      break;
   /*
    * ToDo we could improve the size check for double type *_*
    */
@@ -186,13 +185,15 @@ RetCode OperateDouble::CheckSet(string& str) const {
 
 RetCode OperateULong::CheckSet(string& str) const {
   RetCode ret = rSuccess;
-  if (str == "" && nullable) return rSuccess;
+  if (str == "" && nullable)
+    return rSuccess;
   if (str == "" && !nullable) {
     ret = rInvalidNullData;
     ELOG(ret, str);
     return ret;
   }
-  if (str == kULongMax && !nullable) return rSuccess;
+  if (str == kULongMax && !nullable)
+    return rSuccess;
   if (!isdigit(str[0]) && str[0] != '-') {
     ret = rIncorrectData;
     ELOG(ret, str);
@@ -212,7 +213,8 @@ RetCode OperateULong::CheckSet(string& str) const {
   } else {
     auto len = 0;
     for (auto i = str.begin(); i != str.end(); i++, len++)
-      if (*i == '.') break;
+      if (*i == '.')
+        break;
     /*
      * ToDo we could improve the size check for unsigned long type *_*
      */
@@ -227,7 +229,8 @@ RetCode OperateULong::CheckSet(string& str) const {
 
 RetCode OperateString::CheckSet(string& str) const {
   RetCode ret = rSuccess;
-  if (str[0] == NULL_STRING && nullable) return rSuccess;
+  if (str[0] == NULL_STRING && nullable)
+    return rSuccess;
   if (str[0] == NULL_STRING && !nullable) {
     ret = rInvalidNullData;
     ELOG(ret, str);
@@ -238,8 +241,8 @@ RetCode OperateString::CheckSet(string& str) const {
    */
   if (str.length() > size) {
     ret = rTooLongData;
-    WLOG(ret, " length of str:" << str
-                                << " is longer than expected length:" << size);
+    WLOG(ret,
+         " length of str:" << str << " is longer than expected length:" << size);
     str = str.substr(0, size);
   }
   return ret;
@@ -247,10 +250,11 @@ RetCode OperateString::CheckSet(string& str) const {
 
 RetCode OperateDate::CheckSet(string& str) const {
   RetCode ret = rSuccess;
-  if (str == "" && nullable) return rSuccess;
+  if (str == "" && nullable)
+    return rSuccess;
   if (str == "" && !nullable) {
-    LOG(ERROR) << "[CheckSet]: [" << kErrorMessage[rInvalidNullData] << "] for "
-               << str << endl;
+    LOG(ERROR)<< "[CheckSet]: [" << kErrorMessage[rInvalidNullData] << "] for "
+    << str << endl;
     return rInvalidNullData;
   }
   if (str.length() == 8) {
@@ -302,7 +306,8 @@ RetCode OperateDate::CheckSet(string& str) const {
 
 RetCode OperateTime::CheckSet(string& str) const {
   RetCode ret = rSuccess;
-  if (str == "" && nullable) return rSuccess;
+  if (str == "" && nullable)
+    return rSuccess;
   if (str == "" && !nullable) {
     ret = rInvalidNullData;
     ELOG(ret, str);
@@ -353,62 +358,207 @@ RetCode OperateTime::CheckSet(string& str) const {
 
 RetCode OperateDatetime::CheckSet(string& str) const {
   RetCode ret = rSuccess;
-  if (str == "" && nullable) return rSuccess;
+  bool deci_sec_flag = 0;
+  if (str == "" && nullable)
+    return rSuccess;
   if (str == "" && !nullable) {
     ret = rInvalidNullData;
     ELOG(ret, str);
     return ret;
   }
-  if (str.length() != 26 && str.length() != 19) {
+  std::string def_datetime[7] =
+      { "1400", "01", "01", "00", "00", "00", "000000" };
+  char separator[6] = { '-', '-', ' ', ':', ':', '.' };
+  str = trim(str);
+
+  /*
+   *  check only one or no space in str.
+   */
+  int space_pos = str.find(' ');
+  if (space_pos != -1) {
+    std::string str_res = str.substr(space_pos + 1);
+    if ((space_pos = str_res.find(' ')) != -1) {
+      ret = rIncorrectData;
+      ELOG(ret, str);
+      return ret;
+    }
+  }
+  /*
+   *  check str ,if there is warning fix it, if there is error,
+   */
+  int i = 0;
+  while (i < 6) {
+    int separator_pos = str.find(separator[i]);
+    //    can't find ith separator
+    if (separator_pos == -1) {
+      if (is_all_digit(str)) {
+        ret = rIncorrectData;
+        ELOG(ret, str);
+        return ret;
+      }
+      def_datetime[i] = str;
+      str = check_datetime_range(def_datetime, deci_sec_flag, ret);
+      ELOG(ret, str);
+      return ret;
+    } else {
+      //    find ith separator
+      std::string left_part = str.substr(0, separator_pos);
+      str = str.substr(separator_pos + 1, str.size());
+      if (is_all_digit(left_part)) {
+        ret = rIncorrectData;
+        ELOG(ret, str);
+        return ret;
+      }
+      def_datetime[i] = left_part;
+    }
+    i++;
+  }
+  //    the data behind "." part
+  if (is_all_digit(str)) {
     ret = rIncorrectData;
     ELOG(ret, str);
     return ret;
   }
-  if (str.length() == 26) {
-    for (auto i = 0; i < str.length(); i++)
-      if (!isdigit(str[i]) && i != 4 && i != 7 && i != 10 & i != 13 &&
-          i != 16 & i != 19) {
-        ret = rIncorrectData;
-        ELOG(ret, str);
-        return ret;
-      }
-    if (str < "1400-01-01 00:00:00.000000") {
-      ret = rTooSmallData;
-      ELOG(ret, str);
-      str = "1400-01-01 00:00:00.000000";
-      return ret;
-    } else if (str > "9999-12-31 23:59:59.999999") {
-      ret = rTooLargeData;
-      str = "9999-12-31 23:59:59.999999";
-      return ret;
+  if (str.size() == 6) {
+    def_datetime[6] = str;
+    deci_sec_flag = 1;
+  }
+  else if(str.size() != 0 && str.size() != 6)
+  {
+    ret = rIncorrectData;
+    ELOG(ret, str);
+    return ret;
+  }
+  str = check_datetime_range(def_datetime, deci_sec_flag, ret);
+  ELOG(ret, str);
+  return ret;
+}
+
+std::string& trim(std::string &s) {
+  if (s.empty()) {
+    return s;
+  }
+  s.erase(0, s.find_first_not_of(" "));
+  s.erase(s.find_last_not_of(" ") + 1);
+  return s;
+}
+
+bool is_all_digit(const std::string &str) {
+  bool flag = 0;
+  for (auto i = str.begin(); i != str.end(); i++) {
+    if (isdigit(*i) == 0) {
+      flag = 1;
     }
   }
-  if (str.length() == 19) {
-    for (auto i = 0; i < str.length(); i++)
-      if (!isdigit(str[i]) && i != 4 && i != 7 && i != 10 & i != 13 &&
-          i != 16) {
-        ret = rIncorrectData;
-        ELOG(ret, str);
-        return ret;
-      }
-    if (str < "1400-01-01 00:00:00") {
-      ret = rTooSmallData;
-      ELOG(ret, str);
-      str = "1400-01-01 00:00:00";
-      return ret;
-    } else if (str > "9999-12-31 23:59:59") {
-      ret = rTooLargeData;
-      str = "9999-12-31 23:59:59";
-      return ret;
+  return flag;
+}
+/*
+ * 可把"0123"->"123"
+ */
+void str_to_int(const std::string &str, int &res) {
+  std::stringstream ss;
+  ss << str;
+  ss >> res;
+  ss.clear();
+}
+
+void int_to_str(std::string &str, int &res) {
+  std::stringstream ss;
+  ss << res;
+  ss >> str;
+  ss.clear();
+}
+/*
+ *  flag : 是否还有小数点后面的时间  =1 则为有
+ *  return : YYYY-MM-DD HH-mm-ss or YYYY-MM-DD HH-mm-ss.xxxxxx
+ */
+std::string check_datetime_range(std::string datetime[],
+                                 const bool &deci_sec_flag, RetCode &retcode) {
+  int year, month, day, hour, minute, second, deci_sec;
+  bool is_leap_year = 0;
+  int days[2][12] = { { 31, 28, 31, 30, 31, 30, 31, 30, 31, 30, 31, 30 }, { 31,
+      29, 31, 30, 31, 30, 31, 30, 31, 30, 31, 30 } };
+  str_to_int(datetime[0], year);
+
+  if (year > 9999 ||year < 1400) {
+    retcode = rIncorrectData;
+    return "";
+  } else {
+    int_to_str(datetime[0], year);
+  }
+  str_to_int(datetime[0], year);
+  if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0)
+    is_leap_year = 1;
+
+  str_to_int(datetime[1], month);
+  if (month > 12 || month < 1) {
+    retcode = rIncorrectData;
+    return "";
+  }else {
+    int_to_str(datetime[1], month);
+    if (datetime[1].size() == 1)
+      datetime[1] = "0" + datetime[1];
+  }
+
+  str_to_int(datetime[2], day);
+  if (day > days[is_leap_year][month - 1] || day == 0) {
+    retcode = rIncorrectData;
+    return "";
+  } else {
+    int_to_str(datetime[2], day);
+    if (datetime[2].size() == 1) {
+      datetime[2] = "0" + datetime[2];
     }
   }
 
-  return ret;
+  str_to_int(datetime[3], hour);
+  if (hour > 24) {
+    retcode = rIncorrectData;
+    return "";
+  } else {
+    int_to_str(datetime[3], hour);
+    if (datetime[3].size() == 1) {
+      datetime[3] = "0" + datetime[3];
+    }
+  }
+
+  str_to_int(datetime[4], minute);
+  if (minute > 59) {
+    retcode = rIncorrectData;
+    return "";
+  } else {
+    int_to_str(datetime[4], minute);
+    if (datetime[4].size() == 1) {
+      datetime[4] = "0" + datetime[4];
+    }
+  }
+
+  str_to_int(datetime[5], second);
+  if (second > 59) {
+    retcode = rIncorrectData;
+    return "";
+  } else {
+    int_to_str(datetime[5], second);
+    if (datetime[5].size() == 1) {
+      datetime[5] = "0" + datetime[5];
+    }
+  }
+  //    return datetime format like 1400-01-01 00:00:00.000000 or 9999-12-30 23:59:59
+  if (deci_sec_flag == 0)
+  {
+    return datetime[0] + "-" + datetime[1] + "-" + datetime[2] + " "
+        + datetime[3] + ":" + datetime[4] + ":" + datetime[5];
+  }else{
+    return datetime[0] + "-" + datetime[1] + "-" + datetime[2] + " "
+        + datetime[3] + ":" + datetime[4] + ":" + datetime[5] + "."
+        + datetime[6];
+  }
 }
 
 RetCode OperateSmallInt::CheckSet(string& str) const {
   RetCode ret = rSuccess;
-  if (str == "" && nullable) return rSuccess;
+  if (str == "" && nullable)
+    return rSuccess;
   if (str == "" && !nullable) {
     ret = rInvalidNullData;
     ELOG(ret, str);
@@ -441,7 +591,8 @@ RetCode OperateSmallInt::CheckSet(string& str) const {
 
 RetCode OperateUSmallInt::CheckSet(string& str) const {
   RetCode ret = rSuccess;
-  if (str == "" && nullable) return rSuccess;
+  if (str == "" && nullable)
+    return rSuccess;
   if (str == "" && !nullable) {
     ret = rInvalidNullData;
     ELOG(ret, str);
@@ -476,7 +627,8 @@ RetCode OperateUSmallInt::CheckSet(string& str) const {
  */
 RetCode OperateDecimal::CheckSet(string& str) const {
   RetCode ret = rSuccess;
-  if (str == "" && nullable) return rSuccess;
+  if (str == "" && nullable)
+    return rSuccess;
   if (str == "" && !nullable) {
     ret = rInvalidNullData;
     ELOG(ret, str);
@@ -487,7 +639,8 @@ RetCode OperateDecimal::CheckSet(string& str) const {
 
 RetCode OperateBool::CheckSet(string& str) const {
   RetCode ret = rSuccess;
-  if (str == "" && nullable) return rSuccess;
+  if (str == "" && nullable)
+    return rSuccess;
   if (str == "" && !nullable) {
     ret = rInvalidNullData;
     ELOG(ret, str);
