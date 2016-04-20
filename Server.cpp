@@ -1,10 +1,18 @@
+/* At the begin of the main().I add a new thread to run the httpserver.this thread will use the 
+*address 219.228.147.167,the port 8097,20 threads to make up the thread pool,and the last 
+*string means your webserver's doc_root.
+*
+*/
+
 #define GLOG_NO_ABBREVIATED_SEVERITIES
 #include <startup.h>
 #include <getopt.h>
 #include <string>
+#include <boost/thread/thread.hpp>
 // #include "Test/set_up_environment.h"
 #include "./Test/TestMain.cpp"
 #include "common/log/logging.h"
+#include "httpserver/claimshttpserver.hpp"
 #define AUTU_MASTER
 // #define FORK
 //#define DEBUG_MODE
@@ -76,13 +84,22 @@ void handle_parameters(int argc, char** argv) {
     }
   }
 }
+void httpserver_run(int argc,std::string argv[]){
+	httpserver::init(argc,argv);
+}
+
 int main(int argc, char** argv) {
+//initialize the httpserver and create a new thread to listen the request from http.
+//
   using claims::common::Logging;
   handle_parameters(argc, argv);
   Config::getInstance();
   handle_parameters(argc, argv);
   Config::getInstance()->print_configure();
   Logging claims_logging(argv[0]);
+
+  httpserver::httpserver_init();
+  boost::thread t1(httpserver_run,httpserver::hargc,httpserver::hargv);
 
 #ifndef DEBUG_MODE
   bool master;

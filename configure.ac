@@ -49,6 +49,8 @@ AC_CONFIG_FILES([
   utility/Makefile
   codegen/Makefile 
   stmt_handler/Makefile
+  httpserver/Makefile
+  httpserver/json/Makefile
 ])
 AC_OUTPUT
 

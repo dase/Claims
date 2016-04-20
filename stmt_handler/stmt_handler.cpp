@@ -132,9 +132,11 @@ RetCode StmtHandler::Execute(ExecutedResult* exec_result) {
     return ret;
   }
   double exec_time_ms = GetElapsedTime(start_time);
-  if (NULL != exec_result->result_)
-    exec_result->result_->query_time_ = exec_time_ms / 1000.0;
-  cout << "execute time: " << exec_time_ms / 1000.0 << " sec" << endl;
+  if (NULL != exec_result->result_){
+    exec_result->result_->query_time_ = exec_time_ms / 1000.0;\
+  }
+  exec_result->result_time_ = exec_time_ms / 1000.0;
+  cout << "execute time1: " << exec_time_ms / 1000.0 << " sec" << endl;
   return rSuccess;
 }
 

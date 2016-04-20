@@ -23,6 +23,8 @@
 #include "../Daemon/Daemon.h"
 #include "ClientResponse.h"
 #include "json/json.h"
+#include "../httpserver/connection.hpp"
+
 
 class ClientListener {
 public:

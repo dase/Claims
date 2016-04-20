@@ -36,7 +36,7 @@ coordinator:
 master = $ismaster
 
 #hadoop上的数据目录
-data = "$data"
+data = "/home/imdb/data/"
 
 #hdfs主节点
 hdfs_master_ip = "$hdfs_master_ip"
@@ -65,6 +65,16 @@ enable_codegen = $enable_codegen
 load_thread_num = $load_thread_num
 
 memory_utilization = $memory_utilization
+
+#the httpserver info
+httpserver_master_ip="219.228.147.162"
+
+httpserver_master_port="8097"
+
+httpserver_thread_num="100"
+
+httpserver_doc_root="/home/imdb/local/test/"
+
 
 EOF
 done
