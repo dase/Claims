@@ -45,6 +45,7 @@
 #include "../physical_operator/physical_operator_base.h"
 #include "../physical_operator/physical_sort.h"
 using claims::common::ExprNode;
+using claims::common::LogicInitCnxt;
 using claims::physical_operator::ExchangeMerger;
 using claims::physical_operator::Expander;
 using claims::physical_operator::PhysicalSort;
@@ -97,10 +98,12 @@ PlanContext LogicalSort::GetPlanContext() {
   partition_list.push_back(par);
   ret.plan_partitioner_.set_partition_list(partition_list);
   SetColumnId(child_plan_context_);
-  Schema *input_schema = GetSchema(child_plan_context_.attribute_list_);
+  LogicInitCnxt licnxt;
+  licnxt.schema0_ = GetSchema(child_plan_context_.attribute_list_);
+  GetColumnToId(child_plan_context_.attribute_list_, licnxt.column_id0_);
   for (int i = 0; i < order_by_attrs_.size(); ++i) {
-    order_by_attrs_[i].first->InitExprAtLogicalPlan(
-        order_by_attrs_[i].first->actual_type_, column_to_id_, input_schema);
+    licnxt.return_type_ = order_by_attrs_[i].first->actual_type_;
+    order_by_attrs_[i].first->InitExprAtLogicalPlan(licnxt);
   }
   plan_context_ = new PlanContext();
   *plan_context_ = ret;
@@ -185,6 +188,15 @@ void LogicalSort::PrintOrderByAttr(int level) const {
            order_by_attr_[i]->direction_ == 0 ? "ASC" : "DESC");
   }
 #else
+  GetPlanContext();
+  cout << setw(level * kTabSize) << " "
+       << "[Partition info: "
+       << plan_context_->plan_partitioner_.get_partition_key().attrName
+       << " table_id= "
+       << plan_context_->plan_partitioner_.get_partition_key().table_id_
+       << " column_id= "
+       << plan_context_->plan_partitioner_.get_partition_key().index << " ]"
+       << endl;
   level++;
   for (int i = 0; i < order_by_attrs_.size(); ++i) {
     cout << setw(level * kTabSize) << " " << order_by_attrs_[i].first->alias_

@@ -7,6 +7,7 @@
 #include <sstream>
 #include "BlockManager.h"
 
+#include "../common/file_handle/hdfs_connector.h"
 #include "../Environment.h"
 #include "../common/rename.h"
 #include "../common/Message.h"
@@ -17,6 +18,7 @@
 using claims::common::rLoadFromHdfsOpenFailed;
 using claims::common::rLoadFromDiskOpenFailed;
 using claims::common::rUnbindPartitionFailed;
+using claims::common::HdfsConnector;
 
 BlockManager* BlockManager::blockmanager_ = NULL;
 
@@ -38,6 +40,7 @@ BlockManager::BlockManager() {
   logging_ = new StorageManagerLogging();
   logging_->log("BlockManagerSlave is initialized. The ActorName=%s",
                 actor_name.str().c_str());
+
   memstore_ = MemoryChunkStore::GetInstance();
 }
 BlockManager::~BlockManager() {
@@ -55,6 +58,7 @@ void BlockManager::initialize() {
   // 读配置文件中的配置，然后根据是否是master注册
   // 1，建两个存储，一个是内存的，一个磁盘的
   diskstore_ = new DiskStore(DISKDIR);
+
   memstore_ = MemoryChunkStore::GetInstance();
 
   /// the version written by zhanglei/////////////////////////////////
@@ -123,6 +127,7 @@ bool BlockManager::tryToReportBlockStatus(string blockId) {
 }
 
 void BlockManager::get(string blockId) { getLocal(blockId); }
+
 void* BlockManager::getLocal(string blockId) {
   void* rt = NULL;
   bool exists = false;
@@ -179,8 +184,9 @@ ChunkInfo BlockManager::loadFromHdfs(string file_name) {
   file_name_former = file_name.substr(0, pos);
   file_name_latter = file_name.substr(pos + 1, file_name.length());
   int offset = atoi(file_name_latter.c_str());
-  hdfsFS fs =
-      hdfsConnect(Config::hdfs_master_ip.c_str(), Config::hdfs_master_port);
+  //  hdfsFS fs =
+  //      hdfsConnect(Config::hdfs_master_ip.c_str(), Config::hdfs_master_port);
+  hdfsFS fs = HdfsConnector::Instance();
   hdfsFile readFile =
       hdfsOpenFile(fs, file_name_former.c_str(), O_RDONLY, 0, 0, 0);
   hdfsFileInfo* hdfsfile = hdfsGetPathInfo(fs, file_name_former.c_str());
@@ -203,7 +209,7 @@ ChunkInfo BlockManager::loadFromHdfs(string file_name) {
     ci.hook = 0;
   }
   hdfsCloseFile(fs, readFile);
-  hdfsDisconnect(fs);
+  //  hdfsDisconnect(fs);
   return ci;
 }
 
@@ -211,9 +217,10 @@ int BlockManager::LoadFromHdfs(const ChunkID& chunk_id, void* const& desc,
                                const unsigned& length) {
   lock.acquire();
   int ret;
-  int offset = chunk_id.chunk_off;
-  hdfsFS fs =
-      hdfsConnect(Config::hdfs_master_ip.c_str(), Config::hdfs_master_port);
+  uint64_t offset = chunk_id.chunk_off;
+  //  hdfsFS fs =
+  //      hdfsConnect(Config::hdfs_master_ip.c_str(), Config::hdfs_master_port);
+  hdfsFS fs = HdfsConnector::Instance();
   hdfsFile readFile = hdfsOpenFile(
       fs, chunk_id.partition_id.getPathAndName().c_str(), O_RDONLY, 0, 0, 0);
   hdfsFileInfo* hdfsfile = hdfsGetPathInfo(
@@ -226,6 +233,7 @@ int BlockManager::LoadFromHdfs(const ChunkID& chunk_id, void* const& desc,
     ELOG(rLoadFromHdfsOpenFailed,
          chunk_id.partition_id.getPathAndName().c_str());
     hdfsDisconnect(fs);
+
     lock.release();
     return -1;
   }  //加错误码;
@@ -235,7 +243,8 @@ int BlockManager::LoadFromHdfs(const ChunkID& chunk_id, void* const& desc,
     DLOG(INFO) << "file [" << chunk_id.partition_id.getPathAndName().c_str()
                << "] is opened for offset [" << offset << "]" << endl;
   }
-  long int start_pos = CHUNK_SIZE * offset;
+  uint64_t start_pos = CHUNK_SIZE * offset;
+  if (start_pos < 0) assert(false);
   if (start_pos < hdfsfile->mSize) {
     ret = hdfsPread(fs, readFile, start_pos, desc, length);
   } else {
@@ -243,10 +252,11 @@ int BlockManager::LoadFromHdfs(const ChunkID& chunk_id, void* const& desc,
     ret = -1;
   }
   hdfsCloseFile(fs, readFile);
-  hdfsDisconnect(fs);
+  //  hdfsDisconnect(fs);
   lock.release();
   return ret;
 }
+
 int BlockManager::LoadFromDisk(const ChunkID& chunk_id, void* const& desc,
                                const unsigned& length) const {
   int ret = 0;
@@ -268,12 +278,15 @@ int BlockManager::LoadFromDisk(const ChunkID& chunk_id, void* const& desc,
   long int file_length = lseek(fd, 0, SEEK_END);
 
   long start_pos = CHUNK_SIZE * offset;
+
   //  logging_->log("start_pos=%ld**********\n", start_pos);
   DLOG(INFO) << "start_pos=" << start_pos << "*********" << endl;
 
   lseek(fd, start_pos, SEEK_SET);
   if (start_pos < file_length) {
     ret = read(fd, desc, length);
+  } else {
+    ret = 0;
   }
   FileClose(fd);
   return ret;
@@ -288,11 +301,13 @@ string BlockManager::askForMatch(string filename, BlockManagerId bmi) {
   }
   return file_proj_[filename.c_str()];
 }
+
 bool BlockManager::ContainsPartition(const PartitionID& part) const {
   boost::unordered_map<PartitionID, PartitionStorage*>::const_iterator it =
       partition_id_to_storage_.find(part);
   return !(it == partition_id_to_storage_.cend());
 }
+
 bool BlockManager::AddPartition(const PartitionID& partition_id,
                                 const unsigned& number_of_chunks,
                                 const StorageLevel& desirable_storage_level) {
@@ -382,5 +397,6 @@ void BlockManager::BlockManagerWorkerActor::BindingPartition(
 void BlockManager::BlockManagerWorkerActor::UnbindingPartition(
     const PartitionUnbindingMessage& message, const Theron::Address from) {
   bm_->RemovePartition(message.partition_id);
+
   Send(int(0), from);
 }

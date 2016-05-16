@@ -85,15 +85,15 @@ class AstFromList : public AstNode {
   ~AstFromList();
   void Print(int level = 0) const;
   RetCode SemanticAnalisys(SemanticContext* sem_cnxt);
-  RetCode PushDownCondition(PushDownConditionContext* pdccnxt);
+  RetCode PushDownCondition(PushDownConditionContext& pdccnxt);
   RetCode GetLogicalPlan(LogicalOperator*& logic_plan);
 
   map<string, AstNode*> table_joined_root;
   AstNode* args_;
   AstNode* next_;
   AstNode* condition_;
-  set<AstNode*> equal_join_condition_;
-  set<AstNode*> normal_condition_;
+  vector<AstNode*> equal_join_condition_;
+  vector<AstNode*> normal_condition_;
 };
 /**
  * @brief The AST of table.
@@ -107,11 +107,11 @@ class AstTable : public AstNode {
   ~AstTable();
   void Print(int level = 0) const;
   RetCode SemanticAnalisys(SemanticContext* sem_cnxt);
-  RetCode PushDownCondition(PushDownConditionContext* pdccnxt);
+  RetCode PushDownCondition(PushDownConditionContext& pdccnxt);
   RetCode GetLogicalPlan(LogicalOperator*& logic_plan);
 
-  set<AstNode*> equal_join_condition_;
-  set<AstNode*> normal_condition_;
+  vector<AstNode*> equal_join_condition_;
+  vector<AstNode*> normal_condition_;
   string db_name_;
   string table_name_;
   string table_alias_;
@@ -130,13 +130,13 @@ class AstSubquery : public AstNode {
   ~AstSubquery();
   void Print(int level = 0) const;
   RetCode SemanticAnalisys(SemanticContext* sem_cnxt);
-  RetCode PushDownCondition(PushDownConditionContext* pdccnxt);
+  RetCode PushDownCondition(PushDownConditionContext& pdccnxt);
   RetCode GetLogicalPlan(LogicalOperator*& logic_plan);
 
   string subquery_alias_;
   AstNode* subquery_;
-  set<AstNode*> equal_join_condition_;
-  set<AstNode*> normal_condition_;
+  vector<AstNode*> equal_join_condition_;
+  vector<AstNode*> normal_condition_;
 };
 /**
  * @brief The AST of join condition.
@@ -163,15 +163,15 @@ class AstJoin : public AstNode {
   ~AstJoin();
   void Print(int level = 0) const;
   RetCode SemanticAnalisys(SemanticContext* sem_cnxt);
-  RetCode PushDownCondition(PushDownConditionContext* pdccnxt);
+  RetCode PushDownCondition(PushDownConditionContext& pdccnxt);
   RetCode GetLogicalPlan(LogicalOperator*& logic_plan);
 
   string join_type_;
   AstNode* left_table_;
   AstNode* right_table_;
   AstJoinCondition* join_condition_;
-  set<AstNode*> equal_join_condition_;
-  set<AstNode*> normal_condition_;
+  vector<AstNode*> equal_join_condition_;
+  vector<AstNode*> normal_condition_;
 };
 /**
  * @brief The AST of where clause.
@@ -307,8 +307,10 @@ class AstColumn : public AstNode {
   RetCode SemanticAnalisys(SemanticContext* sem_cnxt);
   void RecoverExprName(string& name);
   void GetRefTable(set<string>& ref_table);
+
   RetCode GetLogicalPlan(ExprNode*& logic_expr,
-                         LogicalOperator* child_logic_plan);
+                         LogicalOperator* const left_lplan,
+                         LogicalOperator* const right_lplan);
   RetCode SolveSelectAlias(SelectAliasSolver* const select_alias_solver);
   AstNode* AstNodeCopy();
   string relation_name_;
@@ -338,7 +340,7 @@ class AstSelectStmt : public AstNode {
   ~AstSelectStmt();
   void Print(int level = 0) const;
   RetCode SemanticAnalisys(SemanticContext* sem_cnxt);
-  RetCode PushDownCondition(PushDownConditionContext* pdccnxt);
+  RetCode PushDownCondition(PushDownConditionContext& pdccnxt);
   RetCode GetLogicalPlan(LogicalOperator*& logic_plan);
   RetCode GetLogicalPlanOfAggeration(LogicalOperator*& logic_plan);
   RetCode GetLogicalPlanOfProject(LogicalOperator*& logic_plan);
@@ -352,7 +354,7 @@ class AstSelectStmt : public AstNode {
   AstNode* orderby_clause_;
   AstNode* limit_clause_;
   AstNode* select_into_clause_;
-  set<AstNode*> groupby_attrs_;
+  vector<AstNode*> groupby_attrs_;
   set<AstNode*> agg_attrs_;
 
   bool have_aggeragion_;

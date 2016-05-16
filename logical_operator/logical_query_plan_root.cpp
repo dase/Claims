@@ -197,7 +197,7 @@ PlanContext LogicalQueryPlanRoot::GetPlanContext() {
   LOG(INFO) << "Communication cost: " << ret.commu_cost_
             << " predicted ouput size= "
             << ret.plan_partitioner_.GetAggregatedDataCardinality() << endl;
-  plan_context_ = new PlanContext;
+  plan_context_ = new PlanContext();
   *plan_context_ = ret;
   lock_->release();
   return ret;
@@ -430,6 +430,15 @@ std::vector<std::string> LogicalQueryPlanRoot::GetAttributeName(
 void LogicalQueryPlanRoot::Print(int level) const {
   cout << setw(level * kTabSize) << " "
        << "Root" << endl;
+  GetPlanContext();
+  cout << setw(level * kTabSize) << " "
+       << "[Partition info: "
+       << plan_context_->plan_partitioner_.get_partition_key().attrName
+       << " table_id= "
+       << plan_context_->plan_partitioner_.get_partition_key().table_id_
+       << " column_id= "
+       << plan_context_->plan_partitioner_.get_partition_key().index << " ]"
+       << endl;
   child_->Print(level);
 }
 

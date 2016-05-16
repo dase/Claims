@@ -47,7 +47,8 @@ PartitionStorage::PartitionStorage(const PartitionID& partition_id,
       number_of_chunks_(number_of_chunks),
       desirable_storage_level_(storage_level) {
   if (number_of_chunks_ * CHUNK_SIZE / 1024 / 1024 >
-      BufferManager::getInstance()->getStorageMemoryBudegeInMilibyte() / 2)
+      BufferManager::getInstance()->getStorageMemoryBudegeInMilibyte() *
+          Config::memory_utilization / 100)
     MemoryChunkStore::GetInstance()->SetFreeAlgorithm(0);
   else
     MemoryChunkStore::GetInstance()->SetFreeAlgorithm(1);
@@ -158,8 +159,16 @@ bool PartitionStorage::AtomicPartitionReaderIterator::NextBlock(
   if (NULL != chunk_it_ && chunk_it_->GetNextBlockAccessor(ba)) {
     lock_.release();
     ba->GetBlock(block);
+    if (NULL != ba) {
+      delete ba;
+      ba = NULL;
+    }
     return true;
   } else {
+    if (NULL != chunk_it_) {
+      delete chunk_it_;
+      chunk_it_ = NULL;
+    }
     if ((chunk_it_ = PartitionReaderIterator::NextChunk()) > 0) {
       lock_.release();
       return NextBlock(block);

@@ -11,6 +11,7 @@
 #include <iosfwd>
 
 #include "../../common/types/NValue.hpp"
+#include "../../common/types/decimal.h"
 
 #include "../../Client/Client.h"
 
@@ -97,10 +98,11 @@ TEST_F(ElasticIteratorModelTest, ScalaAggregation) {
   BlockStreamBase::BlockStreamTraverseIterator *b_it =
       it.nextBlock()->createIterator();
   EXPECT_EQ(6001215, *(long *)b_it->currentTuple());
-  NValue v;
-  v.createDecimalFromString("153078795.0000");
+  // NValue v;
+  // v.createDecimalFromString("153078795.0000");
+  Decimal v(65, 30, "153078795.0000");
   EXPECT_TRUE(
-      v.op_equals(*(NValue *)((char *)b_it->currentTuple() + sizeof(long))));
+      v.op_equals(*(Decimal *)((char *)b_it->currentTuple() + sizeof(long))));
 }
 TEST_F(ElasticIteratorModelTest, AggregationLargeGroups) {
   ResultSet rs;
@@ -122,11 +124,11 @@ TEST_F(ElasticIteratorModelTest, AggregationSmallGroups) {
                  message, rs);
   EXPECT_EQ(3, rs.getNumberOftuples());
 }
-TEST_F(ElasticIteratorModelTest, Join) {
+TEST_F(ElasticIteratorModelTest, EqualJoin) {
   ResultSet rs;
   std::string message;
   client_.submit(
-      "select count(*) from PART,LINEITEM where PART.row_id=LINEITEM.row_id;",
+      "select count(*) from LINEITEM,PART where PART.row_id=LINEITEM.row_id;",
       message, rs);
   DynamicBlockBuffer::Iterator it = rs.createIterator();
   BlockStreamBase::BlockStreamTraverseIterator *b_it =
@@ -144,11 +146,62 @@ TEST_F(ElasticIteratorModelTest, CrossJoin) {
   EXPECT_EQ(1000000, *(long *)b_it->nextTuple());
   delete b_it;
 }
+
+TEST_F(ElasticIteratorModelTest, CrossJoinWithSubquery) {
+  ResultSet rs;
+  std::string message;
+  client_.submit(
+      "select count(*) from (select row_id from NATION where row_id<3) as a, "
+      "(select row_id from REGION where row_id=2) as b;",
+      message, rs);
+  DynamicBlockBuffer::Iterator it = rs.createIterator();
+  BlockStreamBase::BlockStreamTraverseIterator *b_it =
+      it.nextBlock()->createIterator();
+  EXPECT_EQ(3, *(long *)b_it->nextTuple());
+  delete b_it;
+}
+
+TEST_F(ElasticIteratorModelTest, CrossJoinWithRightNULLTable) {
+  ResultSet rs;
+  std::string message;
+  client_.submit(
+      "select count(*) from (select row_id from PART) as a, (select row_id "
+      "from REGION where row_id=222) as b;",
+      message, rs);
+  DynamicBlockBuffer::Iterator it = rs.createIterator();
+  BlockStreamBase *b_it = it.nextBlock();
+  EXPECT_EQ(0, b_it);
+}
+
+TEST_F(ElasticIteratorModelTest, CrossJoinWithLeftNULLTable) {
+  ResultSet rs;
+  std::string message;
+  client_.submit(
+      "select count(*) from (select row_id from REGION where row_id>33) as a, "
+      "(select row_id from PART) as b;",
+      message, rs);
+  DynamicBlockBuffer::Iterator it = rs.createIterator();
+  BlockStreamBase *b_it = it.nextBlock();
+  EXPECT_EQ(0, b_it);
+}
+
+TEST_F(ElasticIteratorModelTest, CrossJoinWithAllNULLTable) {
+  ResultSet rs;
+  std::string message;
+  client_.submit(
+      "select count(*) from (select row_id from REGION where row_id>33) as a, "
+      "(select row_id from NATION where row_id>40) as b;",
+      message, rs);
+  DynamicBlockBuffer::Iterator it = rs.createIterator();
+  BlockStreamBase *b_it = it.nextBlock();
+  EXPECT_EQ(0, b_it);
+}
+
 TEST_F(ElasticIteratorModelTest, FilteredJoin) {
   ResultSet rs;
   std::string message;
   client_.submit(
-      "select count(*) from PART,LINEITEM where PART.row_id%10=1 and "
+      "select count(*) from PART,LINEITEM where PART.row_id%10=1 and  "
       "LINEITEM.row_id % 10 =1 and PART.row_id = LINEITEM.row_id;",
       message, rs);
   DynamicBlockBuffer::Iterator it = rs.createIterator();
@@ -273,6 +326,28 @@ TEST_F(ElasticIteratorModelTest, droptestdata) {
   EXPECT_EQ("drop table successfully!\n", message);
   cout << message << endl;
 }
+
+// TEST_F(ElasticIteratorModelTest, CreateTempTableForTableFileConnectorTest) {
+//  string table_name = "sfdfsf";
+//  string create_table_stmt =
+//      "create table " + table_name + " (a int , b varchar(12));";
+//  string create_prj_stmt1 = "create projection on " + table_name +
+//                            " (a  , b ) number = 2 partitioned on a ;";
+//  string create_prj_stmt2 = "create projection on " + table_name +
+//                            " (a ) number = 3 partitioned on a ;";
+//
+//  ResultSet rs;
+//  string message = "";
+//  client_.submit(create_table_stmt.c_str(), message, rs);
+//  EXPECT_EQ("create table successfully\n", message);
+//  cout << message << endl;
+//  client_.submit(create_prj_stmt1.c_str(), message, rs);
+//  EXPECT_EQ("create projection successfully\n", message);
+//  cout << message << endl;
+//  client_.submit(create_prj_stmt2.c_str(), message, rs);
+//  EXPECT_EQ("create projection successfully\n", message);
+//  cout << message << endl;
+//}
 
 // add by cswang 19 Oct, 2015
 

@@ -110,7 +110,7 @@ void MemoryChunkStore::ReturnChunk(const ChunkID& chunk_id) {
   HdfsInMemoryChunk chunk_info = it->second;
   chunk_pool_.free(chunk_info.hook);
   chunk_list_.erase(it);
-  BufferManager::getInstance()->returnStorageBudget(chunk_info.length);
+  BufferManager::getInstance()->returnStorageBudget(CHUNK_SIZE);
   lock_.release();
 }
 
@@ -167,6 +167,8 @@ void MemoryChunkStore::FreeChunkLRU::WayOfFreeChunk() {
       target_ = mei_;
     }
   }
+  LOG(INFO) << "The way is LRU: the free chunk: " << target_->first.chunk_off
+            << endl;
   MemoryChunkStore::GetInstance()->chunk_pool_.free(target_->second.hook);
   MemoryChunkStore::GetInstance()->chunk_list_.erase(target_);
 }
@@ -178,7 +180,8 @@ void MemoryChunkStore::FreeChunkRandom::WayOfFreeChunk() {
   srand((unsigned)time(NULL));
   int size = rand() % count;
   for (int i = 0; i < size; i++) it_++;
-  ;
+  LOG(INFO) << "The way is Random: the free chunk: " << it_->first.chunk_off
+            << endl;
   MemoryChunkStore::GetInstance()->chunk_pool_.free(it_->second.hook);
   MemoryChunkStore::GetInstance()->chunk_list_.erase(it_);
 }

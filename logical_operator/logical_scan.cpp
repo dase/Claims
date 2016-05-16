@@ -29,19 +29,19 @@
 #include "../logical_operator/logical_scan.h"
 #include <stdio.h>
 #include <glog/logging.h>
-#include <iosfwd>
 #include <iostream>
-
+#include <string>
 #include <vector>
 
 #include "../catalog/catalog.h"
 #include "../IDsGenerator.h"
+#include "../logical_operator/logical_operator.h"
 #include "../logical_operator/plan_partition_info.h"
 #include "../physical_operator/exchange_merger.h"
 #include "../physical_operator/physical_operator_base.h"
 #include "../physical_operator/physical_projection_scan.h"
 #include "../Resource/NodeTracker.h"
-
+using std::string;
 using claims::physical_operator::ExchangeMerger;
 using claims::physical_operator::PhysicalProjectionScan;
 namespace claims {
@@ -70,11 +70,11 @@ LogicalScan::LogicalScan(ProjectionDescriptor* projection,
   scan_attribute_list_ = projection->getAttributeList();
   target_projection_ = projection;
 }
-LogicalScan::LogicalScan(ProjectionDescriptor* projection,
-                         const string table_alias, const float sample_rate)
+LogicalScan::LogicalScan(ProjectionDescriptor* const projection,
+                         string table_alias, const float sample_rate)
     : LogicalOperator(kLogicalScan),
-      sample_rate_(sample_rate),
       table_alias_(table_alias),
+      sample_rate_(sample_rate),
       plan_context_(NULL) {
   scan_attribute_list_ = projection->getAttributeList();
   ChangeAliasAttr();
@@ -188,6 +188,7 @@ PlanContext LogicalScan::GetPlanContext() {
 
   Partitioner* par = target_projection_->getPartitioner();
   plan_context_->plan_partitioner_ = PlanPartitioner(*par);
+  plan_context_->plan_partitioner_.UpdateTableNameOfPartitionKey(table_alias_);
   plan_context_->commu_cost_ = 0;
   lock_->release();
   return *plan_context_;
@@ -311,6 +312,15 @@ void LogicalScan::Print(int level) const {
   cout << setw(level * kTabSize) << " "
        << "Scan:" << endl;
   level++;
+  GetPlanContext();
+  cout << setw(level * kTabSize) << " "
+       << "[Partition info: "
+       << plan_context_->plan_partitioner_.get_partition_key().attrName
+       << " table_id= "
+       << plan_context_->plan_partitioner_.get_partition_key().table_id_
+       << " column_id= "
+       << plan_context_->plan_partitioner_.get_partition_key().index << " ]"
+       << endl;
   cout << setw(level * kTabSize) << " "
        << "table name: "
        << Catalog::getInstance()

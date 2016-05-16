@@ -67,7 +67,7 @@ using claims::logical_operator::LogicalSort;
 using claims::logical_operator::LogicalLimit;
 using claims::logical_operator::LogicalSubquery;
 using claims::logical_operator::LogicalDeleteFilter;
-
+using claims::catalog::Attribute;
 using std::bitset;
 using std::endl;
 using std::cout;
@@ -277,23 +277,23 @@ RetCode AstFromList::SemanticAnalisys(SemanticContext* sem_cnxt) {
   return rSuccess;
 }
 
-RetCode AstFromList::PushDownCondition(PushDownConditionContext* pdccnxt) {
-  PushDownConditionContext* cur_pdccnxt = new PushDownConditionContext();
-  cur_pdccnxt->sub_expr_info_ = pdccnxt->sub_expr_info_;
+RetCode AstFromList::PushDownCondition(PushDownConditionContext& pdccnxt) {
+  PushDownConditionContext cur_pdccnxt;
+  cur_pdccnxt.sub_expr_info_ = pdccnxt.sub_expr_info_;
 
   if (NULL != args_) {
-    cur_pdccnxt->from_tables_.clear();
+    cur_pdccnxt.from_tables_.clear();
     args_->PushDownCondition(cur_pdccnxt);
-    pdccnxt->from_tables_.insert(cur_pdccnxt->from_tables_.begin(),
-                                 cur_pdccnxt->from_tables_.end());
+    pdccnxt.from_tables_.insert(cur_pdccnxt.from_tables_.begin(),
+                                cur_pdccnxt.from_tables_.end());
   }
   if (NULL != next_) {
-    cur_pdccnxt->from_tables_.clear();
+    cur_pdccnxt.from_tables_.clear();
     next_->PushDownCondition(cur_pdccnxt);
-    pdccnxt->from_tables_.insert(cur_pdccnxt->from_tables_.begin(),
-                                 cur_pdccnxt->from_tables_.end());
+    pdccnxt.from_tables_.insert(cur_pdccnxt.from_tables_.begin(),
+                                cur_pdccnxt.from_tables_.end());
   }
-  pdccnxt->SetCondition(equal_join_condition_, normal_condition_);
+  pdccnxt.SetCondition(equal_join_condition_, normal_condition_);
   return rSuccess;
 }
 RetCode AstFromList::GetLogicalPlan(LogicalOperator*& logic_plan) {
@@ -307,26 +307,37 @@ RetCode AstFromList::GetLogicalPlan(LogicalOperator*& logic_plan) {
     next_->GetLogicalPlan(next_lplan);
   }
   if (NULL != next_lplan) {
-    if (equal_join_condition_.size() > 0) {
+    if (!equal_join_condition_.empty()) {
       vector<LogicalEqualJoin::JoinPair> join_pair;
       join_pair.clear();
-      ret = GetEqualJoinPair(join_pair, args_lplan, next_lplan,
+      ret = GetEqualJoinPair(join_pair, next_lplan, args_lplan,
                              equal_join_condition_);
       if (rSuccess != ret) {
         return ret;
       }
-      logic_plan = new LogicalEqualJoin(join_pair, args_lplan, next_lplan);
-    } else {
-      logic_plan = new LogicalCrossJoin(args_lplan, next_lplan);
-    }
-    if (normal_condition_.size() > 0) {
       vector<ExprNode*> condition;
       condition.clear();
-      ret = GetFilterCondition(condition, normal_condition_, logic_plan);
+      ret = GetJoinCondition(condition, equal_join_condition_, next_lplan,
+                             args_lplan);
       if (rSuccess != ret) {
         return ret;
       }
-      logic_plan = new LogicalFilter(logic_plan, condition);
+      ret = GetJoinCondition(condition, normal_condition_, next_lplan,
+                             args_lplan);
+      if (rSuccess != ret) {
+        return ret;
+      }
+      logic_plan =
+          new LogicalEqualJoin(join_pair, next_lplan, args_lplan, condition);
+    } else {
+      vector<ExprNode*> condition;
+      condition.clear();
+      ret = GetJoinCondition(condition, normal_condition_, next_lplan,
+                             args_lplan);
+      if (rSuccess != ret) {
+        return ret;
+      }
+      logic_plan = new LogicalCrossJoin(next_lplan, args_lplan, condition);
     }
   } else {
     logic_plan = args_lplan;
@@ -376,6 +387,8 @@ RetCode AstTable::SemanticAnalisys(SemanticContext* sem_cnxt) {
       Environment::getInstance()->getCatalog()->getTable(table_name_);
   if (NULL == tbl) {
     LOG(ERROR) << "table: " << table_name_ << " dosen't exist!" << endl;
+    sem_cnxt->error_msg_ =
+        "table: '\e[1m" + table_name_ + "\e[0m' dosen't exist ";
     return rTableNotExisted;
   }
   if (table_alias_ == "NULL") {
@@ -393,9 +406,9 @@ RetCode AstTable::SemanticAnalisys(SemanticContext* sem_cnxt) {
             << endl;
   return rSuccess;
 }
-RetCode AstTable::PushDownCondition(PushDownConditionContext* pdccnxt) {
-  pdccnxt->from_tables_.insert(table_alias_);
-  pdccnxt->SetCondition(equal_join_condition_, normal_condition_);
+RetCode AstTable::PushDownCondition(PushDownConditionContext& pdccnxt) {
+  pdccnxt.from_tables_.insert(table_alias_);
+  pdccnxt.SetCondition(equal_join_condition_, normal_condition_);
   return rSuccess;
 }
 // TODO(FZH) diver table_name_ to LogicalScan
@@ -414,15 +427,15 @@ RetCode AstTable::GetLogicalPlan(LogicalOperator*& logic_plan) {
                                                       ->getProjectoin(0),
                                                   table_alias_);
     Attribute filter_base =
-        base_table->GetPlanContext().GetAttribute(table_alias_ + ".row_id");
+        base_table->GetPlanContext().plan_partitioner_.get_partition_key();
     LogicalOperator* del_table =
         new LogicalScan(Environment::getInstance()
                             ->getCatalog()
                             ->getTable(table_name_ + "_DEL")
                             ->getProjectoin(0),
                         table_alias_ + "_DEL");
-    Attribute filter_del = del_table->GetPlanContext().GetAttribute(
-        table_alias_ + "_DEL.row_id_DEL");
+    Attribute filter_del =
+        del_table->GetPlanContext().plan_partitioner_.get_partition_key();
 
     assert(filter_base.attrName != "NULL");
     assert(filter_del.attrName != "NULL");
@@ -449,7 +462,7 @@ RetCode AstTable::GetLogicalPlan(LogicalOperator*& logic_plan) {
     ExprNode* qnode = NULL;
     for (auto it = normal_condition_.begin(); it != normal_condition_.end();
          ++it) {
-      ret = (*it)->GetLogicalPlan(qnode, logic_plan);
+      ret = (*it)->GetLogicalPlan(qnode, logic_plan, NULL);
       if (rSuccess != ret) {
         LOG(ERROR) << "get normal condition upon a table, due to [err: " << ret
                    << " ] !" << endl;
@@ -533,9 +546,15 @@ RetCode AstSubquery::SemanticAnalisys(SemanticContext* sem_cnxt) {
   return sem_cnxt->AddTableColumn(column_to_table);
 }
 
-RetCode AstSubquery::PushDownCondition(PushDownConditionContext* pdccnxt) {
-  pdccnxt->from_tables_.insert(subquery_alias_);
-  pdccnxt->SetCondition(equal_join_condition_, normal_condition_);
+RetCode AstSubquery::PushDownCondition(PushDownConditionContext& pdccnxt) {
+  RetCode ret = rSuccess;
+  PushDownConditionContext child_pdccnxt;
+  ret = subquery_->PushDownCondition(child_pdccnxt);
+  if (rSuccess != ret) {
+    return ret;
+  }
+  pdccnxt.from_tables_.insert(subquery_alias_);
+  pdccnxt.SetCondition(equal_join_condition_, normal_condition_);
   return rSuccess;
 }
 // may be deliver subquery output schema
@@ -546,6 +565,19 @@ RetCode AstSubquery::GetLogicalPlan(LogicalOperator*& logic_plan) {
     return ret;
   }
   logic_plan = new LogicalSubquery(logic_plan, subquery_alias_);
+
+  LOG(WARNING) << "there shouldn't be equal join condition here.";
+  assert(equal_join_condition_.size() == 0);
+
+  if (normal_condition_.size() > 0) {
+    vector<ExprNode*> condition;
+    condition.clear();
+    ret = GetFilterCondition(condition, normal_condition_, logic_plan);
+    if (rSuccess != ret) {
+      return ret;
+    }
+    logic_plan = new LogicalFilter(logic_plan, condition);
+  }
   return rSuccess;
 }
 
@@ -677,31 +709,31 @@ RetCode AstJoin::SemanticAnalisys(SemanticContext* sem_cnxt) {
   //  join_sem_cnxt.~SemanticContext();
   return ret;
 }
-RetCode AstJoin::PushDownCondition(PushDownConditionContext* pdccnxt) {
-  PushDownConditionContext* cur_pdccnxt = new PushDownConditionContext();
-  cur_pdccnxt->sub_expr_info_ = pdccnxt->sub_expr_info_;
+RetCode AstJoin::PushDownCondition(PushDownConditionContext& pdccnxt) {
+  PushDownConditionContext cur_pdccnxt;
+  cur_pdccnxt.sub_expr_info_ = pdccnxt.sub_expr_info_;
   if (NULL != join_condition_) {
-    cur_pdccnxt->GetSubExprInfo(
+    cur_pdccnxt.GetSubExprInfo(
         reinterpret_cast<AstJoinCondition*>(join_condition_)->condition_);
   }
 
-  cur_pdccnxt->from_tables_.clear();
-  PushDownConditionContext* child_pdccnxt = new PushDownConditionContext();
-  child_pdccnxt->sub_expr_info_ = cur_pdccnxt->sub_expr_info_;
-  child_pdccnxt->from_tables_.clear();
+  cur_pdccnxt.from_tables_.clear();
+  PushDownConditionContext child_pdccnxt;
+  child_pdccnxt.sub_expr_info_ = cur_pdccnxt.sub_expr_info_;
+  child_pdccnxt.from_tables_.clear();
   left_table_->PushDownCondition(child_pdccnxt);
-  cur_pdccnxt->from_tables_.insert(child_pdccnxt->from_tables_.begin(),
-                                   child_pdccnxt->from_tables_.end());
+  cur_pdccnxt.from_tables_.insert(child_pdccnxt.from_tables_.begin(),
+                                  child_pdccnxt.from_tables_.end());
 
-  child_pdccnxt->from_tables_.clear();
+  child_pdccnxt.from_tables_.clear();
   right_table_->PushDownCondition(child_pdccnxt);
-  cur_pdccnxt->from_tables_.insert(child_pdccnxt->from_tables_.begin(),
-                                   child_pdccnxt->from_tables_.end());
+  cur_pdccnxt.from_tables_.insert(child_pdccnxt.from_tables_.begin(),
+                                  child_pdccnxt.from_tables_.end());
 
-  cur_pdccnxt->SetCondition(equal_join_condition_, normal_condition_);
+  cur_pdccnxt.SetCondition(equal_join_condition_, normal_condition_);
 
-  pdccnxt->from_tables_.insert(cur_pdccnxt->from_tables_.begin(),
-                               cur_pdccnxt->from_tables_.end());
+  pdccnxt.from_tables_.insert(cur_pdccnxt.from_tables_.begin(),
+                              cur_pdccnxt.from_tables_.end());
   return rSuccess;
 }
 RetCode AstJoin::GetLogicalPlan(LogicalOperator*& logic_plan) {
@@ -716,7 +748,19 @@ RetCode AstJoin::GetLogicalPlan(LogicalOperator*& logic_plan) {
   if (rSuccess != ret) {
     return ret;
   }
-  if (equal_join_condition_.size() > 0) {
+
+  if (!equal_join_condition_.empty()) {
+    vector<ExprNode*> condition;
+    condition.clear();
+    ret = GetJoinCondition(condition, equal_join_condition_, left_plan,
+                           right_plan);
+    if (rSuccess != ret) {
+      return ret;
+    }
+    ret = GetJoinCondition(condition, normal_condition_, left_plan, right_plan);
+    if (rSuccess != ret) {
+      return ret;
+    }
     vector<LogicalEqualJoin::JoinPair> join_pair;
     join_pair.clear();
     ret = GetEqualJoinPair(join_pair, left_plan, right_plan,
@@ -724,19 +768,23 @@ RetCode AstJoin::GetLogicalPlan(LogicalOperator*& logic_plan) {
     if (rSuccess != ret) {
       return ret;
     }
-    logic_plan = new LogicalEqualJoin(join_pair, left_plan, right_plan);
+    logic_plan =
+        new LogicalEqualJoin(join_pair, left_plan, right_plan, condition);
   } else {
-    logic_plan = new LogicalCrossJoin(left_plan, right_plan);
-  }
-  if (normal_condition_.size() > 0) {
-    vector<ExprNode*> condition;
-    condition.clear();
-    ret = GetFilterCondition(condition, normal_condition_, logic_plan);
-    if (rSuccess != ret) {
-      return ret;
+    if (!normal_condition_.empty()) {
+      vector<ExprNode*> condition;
+      condition.clear();
+      ret =
+          GetJoinCondition(condition, normal_condition_, left_plan, right_plan);
+      if (rSuccess != ret) {
+        return ret;
+      }
+      logic_plan = new LogicalCrossJoin(left_plan, right_plan, condition);
+    } else {
+      logic_plan = new LogicalCrossJoin(left_plan, right_plan);
     }
-    logic_plan = new LogicalFilter(logic_plan, condition);
   }
+
   return rSuccess;
 }
 
@@ -1011,7 +1059,7 @@ RetCode AstOrderByClause::GetLogicalPlan(LogicalOperator*& logic_plan) {
   int direction = 0;
   AstOrderByList* orderby = orderby_list_;
   while (NULL != orderby) {
-    orderby->expr_->GetLogicalPlan(tmp_expr, logic_plan);
+    orderby->expr_->GetLogicalPlan(tmp_expr, logic_plan, NULL);
     direction = orderby->orderby_direction_ == "ASC" ? 0 : 1;
     orderby_expr.push_back(make_pair(tmp_expr, direction));
     orderby = orderby->next_;
@@ -1064,7 +1112,7 @@ RetCode AstHavingClause::GetLogicalPlan(LogicalOperator*& logic_plan) {
   if (NULL != expr_) {
     vector<ExprNode*> having_expr;
     ExprNode* expr = NULL;
-    expr_->GetLogicalPlan(expr, logic_plan);
+    expr_->GetLogicalPlan(expr, logic_plan, NULL);
     having_expr.push_back(expr);
     logic_plan = new LogicalFilter(logic_plan, having_expr);
   }
@@ -1213,6 +1261,8 @@ RetCode AstColumn::SemanticAnalisys(SemanticContext* sem_cnxt) {
   if (rSuccess != ret) {
     LOG(ERROR) << "There are errors in ( " << relation_name_ << " , "
                << column_name_ << " )" << endl;
+    sem_cnxt->error_msg_ =
+        "column: '\e[1m" + column_name_ + "\e[0m' is invalid";
     return ret;
   }
   if (NULL != next_) {
@@ -1253,14 +1303,42 @@ void AstColumn::GetRefTable(set<string>& ref_table) {
 }
 
 RetCode AstColumn::GetLogicalPlan(ExprNode*& logic_expr,
-                                  LogicalOperator* child_logic_plan) {
-  logic_expr = new ExprColumn(
-      ExprNodeType::t_qcolcumns,
-      child_logic_plan->GetPlanContext()
-          .GetAttribute(relation_name_, relation_name_ + "." + column_name_)
-          .attrType->type,
-      expr_str_, relation_name_, column_name_);
-  return rSuccess;
+                                  LogicalOperator* const left_lplan,
+                                  LogicalOperator* const right_lplan) {
+  Attribute ret_lattr = left_lplan->GetPlanContext().GetAttribute(
+      string(relation_name_ + "." + column_name_));
+  if (NULL != right_lplan) {
+    Attribute ret_rattr = right_lplan->GetPlanContext().GetAttribute(
+        string(relation_name_ + "." + column_name_));
+    if ((ret_lattr.attrName != "NULL") && (ret_rattr.attrName != "NULL")) {
+      assert(false);
+      return rFailure;
+    } else if (ret_lattr.attrName != "NULL") {
+      logic_expr =
+          new ExprColumn(ExprNodeType::t_qcolcumns, ret_lattr.attrType->type,
+                         expr_str_, relation_name_, column_name_);
+      return rSuccess;
+    } else if (ret_rattr.attrName != "NULL") {
+      logic_expr =
+          new ExprColumn(ExprNodeType::t_qcolcumns, ret_rattr.attrType->type,
+                         expr_str_, relation_name_, column_name_);
+      return rSuccess;
+    } else {
+      assert(false);
+      return rFailure;
+    }
+  } else {
+    if (ret_lattr.attrName != "NULL") {
+      logic_expr =
+          new ExprColumn(ExprNodeType::t_qcolcumns, ret_lattr.attrType->type,
+                         expr_str_, relation_name_, column_name_);
+      return rSuccess;
+    } else {
+      logic_expr = NULL;
+      assert(false);
+      return rFailure;
+    }
+  }
 }
 RetCode AstColumn::SolveSelectAlias(
     SelectAliasSolver* const select_alias_solver) {
@@ -1295,7 +1373,11 @@ AstSelectStmt::AstSelectStmt(AstNodeType ast_node_type, int select_opts,
       having_clause_(having_clause),
       orderby_clause_(orderby_clause),
       limit_clause_(limit_clause),
-      select_into_clause_(select_into_clause) {}
+      select_into_clause_(select_into_clause),
+      have_aggeragion_(false) {
+  groupby_attrs_.clear();
+  agg_attrs_.clear();
+}
 
 AstSelectStmt::~AstSelectStmt() {
   delete select_list_;
@@ -1320,7 +1402,7 @@ void AstSelectStmt::Print(int level) const {
   if (orderby_clause_ != NULL) orderby_clause_->Print(level);
   if (limit_clause_ != NULL) limit_clause_->Print(level);
   if (select_into_clause_ != NULL) select_into_clause_->Print(level);
-  cout << "------------select ast print over!------------------" << endl;
+  //  cout << "------------select ast print over!------------------" << endl;
 }
 /**
  *  NOTE: the physical execution may be divide into 2 step_
@@ -1484,14 +1566,11 @@ RetCode AstSelectStmt::SemanticAnalisys(SemanticContext* sem_cnxt) {
   return ret;
 }
 
-RetCode AstSelectStmt::PushDownCondition(PushDownConditionContext* pdccnxt) {
-  if (NULL == pdccnxt) {
-    pdccnxt = new PushDownConditionContext();
-  }
+RetCode AstSelectStmt::PushDownCondition(PushDownConditionContext& pdccnxt) {
   if (NULL != where_clause_) {
     AstWhereClause* where_clause =
         reinterpret_cast<AstWhereClause*>(where_clause_);
-    pdccnxt->GetSubExprInfo(where_clause->expr_);
+    pdccnxt.GetSubExprInfo(where_clause->expr_);
   }
   from_list_->PushDownCondition(pdccnxt);
 
@@ -1506,14 +1585,14 @@ RetCode AstSelectStmt::GetLogicalPlanOfAggeration(
   ExprNode* tmp_expr = NULL;
   RetCode ret = rSuccess;
   for (auto it = groupby_attrs_.begin(); it != groupby_attrs_.end(); ++it) {
-    ret = (*it)->GetLogicalPlan(tmp_expr, logic_plan);
+    ret = (*it)->GetLogicalPlan(tmp_expr, logic_plan, NULL);
     if (rSuccess != ret) {
       return ret;
     }
     group_by_attrs.push_back(tmp_expr);
   }
   for (auto it = agg_attrs_.begin(); it != agg_attrs_.end(); ++it) {
-    ret = (*it)->GetLogicalPlan(tmp_expr, logic_plan);
+    ret = (*it)->GetLogicalPlan(tmp_expr, logic_plan, NULL);
     if (rSuccess != ret) {
       return ret;
     }
@@ -1564,7 +1643,7 @@ RetCode AstSelectStmt::GetLogicalPlanOfProject(LogicalOperator*& logic_plan) {
     }
   }
   for (int i = 0; i < ast_expr.size(); ++i) {
-    ret = ast_expr[i]->GetLogicalPlan(tmp_expr, logic_plan);
+    ret = ast_expr[i]->GetLogicalPlan(tmp_expr, logic_plan, NULL);
     if (rSuccess != ret) {
       return rSuccess;
     }

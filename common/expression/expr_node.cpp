@@ -49,17 +49,18 @@ ExprNode::ExprNode(ExprNode* expr)
       is_null_(expr->is_null_),
       value_size_(expr->value_size_),
       type_cast_func_(expr->type_cast_func_),
-      value_(expr->value_) {}
+      value_(NULL) {}
 
-bool ExprNode::MoreExprEvaluate(vector<ExprNode*> thread_condi, void* tuple,
-                                Schema* schema) {
+bool ExprNode::MoreExprEvaluate(vector<ExprNode*> thread_condi,
+                                ExprEvalCnxt& eecnxt) {
   for (int i = 0; i < thread_condi.size(); ++i) {
     bool result =
-        *reinterpret_cast<bool*>(thread_condi[i]->ExprEvaluate(tuple, schema));
+        *reinterpret_cast<bool*>(thread_condi[i]->ExprEvaluate(eecnxt));
     if (!result) return false;
   }
   return true;
 }
+
 bool ExprNode::IsEqualAttr(const Attribute& attr) {
   if (expr_node_type_ == t_qcolcumns) {
     ExprColumn* column = reinterpret_cast<ExprColumn*>(this);
@@ -70,7 +71,7 @@ bool ExprNode::IsEqualAttr(const Attribute& attr) {
   }
   return false;
 }
-Attribute ExprNode::ExprNodeToAttr(const int id) {
+Attribute ExprNode::ExprNodeToAttr(const int id, const unsigned table_id) {
   column_type* column = NULL;
   if (t_string == this->return_type_ || t_decimal == this->return_type_) {
     column = new column_type(this->return_type_, this->value_size_);
@@ -78,7 +79,6 @@ Attribute ExprNode::ExprNodeToAttr(const int id) {
     column = new column_type(this->return_type_);
   }
   // set TableID
-  const unsigned kTableID = INTERMEIDATE_TABLEID;
   string attr_name = "NULL_MID." + alias_;
   if (t_qcolcumns == expr_node_type_) {
     ExprColumn* column = reinterpret_cast<ExprColumn*>(this);
@@ -87,7 +87,7 @@ Attribute ExprNode::ExprNodeToAttr(const int id) {
       attr_name = column->table_name_ + "." + column->column_name_;
     }  // else is for the case it's aliased
   }
-  Attribute attr_alais(kTableID, id, attr_name, column->type, column->size);
+  Attribute attr_alais(table_id, id, attr_name, column->type, column->size);
   return attr_alais;
 }
 }  // namespace common

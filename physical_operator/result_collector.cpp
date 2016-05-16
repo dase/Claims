@@ -84,7 +84,7 @@ bool ResultCollector::Open(const PartitionOffset& part_offset) {
   }
   registered_thread_count_++;
   if (true == g_thread_pool_used) {
-    Environment::getInstance()->getThreadPool()->add_task(CollectResult, this);
+    Environment::getInstance()->getThreadPool()->AddTask(CollectResult, this);
   } else {
     pthread_t tid;
     pthread_create(&tid, NULL, CollectResult, this);
@@ -135,7 +135,7 @@ void ResultCollector::DeallocateBlockStream(BlockStreamBase*& target) const {
 void* ResultCollector::CollectResult(void* arg) {
   ResultCollector* Pthis = (ResultCollector*)arg;
   Pthis->state_.child_->Open(Pthis->state_.partition_offset_);
-  BlockStreamBase* block_for_asking;
+  BlockStreamBase* block_for_asking = NULL;
   if (false == Pthis->CreateBlockStream(block_for_asking)) {
     assert(false);
     return 0;
@@ -152,6 +152,7 @@ void* ResultCollector::CollectResult(void* arg) {
       return 0;
     }
   }
+  DELETE_PTR(block_for_asking);
   Pthis->sema_input_complete_.post();
   double eclipsed_seconds = getSecond(start);
   Pthis->block_buffer_->query_time_ = eclipsed_seconds;

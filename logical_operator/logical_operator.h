@@ -31,6 +31,7 @@
 #include <map>
 #include <vector>
 #include <string>
+#include <atomic>
 #include "../common/ids.h"
 #include "../common/Schema/SchemaFix.h"
 #include "../logical_operator/plan_context.h"
@@ -38,6 +39,7 @@
 #include "../physical_operator/physical_operator_base.h"
 #include "../utility/lock.h"
 
+static std::atomic_uint MIDINADE_TABLE_ID(1000000);
 namespace claims {
 namespace logical_operator {
 #define kTabSize 4
@@ -72,8 +74,9 @@ typedef struct PhysicalPlanDescriptor {
  */
 class LogicalOperator {
  public:
-  LogicalOperator(){};
-  LogicalOperator(OperatorType operator_type) : operator_type_(operator_type) {
+  LogicalOperator() {}
+  LogicalOperator(OperatorType operator_type) {
+    operator_type_ = operator_type;
     lock_ = new Lock();
   }
   virtual ~LogicalOperator() {
@@ -127,8 +130,9 @@ class LogicalOperator {
   void GetColumnToId(const std::vector<Attribute>& attributes,
                      map<string, int>& column_to_id);
   Lock* lock_;
+  //  static std::atomic_uint MIDINADE_TABLE_ID;
 
- private:
+ protected:
   OperatorType operator_type_;
 };
 

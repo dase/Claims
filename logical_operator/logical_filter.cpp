@@ -35,12 +35,14 @@
 #include "../catalog/stat/StatManager.h"
 #include "../IDsGenerator.h"
 #include "../common/AttributeComparator.h"
+#include "../common/expression/expr_node.h"
 #include "../common/TypePromotionMap.h"
 #include "../common/TypeCast.h"
 #include "../common/Expression/initquery.h"
 #include "../physical_operator/exchange_merger.h"
 #include "../physical_operator/physical_filter.h"
 
+using claims::common::LogicInitCnxt;
 using claims::physical_operator::ExchangeMerger;
 using claims::physical_operator::PhysicalFilter;
 namespace claims {
@@ -96,23 +98,29 @@ PlanContext LogicalFilter::GetPlanContext() {
       }
     }
   }
-  std::map<std::string, int> column_to_id;
-  GetColumnToId(plan_context.attribute_list_, column_to_id);
-  Schema* input_schema = GetSchema(plan_context.attribute_list_);
+//  std::map<std::string, int> column_to_id;
+//  GetColumnToId(plan_context.attribute_list_, column_to_id);
+//  Schema* input_schema = GetSchema(plan_context.attribute_list_);
 #ifdef NEWCONDI
   for (int i = 0; i < condi_.size(); ++i) {
     // Initialize expression of logical execution plan.
     InitExprAtLogicalPlan(condi_[i], t_boolean, column_to_id, input_schema);
   }
 #else
+  LogicInitCnxt licnxt;
+  GetColumnToId(plan_context.attribute_list_, licnxt.column_id0_);
+  licnxt.schema0_ = plan_context.GetSchema();
   for (int i = 0; i < condition_.size(); ++i) {
-    condition_[i]->InitExprAtLogicalPlan(t_boolean, column_to_id, input_schema);
+    licnxt.return_type_ = t_boolean;
+    condition_[i]->InitExprAtLogicalPlan(licnxt);
   }
 #endif
   plan_context_ = new PlanContext();
   *plan_context_ = plan_context;
+  plan_context_->attribute_list_.assign(plan_context.attribute_list_.begin(),
+                                        plan_context.attribute_list_.end());
   lock_->release();
-  return plan_context;
+  return *plan_context_;
 }
 
 PhysicalOperatorBase* LogicalFilter::GetPhysicalPlan(
@@ -355,6 +363,15 @@ float LogicalFilter::PredictSelectivity() const {
 void LogicalFilter::Print(int level) const {
   cout << setw(level * kTabSize) << " "
        << "Filter:" << endl;
+  GetPlanContext();
+  cout << setw(level * kTabSize) << " "
+       << "[Partition info: "
+       << plan_context_->plan_partitioner_.get_partition_key().attrName
+       << " table_id= "
+       << plan_context_->plan_partitioner_.get_partition_key().table_id_
+       << " column_id= "
+       << plan_context_->plan_partitioner_.get_partition_key().index << " ]"
+       << endl;
 #ifdef NEWCONDI
 
   for (int i = 0; i < condi_.size(); ++i) {

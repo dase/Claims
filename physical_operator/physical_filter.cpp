@@ -156,16 +156,18 @@ bool PhysicalFilter::Next(BlockStreamBase* block) {
         delete tc->block_stream_iterator_;
         tc->block_stream_iterator_ = tc->block_for_asking_->createIterator();
       } else {
-        if (!block->Empty())
+        if (!block->Empty()) {
           return true;
-        else
+        } else {
           return false;
+        }
       }
     }
     ProcessInLogic(block, tc);
-    if (block->Full())
+    if (block->Full()) {
       // for case (1)
       return true;
+    }
   }
 }
 
@@ -210,8 +212,9 @@ void PhysicalFilter::ProcessInLogic(BlockStreamBase* block,
       }
 #endif
 #else
-      pass_filter = tc->thread_condi_[0]->MoreExprEvaluate(
-          tc->thread_condi_, tuple_from_child, state_.schema_);
+      tc->expr_eval_cnxt_.tuple[0] = tuple_from_child;
+      pass_filter = tc->thread_condi_[0]->MoreExprEvaluate(tc->thread_condi_,
+                                                           tc->expr_eval_cnxt_);
 #endif
       if (pass_filter) {
         const unsigned bytes =
@@ -308,6 +311,7 @@ ThreadContext* PhysicalFilter::CreateContext() {
   ftc->temp_block_ =
       BlockStreamBase::createBlock(state_.schema_, state_.block_size_);
   ftc->block_stream_iterator_ = ftc->block_for_asking_->createIterator();
+  ftc->expr_eval_cnxt_.schema[0] = state_.schema_;
 #ifdef NEWCONDI
   ftc->thread_qual_ = state_.qual_;
   for (int i = 0; i < state_.qual_.size(); i++) {
