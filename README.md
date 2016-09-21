@@ -55,17 +55,17 @@ Beneficial from the smart and massively parallelism and the in-memory data proce
 
 #### Former members
 
-[Li Wang](https://github.com/wangli1426) was Ph.D. student in East China Normal University.
+[Li Wang](https://github.com/wangli1426) was a Ph.D. student in East China Normal University.
 
-[Lei Zhang](https://github.com/egraldlo) was M.A. student in East China Normal University.
+[Lei Zhang](https://github.com/egraldlo) was a M.A. student in East China Normal University.
 
-[Shaochan Dong](https://github.com/scdong) was M.A. student in East China Normal University.
+[Shaochan Dong](https://github.com/scdong) was a M.A. student in East China Normal University.
 
-[Xinzhou Zhang]() was M.A. student in East China Normal University.
+[Xinzhou Zhang]() was a M.A. student in East China Normal University.
 
-[Yongfeng Li](https://github.com/NagamineLee) was M.A. student in East China Normal University.
+[Yongfeng Li](https://github.com/NagamineLee) was a M.A. student in East China Normal University.
 
-[Lin Gu]() was M.A. student in East China Normal University.
+[Lin Gu]() was a M.A. student in East China Normal University.
 
 #### Publications
 
