@@ -28,45 +28,6 @@ Beneficial from the smart and massively parallelism and the in-memory data proce
 
 ![asdf](http://i4.imgbus.com/doimg/dc2o5m0mfobn749.jpg)
 
-
-
-
-#### Team members
-
-[Aoying Zhou](http://dase.ecnu.edu.cn/index/shows/catid/14/id/131), Professor in East China Normal University, is the person in charge of this project.
-
-[Minqi Zhou](https://github.com/polpo1980), Associate Professor in East China Normal University, is the person in charge of this project.
-
-[Chuliang Weng](http://chuliangweng.github.io), Professor in East China Normal University, is the person in charge of this project.
-
-[Zhuhe Fang](https://github.com/fzhedu) is mainly responsible for designing and implementing SQL query optimization.
-
-[Kai Yu](https://github.com/yukai2014) is mainly responsible for designing and implementing SQL DDL and data injection.
-
-[Han Zhang](https://github.com/Jackson1992) is mainly responsible for storage layer.
-
-[Yang Yu](https://github.com/FishYoung) is mainly responsible for SQL parser and optimization.
-
-[Zhifang Li](https://github.com/yestodaylee) is mainly responsible for data injection.
-
-[Zhenhui Zhao](https://github.com/zhejiangxiaomai) is mainly responsible for improving system stability.
-
-[Tingting Sun](https://github.com/neko940709) is mainly responsible for data format.
-
-#### Former members
-
-[Li Wang](https://github.com/wangli1426), PHD, 2015. 
-
-[Lei Zhang](https://github.com/egraldlo), MS, 2015.
-
-[Shaochan Dong](https://github.com/scdong), MS, 2015.
-
-[Xinzhou Zhang](), MS, 2015.
-
-[Yongfeng Li](https://github.com/NagamineLee), MS, 2015.
-
-[Lin Gu](), MS, 2015.
-
 #### Publications
 
 1. Li Wang, Minqi Zhou, Zhenjie Zhang, Yin Yang, Aoying Zhou, Dina Bitton. Elastic Pipelining in In-Memory Database Cluster. Sigmod 2016.
