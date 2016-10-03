@@ -21,6 +21,8 @@
 using claims::utility::LockGuard;
 
 struct remote_command {
+  remote_command() {}
+  remote_command(std::string s, int fd) : cmd(s), socket_fd(fd) {}
   std::string cmd;
   int socket_fd;
 };
@@ -33,6 +35,7 @@ struct ExecutedResult {
   std::string info_;
   std::string warning_;
   int warning_count_;
+  double result_time_;
 
   SpineLock append_lock_;
 

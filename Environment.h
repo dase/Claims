@@ -55,6 +55,7 @@ class Environment {
   void initializeExpressionSystem();
   void destoryClientListener();
   bool initializeThreadPool();
+  static void *InitMysqlListener(void * null_);
 
  private:
   static Environment* _instance;

@@ -1,3 +1,9 @@
+/* At the begin of the main().I add a new thread to run the httpserver.this thread will use the 
+*address 219.228.147.167,the port 8097,20 threads to make up the thread pool,and the last 
+*string means your webserver's doc_root.
+*
+*/
+
 #define GLOG_NO_ABBREVIATED_SEVERITIES
 #include <startup.h>
 #include <getopt.h>
@@ -76,7 +82,9 @@ void handle_parameters(int argc, char** argv) {
     }
   }
 }
+
 int main(int argc, char** argv) {
+
   using claims::common::Logging;
   handle_parameters(argc, argv);
   Config::getInstance();
@@ -98,6 +106,8 @@ int main(int argc, char** argv) {
     actor = "master";
   else
     actor = "slave";
+
+
 
 #ifndef FORK
   if (master) {

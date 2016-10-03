@@ -342,6 +342,7 @@ TTInt Decimal::Round(unsigned num) const
 
 string Decimal::ToString(unsigned number_of_fractinal_digits) const {
   if (isNull()) return "NULL";
+  number_of_fractinal_digits = 15;
   assert(number_of_fractinal_digits <= Decimal::kMaxDecScale);
   string ress = "";
   TTInt rest = Round(number_of_fractinal_digits);

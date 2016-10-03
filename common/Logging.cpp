@@ -491,3 +491,18 @@ void ThreadPoolLogging::elog(const char* format, ...) {
   RawElog("[ThreadPool]: ", format, arg);
   va_end(arg);
 }
+
+void MySqlElog(const char* format, ...) {
+  va_list arg;
+  va_start(arg, format);
+  RawElog("[claims-mysql]: ", format, arg);
+  va_end(arg);
+}
+
+void MySqlLog(const char* format, ...) {
+  va_list arg;
+  va_start(arg, format);
+  RawLog("[claims-mysql]: ", format, arg);
+  va_end(arg);
+}
+

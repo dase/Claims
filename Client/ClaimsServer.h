@@ -24,6 +24,7 @@
 #include "ClientResponse.h"
 #include "json/json.h"
 
+
 class ClientListener {
 public:
 	ClientListener(int port);
@@ -67,5 +68,8 @@ private:
 	static int standard_err;
 
 };
+
+
+
 
 #endif /* CLAIMSSERVER_H_ */

@@ -21,13 +21,14 @@ master=1
 client_listener_port = 10000
 
 
+
 #hadoop上的数据目录
  
 #data="/home/imdb/data/wangli/"
 #data="/home/imdb/data/wangli/"
 #data="/home/imdb/data/POC/sample/"
 #data="/home/minqi/git/Data/data/tpc-h/1-partition/sf-1/"
-data="/home/minqi/git/Data/data/tpc-h/18-partition/sf-1/"
+#data="/home/imdb/data/"
 #data="/home/imdb/data/SF-1/"
 #data="/home/imdb/data/SF-1/"
 #data="/home/imdb/data/stock/"
@@ -38,6 +39,10 @@ data="/home/minqi/git/Data/data/tpc-h/18-partition/sf-1/"
 #data="/home/imdb/data/POC/"
 #data="/home/imdb/data/POC/"
 #hdfs主节点
+
+
+#the path for data and catalog
+data="/home/imdb/data/"
 
 
 hdfs_master_ip="127.0.0.1"
@@ -60,4 +65,18 @@ pipelined_exchange=1
 local_disk_mode=1
 
 scan_batch=100
+
+
+
+#enable llvm codegen or not
+enable_codegen=0
+
+#the httpserver info
+httpserver_master_ip="219.228.147.162"
+
+httpserver_master_port="8097"
+
+httpserver_thread_num="10"
+
+httpserver_doc_root="/home/imdb/local/test/"
 

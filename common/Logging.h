@@ -165,6 +165,14 @@ class ThreadPoolLogging {
       __attribute__((format(printf, 1, 2)));
 };
 
+class HttpserverLogging {
+ public:
+  static void log(const char* format, ...)
+      __attribute__((format(printf, 1, 2)));
+  static void elog(const char* format, ...)
+      __attribute__((format(printf, 1, 2)));
+};
+
 static void Logging_ExchangeIteratorLowerWithWideDependency(const char* format,
                                                             ...) {
 #ifdef DEBUG_ExchangeIteratorWithWideDependency
@@ -301,5 +309,8 @@ static void Logging_BlockStreamExchangeLowerBase(const char* format, ...) {
 
 void SQLParse_log(const char* format, ...);
 void SQLParse_elog(const char* format, ...);
+
+void MySqlElog(const char* format, ...);
+void MySqlLog(const char* format, ...);
 
 #endif /* LOGGING_H_ */
