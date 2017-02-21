@@ -32,6 +32,7 @@
 #define CATALOG_CATALOG_H_
 #include <boost/unordered_map.hpp>
 #include <string>
+#include <vector>
 
 #include "../catalog/projection_binding.h"
 #include "../catalog/table.h"
@@ -39,8 +40,17 @@
 #include "../common/error_define.h"
 #include "../common/Logging.h"
 #include "../utility/lock.h"
+
 namespace claims {
+
+namespace loader {
+class SingleFileConnector;
+};
+
 namespace catalog {
+using std::vector;
+using loader::SingleFileConnector;
+class SingleFileConnector;
 
 struct TableIDAllocator {
   TableIDAllocator() { table_id_curosr = 0; }
@@ -76,16 +86,17 @@ class Catalog {
   TableDescriptor* getTable(const TableID&) const;
   TableDescriptor* getTable(const std::string& table_name) const;
   void GetAllTables(ostringstream& ostr) const;
+  vector<TableID> getVisibleTablesIDs()const;
   ProjectionDescriptor* getProjection(const ProjectionID&) const;
   ProjectionBinding* getBindingModele() const;
-
+  vector<TableID> getAllTableIDs() const;
   /**
    * ATTENTION: this method do not return the number of existing table,
    *            other than the next table'id
    * An example is: a table is dropped, but the return value don't change
    */
   unsigned getTableCount() const { return table_id_allocator.table_id_curosr; }
-
+  unsigned getNumberOfTable() const { return tableid_to_table.size();}
   RetCode saveCatalog();     // 2014-3-20---save as a file---by Yu
   RetCode restoreCatalog();  // 2014-3-20---restore from a file---by Yu
   void outPut();
@@ -110,8 +121,10 @@ class Catalog {
   Logging* logging;
   ProjectionBinding* binding_;
   static Catalog* instance_;
+  SingleFileConnector* write_connector_ = NULL;
+  SingleFileConnector* read_connector_ = NULL;
+  //  Lock write_lock_;
 
-  // 2014-3-20---add serialize function---by Yu
   friend class boost::serialization::access;
   template <class Archive>
   void serialize(Archive& ar, const unsigned int version) {

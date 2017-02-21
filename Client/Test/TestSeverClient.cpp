@@ -123,7 +123,7 @@ static int loadData() {
   catalog->add_table(table_1);
 
   ////////////////////////////////////Create table
-  ///right//////////////////////////
+  /// right//////////////////////////
   TableDescriptor* table_2 = new TableDescriptor(
       "sb",
       Environment::getInstance()->getCatalog()->allocate_unique_table_id());
@@ -212,20 +212,20 @@ static int loadData() {
   }
   // partitioned by row_id
   //		for(unsigned
-  //i=0;i<table_1->getProjectoin(14)->getPartitioner()->getNumberOfPartitions();i++){
+  // i=0;i<table_1->getProjectoin(14)->getPartitioner()->getNumberOfPartitions();i++){
   //
   //			catalog->getTable(0)->getProjectoin(14)->getPartitioner()->RegisterPartition(i,2);
   //		}
   //
   //		// 8 partitions
   //	for(unsigned
-  //i=0;i<table_1->getProjectoin(2)->getPartitioner()->getNumberOfPartitions();i++){
+  // i=0;i<table_1->getProjectoin(2)->getPartitioner()->getNumberOfPartitions();i++){
   //
   //		catalog->getTable(0)->getProjectoin(2)->getPartitioner()->RegisterPartition(i,1);
   //	}
   //
   //	for(unsigned
-  //i=0;i<table_1->getProjectoin(3)->getPartitioner()->getNumberOfPartitions();i++){
+  // i=0;i<table_1->getProjectoin(3)->getPartitioner()->getNumberOfPartitions();i++){
   //
   //		catalog->getTable(0)->getProjectoin(3)->getPartitioner()->RegisterPartition(i,3);
   //	}
@@ -245,20 +245,20 @@ static int loadData() {
         i, 6);
   }
   //	for(unsigned
-  //i=0;i<table_2->getProjectoin(2)->getPartitioner()->getNumberOfPartitions();i++){
+  // i=0;i<table_2->getProjectoin(2)->getPartitioner()->getNumberOfPartitions();i++){
   //
   //		catalog->getTable(1)->getProjectoin(2)->getPartitioner()->RegisterPartition(i,1);
   //	}
 
   //	for(unsigned
-  //i=0;i<table_2->getProjectoin(3)->getPartitioner()->getNumberOfPartitions();i++){
+  // i=0;i<table_2->getProjectoin(3)->getPartitioner()->getNumberOfPartitions();i++){
   //
   //		catalog->getTable(1)->getProjectoin(3)->getPartitioner()->RegisterPartition(i,3);
   //	}
   //
   //		//partitioned by row_id
   //		for(unsigned
-  //i=0;i<table_2->getProjectoin(14)->getPartitioner()->getNumberOfPartitions();i++){
+  // i=0;i<table_2->getProjectoin(14)->getPartitioner()->getNumberOfPartitions();i++){
   //
   //			catalog->getTable(1)->getProjectoin(14)->getPartitioner()->RegisterPartition(i,2);
   //		}
@@ -266,41 +266,41 @@ static int loadData() {
   //		////////////////////////////////////////
   //
   //		///////////////////ONE
-  //MONTH/////////////////////////////////////////////////////////////
+  // MONTH/////////////////////////////////////////////////////////////
   //		//CJ
   //		// 4 partition
   //	for(unsigned
-  //i=0;i<table_1->getProjectoin(4)->getPartitioner()->getNumberOfPartitions();i++){
+  // i=0;i<table_1->getProjectoin(4)->getPartitioner()->getNumberOfPartitions();i++){
   //
   //		catalog->getTable(0)->getProjectoin(4)->getPartitioner()->RegisterPartition(i,40);
   //	}
   //
   //	for(unsigned
-  //i=0;i<table_1->getProjectoin(5)->getPartitioner()->getNumberOfPartitions();i++){
+  // i=0;i<table_1->getProjectoin(5)->getPartitioner()->getNumberOfPartitions();i++){
   //
   //		catalog->getTable(0)->getProjectoin(5)->getPartitioner()->RegisterPartition(i,104);
   //	}
   //		//8 partitions
   //		for(unsigned
-  //i=0;i<table_1->getProjectoin(10)->getPartitioner()->getNumberOfPartitions();i++){
+  // i=0;i<table_1->getProjectoin(10)->getPartitioner()->getNumberOfPartitions();i++){
   //
   //			catalog->getTable(0)->getProjectoin(10)->getPartitioner()->RegisterPartition(i,20);
   //		}
   //
   //		for(unsigned
-  //i=0;i<table_1->getProjectoin(11)->getPartitioner()->getNumberOfPartitions();i++){
+  // i=0;i<table_1->getProjectoin(11)->getPartitioner()->getNumberOfPartitions();i++){
   //
   //			catalog->getTable(0)->getProjectoin(11)->getPartitioner()->RegisterPartition(i,52);
   //		}
   //		// 18 partitions
   //	for(unsigned
-  //i=0;i<table_1->getProjectoin(6)->getPartitioner()->getNumberOfPartitions();i++){
+  // i=0;i<table_1->getProjectoin(6)->getPartitioner()->getNumberOfPartitions();i++){
   //
   //		catalog->getTable(0)->getProjectoin(6)->getPartitioner()->RegisterPartition(i,10);
   //	}
   //
   //	for(unsigned
-  //i=0;i<table_1->getProjectoin(7)->getPartitioner()->getNumberOfPartitions();i++){
+  // i=0;i<table_1->getProjectoin(7)->getPartitioner()->getNumberOfPartitions();i++){
   //
   //		catalog->getTable(0)->getProjectoin(7)->getPartitioner()->RegisterPartition(i,24);
   //	}
@@ -308,37 +308,37 @@ static int loadData() {
   //		//SB
   //		// 4 partition
   //	for(unsigned
-  //i=0;i<table_2->getProjectoin(4)->getPartitioner()->getNumberOfPartitions();i++){
+  // i=0;i<table_2->getProjectoin(4)->getPartitioner()->getNumberOfPartitions();i++){
   //
   //		catalog->getTable(1)->getProjectoin(4)->getPartitioner()->RegisterPartition(i,39);
   //	}
   //
   //	for(unsigned
-  //i=0;i<table_2->getProjectoin(5)->getPartitioner()->getNumberOfPartitions();i++){
+  // i=0;i<table_2->getProjectoin(5)->getPartitioner()->getNumberOfPartitions();i++){
   //
   //		catalog->getTable(1)->getProjectoin(5)->getPartitioner()->RegisterPartition(i,131);
   //	}
   //		// 8 partitions
   //		for(unsigned
-  //i=0;i<table_2->getProjectoin(10)->getPartitioner()->getNumberOfPartitions();i++){
+  // i=0;i<table_2->getProjectoin(10)->getPartitioner()->getNumberOfPartitions();i++){
   //
   //			catalog->getTable(1)->getProjectoin(10)->getPartitioner()->RegisterPartition(i,20);
   //		}
   //
   //		for(unsigned
-  //i=0;i<table_2->getProjectoin(11)->getPartitioner()->getNumberOfPartitions();i++){
+  // i=0;i<table_2->getProjectoin(11)->getPartitioner()->getNumberOfPartitions();i++){
   //
   //			catalog->getTable(1)->getProjectoin(11)->getPartitioner()->RegisterPartition(i,66);
   //		}
   //		// 18 partitions
   //	for(unsigned
-  //i=0;i<table_2->getProjectoin(6)->getPartitioner()->getNumberOfPartitions();i++){
+  // i=0;i<table_2->getProjectoin(6)->getPartitioner()->getNumberOfPartitions();i++){
   //
   //		catalog->getTable(1)->getProjectoin(6)->getPartitioner()->RegisterPartition(i,10);
   //	}
   //
   //	for(unsigned
-  //i=0;i<table_2->getProjectoin(7)->getPartitioner()->getNumberOfPartitions();i++){
+  // i=0;i<table_2->getProjectoin(7)->getPartitioner()->getNumberOfPartitions();i++){
   //
   //		catalog->getTable(1)->getProjectoin(7)->getPartitioner()->RegisterPartition(i,30);
   //	}
@@ -349,25 +349,25 @@ static int loadData() {
   //		//// cj////
   //		// 4 partitions
   //		for(unsigned
-  //i=0;i<table_1->getProjectoin(8)->getPartitioner()->getNumberOfPartitions();i++){
+  // i=0;i<table_1->getProjectoin(8)->getPartitioner()->getNumberOfPartitions();i++){
   //
   //			catalog->getTable(0)->getProjectoin(8)->getPartitioner()->RegisterPartition(i,14);
   //		}
   //
   //		for(unsigned
-  //i=0;i<table_1->getProjectoin(9)->getPartitioner()->getNumberOfPartitions();i++){
+  // i=0;i<table_1->getProjectoin(9)->getPartitioner()->getNumberOfPartitions();i++){
   //
   //			catalog->getTable(0)->getProjectoin(9)->getPartitioner()->RegisterPartition(i,36);
   //		}
   //		// 8 partitions
   //		for(unsigned
-  //i=0;i<table_1->getProjectoin(12)->getPartitioner()->getNumberOfPartitions();i++){
+  // i=0;i<table_1->getProjectoin(12)->getPartitioner()->getNumberOfPartitions();i++){
   //
   //			catalog->getTable(0)->getProjectoin(12)->getPartitioner()->RegisterPartition(i,7);
   //		}
   //
   //		for(unsigned
-  //i=0;i<table_1->getProjectoin(13)->getPartitioner()->getNumberOfPartitions();i++){
+  // i=0;i<table_1->getProjectoin(13)->getPartitioner()->getNumberOfPartitions();i++){
   //
   //			catalog->getTable(0)->getProjectoin(13)->getPartitioner()->RegisterPartition(i,19);
   //		}
@@ -375,25 +375,25 @@ static int loadData() {
   //		//// sb ////
   //		// 4 partitions//
   //		for(unsigned
-  //i=0;i<table_2->getProjectoin(8)->getPartitioner()->getNumberOfPartitions();i++){
+  // i=0;i<table_2->getProjectoin(8)->getPartitioner()->getNumberOfPartitions();i++){
   //
   //			catalog->getTable(1)->getProjectoin(8)->getPartitioner()->RegisterPartition(i,14);
   //		}
   //
   //		for(unsigned
-  //i=0;i<table_2->getProjectoin(9)->getPartitioner()->getNumberOfPartitions();i++){
+  // i=0;i<table_2->getProjectoin(9)->getPartitioner()->getNumberOfPartitions();i++){
   //
   //			catalog->getTable(1)->getProjectoin(9)->getPartitioner()->RegisterPartition(i,131);
   //		}
   //		// 8 partitions//
   //		for(unsigned
-  //i=0;i<table_2->getProjectoin(12)->getPartitioner()->getNumberOfPartitions();i++){
+  // i=0;i<table_2->getProjectoin(12)->getPartitioner()->getNumberOfPartitions();i++){
   //
   //			catalog->getTable(1)->getProjectoin(12)->getPartitioner()->RegisterPartition(i,7);
   //		}
   //
   //		for(unsigned
-  //i=0;i<table_2->getProjectoin(13)->getPartitioner()->getNumberOfPartitions();i++){
+  // i=0;i<table_2->getProjectoin(13)->getPartitioner()->getNumberOfPartitions();i++){
   //
   //			catalog->getTable(1)->getProjectoin(13)->getPartitioner()->RegisterPartition(i,23);
   //		}

@@ -21,9 +21,9 @@ static double lineitem_scan_self_join() {
   TableDescriptor* table_right =
       Environment::getInstance()->getCatalog()->getTable("LINEITEM");
 
-  LogicalOperator* scan = new LogicalScan(table->getProjectoin(0));
+  LogicalOperator* scan = new LogicalScan(table->getProjection(0));
 
-  LogicalOperator* scan_right = new LogicalScan(table_right->getProjectoin(0));
+  LogicalOperator* scan_right = new LogicalScan(table_right->getProjection(0));
 
   LogicalFilter::Condition filter_condition_1;
   filter_condition_1.add(table->getAttribute("row_id"), AttributeComparator::EQ,
@@ -66,9 +66,9 @@ static double sb_scan_self_join() {
   TableDescriptor* table_right =
       Environment::getInstance()->getCatalog()->getTable("sb");
 
-  LogicalOperator* scan = new LogicalScan(table->getProjectoin(0));
+  LogicalOperator* scan = new LogicalScan(table->getProjection(0));
 
-  LogicalOperator* scan_right = new LogicalScan(table_right->getProjectoin(0));
+  LogicalOperator* scan_right = new LogicalScan(table_right->getProjection(0));
 
   LogicalFilter::Condition filter_condition_1;
   filter_condition_1.add(table->getAttribute("row_id"), AttributeComparator::EQ,
@@ -111,7 +111,7 @@ static double lineitem_scan_aggregation() {
   TableDescriptor* table =
       Environment::getInstance()->getCatalog()->getTable("LINEITEM");
 
-  LogicalOperator* scan = new LogicalScan(table->getProjectoin(0));
+  LogicalOperator* scan = new LogicalScan(table->getProjection(0));
 
   std::vector<Attribute> group_by_attributes;
   //	group_by_attributes.push_back(table->getAttribute("L_RETURNFLAG"));
@@ -157,7 +157,7 @@ static double lineitem_scan_filter() {
       Environment::getInstance()->getCatalog()->getTable("LINEITEM");
   //	printf("Tuple
   // size:%d\n",table->getProjectoin(0)->getSchema()->getTupleMaxSize());
-  LogicalOperator* scan = new LogicalScan(table->getProjectoin(0));
+  LogicalOperator* scan = new LogicalScan(table->getProjection(0));
 
   LogicalFilter::Condition filter_condition_1;
   filter_condition_1.add(table->getAttribute("row_id"), AttributeComparator::EQ,
@@ -188,7 +188,7 @@ static double sb_scan_filter() {
   TableDescriptor* table =
       Environment::getInstance()->getCatalog()->getTable("sb");
 
-  LogicalOperator* scan = new LogicalScan(table->getProjectoin(0));
+  LogicalOperator* scan = new LogicalScan(table->getProjection(0));
   //	printf("Tuple
   // size:%d\n",table->getProjectoin(0)->getSchema()->getTupleMaxSize());
 
@@ -225,7 +225,7 @@ static double sb_scan_aggregation() {
   TableDescriptor* table =
       Environment::getInstance()->getCatalog()->getTable("sb");
 
-  LogicalOperator* scan = new LogicalScan(table->getProjectoin(0));
+  LogicalOperator* scan = new LogicalScan(table->getProjection(0));
 
   std::vector<Attribute> group_by_attributes;
   //	group_by_attributes.push_back(table->getAttribute("L_RETURNFLAG"));
@@ -331,7 +331,7 @@ static void test_block_construct() {
   TableDescriptor* table =
       Environment::getInstance()->getCatalog()->getTable("sb");
 
-  LogicalOperator* scan = new LogicalScan(table->getProjectoin(0));
+  LogicalOperator* scan = new LogicalScan(table->getProjection(0));
   scan->GetPlanContext();
 
   PhysicalOperatorBase* s = scan->GetPhysicalPlan(64 * 1024);
@@ -339,7 +339,7 @@ static void test_block_construct() {
 
   std::vector<BlockStreamBase*> vect;
   BlockStreamBase* block = BlockStreamBase::createBlock(
-      table->getProjectoin(0)->getSchema(), 64 * 1024);
+      table->getProjection(0)->getSchema(), 64 * 1024);
   s->Open();
   while (s->Next(block))
     ;

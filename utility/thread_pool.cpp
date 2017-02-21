@@ -29,6 +29,7 @@
 #include "./thread_pool.h"
 #include <unistd.h>
 #include <sys/syscall.h>
+#include <glog/logging.h>
 #include <vector>
 #include "./task.h"
 #include "../common/memory_handle.h"
@@ -57,13 +58,13 @@ bool ThreadPool::Init(int thread_count_in_pool) {
 
   if (pthread_create(&monitor_thread_, NULL, MonitorThreadExec, this) !=
       0) {  // if any failed, return false
-    ThreadPoolLogging::elog("ERROR: create monitor thread failed!");
+    PLOG(ERROR) << "ERROR: create monitor thread failed!";
     return false;
   }
   for (int i = 0; i < base_thread_count_; ++i) {
     if (pthread_create(&thread_list_[i], NULL, ThreadExec, this) !=
         0) {  // if any failed, return false
-      ThreadPoolLogging::elog("ERROR: create thread failed!");
+      PLOG(ERROR) << "ERROR: create thread failed!";
       return false;
     }
     ++current_thread_count_;

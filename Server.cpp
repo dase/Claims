@@ -2,6 +2,7 @@
 #include <startup.h>
 #include <getopt.h>
 #include <string>
+#include <iostream>
 // #include "Test/set_up_environment.h"
 #include "./Test/TestMain.cpp"
 #include "common/log/logging.h"
@@ -100,16 +101,21 @@ int main(int argc, char** argv) {
     actor = "slave";
 
 #ifndef FORK
+  std::string cmd;
   if (master) {
     Environment::getInstance(master);
     //  create_poc_data_four_partitions();
     //  create_poc_data_one_partitions();
     //  print_welcome();
     //  ExecuteLogicalQueryPlan();
-    while (true) sleep(1);
+ 
+    while (std::cin.get() != 'q') {
+      sleep(1);
+    }
   } else {
     Environment::getInstance(master);
-    while (true) sleep(1);
+    while (std::cin.get() != 'q') sleep(1);
+ 
   }
 #else
   int pid = fork();

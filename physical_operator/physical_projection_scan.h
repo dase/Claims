@@ -33,6 +33,7 @@
 
 #ifndef PHYSICAL_OPERATOR_PHYSICAL_PROJECTION_SCAN_H_
 #define PHYSICAL_OPERATOR_PHYSICAL_PROJECTION_SCAN_H_
+#include <stack>
 
 #define GLOG_NO_ABBREVIATED_SEVERITIES
 #include <boost/archive/text_iarchive.hpp>
@@ -44,10 +45,12 @@
 #include "../physical_operator/physical_operator_base.h"
 #include "../common/Schema/Schema.h"
 #include "../storage/ChunkStorage.h"
+#include "../storage/PartitionReaderIterator.h"
 #include "../storage/PartitionStorage.h"
 #include "../physical_operator/physical_operator.h"
 #include "../common/ExpandedThreadTracker.h"
-
+#include "../txn_manager/txn.hpp"
+using claims::txn::Query;
 namespace claims {
 namespace physical_operator {
 
@@ -109,10 +112,11 @@ class PhysicalProjectionScan : public PhysicalOperator {
     ProjectionID projection_id_;
     unsigned block_size_;
     float sample_rate_;
+    Query query_;
     friend class boost::serialization::access;
     template <class Archive>
     void serialize(Archive& ar, const unsigned int version) {
-      ar& schema_& projection_id_& block_size_& sample_rate_;
+      ar& schema_& projection_id_& block_size_& sample_rate_& query_;
     }
   };
   PhysicalProjectionScan(State state);
@@ -122,25 +126,31 @@ class PhysicalProjectionScan : public PhysicalOperator {
    * @brief Method description: Initialize the operator and get the initial
    * position of chunk read iterator.
    */
-  bool Open(const PartitionOffset& partition_offset = 0);
+  bool Open(SegmentExecStatus* const exec_status,
+            const PartitionOffset& partition_offset = 0);
 
   /**
    * @brief: fetch block from child operator.
    */
 
-  bool Next(BlockStreamBase* block);
+  bool Next(SegmentExecStatus* const exec_status, BlockStreamBase* block);
   /**
    * @brief: revoke resource.
    */
-  bool Close();
+  bool Close(SegmentExecStatus* const exec_status);
   void Print();
+  RetCode GetAllSegments(stack<Segment*>* all_segments);
+  void SetTxnInfo(const Query& query) {
+    state_.query_ = query;
+    state_.query_.GenTxnInfo();
+  }
 
  private:
   bool PassSample() const;
 
  private:
   State state_;
-  PartitionStorage::PartitionReaderItetaor* partition_reader_iterator_;
+  PartitionStorage::PartitionReaderIterator* partition_reader_iterator_;
   std::list<ChunkReaderIterator*> remaining_chunk_iterator_list_;
   Lock chunk_reader_container_lock_;
   // like a buffer

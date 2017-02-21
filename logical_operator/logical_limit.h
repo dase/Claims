@@ -90,6 +90,13 @@ class LogicalLimit : public LogicalOperator {
    * @param level: As an index.
    */
   virtual void Print(int level = 0) const;
+  void GetTxnInfo(QueryReq& request) const override {
+      child_->GetTxnInfo(request);
+    }
+    void SetTxnInfo(const Query& query) override  {
+      child_->SetTxnInfo(query);
+    }
+
 
   LogicalOperator* child_;
 

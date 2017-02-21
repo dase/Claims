@@ -33,13 +33,13 @@
 #include "../catalog/table.h"
 #include "../catalog/catalog.h"
 #include "../Environment.h"
-#include "../loader/data_injector.h"
 #include "../common/error_define.h"
+#include "../loader/data_ingestion.h"
 
 using claims::catalog::Catalog;
 using claims::common::rSuccess;
 using claims::common::FileOpenFlag;
-using claims::loader::DataInjector;
+using claims::loader::DataIngestion;
 using claims::common::rNotSupport;
 using claims::catalog::TableDescriptor;
 using claims::common::rTableNotExisted;
@@ -224,7 +224,8 @@ RetCode InsertExec::Execute(ExecutedResult *exec_result) {
              position < table_desc_->getNumberOfAttribute(); position++) {
           // check value count
           if (insert_value == NULL) {
-            LOG(ERROR) << "Value count is too few" << endl;
+            LOG(ERROR) << "Value count is too few. Expected value count is "
+                       << table_desc_->getNumberOfAttribute() << endl;
             exec_result->SetError("Value count is too few");
             return claims::common::rFailure;
           }
@@ -314,9 +315,9 @@ RetCode InsertExec::Execute(ExecutedResult *exec_result) {
 
     if (!is_correct_) return claims::common::rFailure;
 
-    DataInjector *injector = new DataInjector(table);
+    DataIngestion *injestion = new DataIngestion(table);
     // str() will copy string buffer without the last '\n'
-    ret = injector->InsertFromString(ostr.str() + "\n", exec_result);
+    ret = injestion->InsertFromString(ostr.str() + "\n", exec_result);
     if (rSuccess == ret) {
       ostr.clear();
       ostr.str("");
@@ -328,7 +329,7 @@ RetCode InsertExec::Execute(ExecutedResult *exec_result) {
                  << table->getTableName() << endl;
       exec_result->SetError("failed to insert tuples into table ");
     }
-    DELETE_PTR(injector);
+    DELETE_PTR(injestion);
     Environment::getInstance()->getCatalog()->saveCatalog();
   }
 

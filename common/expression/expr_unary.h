@@ -21,15 +21,18 @@ class ExprUnary : public ExprNode {
   DataTypeOperFunc data_type_oper_func_;
   ExprUnary(ExprNodeType expr_node_type, data_type actual_type, string alias,
             OperType oper_type, ExprNode* arg0);
+  ExprUnary(ExprNodeType expr_node_type, data_type actual_type,
+            data_type get_type, string alias, OperType oper_type,
+            ExprNode* arg0);
   explicit ExprUnary(ExprUnary* expr);
   ExprUnary() {}
   ~ExprUnary() { delete arg0_; }
-  virtual void* ExprEvaluate(void* tuple, Schema* schema);
-  virtual void* ExprEvaluate(void* tuple, Schema* schema, void* last_value);
+  virtual void* ExprEvaluate(ExprEvalCnxt& eecnxt);
+
+  virtual void InitExprAtLogicalPlan(LogicInitCnxt& licnxt);
+  virtual void* ExprEvaluate(ExprEvalCnxt& eecnxt, void* last_value);
   virtual void* ExprEvaluate(void* value, void* last_value);
-  virtual void InitExprAtLogicalPlan(
-      data_type return_type, const std::map<std::string, int>& column_index,
-      Schema* schema);
+
   virtual void InitExprAtPhysicalPlan();
   virtual ExprNode* ExprCopy();
 

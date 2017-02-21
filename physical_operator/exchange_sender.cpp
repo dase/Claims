@@ -35,6 +35,9 @@
 #include "../common/Logging.h"
 #include "../common/ids.h"
 #include "../physical_operator/exchange_sender.h"
+
+#define CONNECTION_VERIFY
+
 namespace claims {
 namespace physical_operator {
 ExchangeSender::ExchangeSender() {}
@@ -47,7 +50,7 @@ ExchangeSender::~ExchangeSender() {}
  */
 bool ExchangeSender::ConnectToUpper(const ExchangeID& exchange_id,
                                     const NodeID& id, int& sock_fd) const {
-  struct hostent* host;
+  //  struct hostent* host;
   ExchangeTracker* et = Environment::getInstance()->getExchangeTracker();
   int upper_port;
   NodeAddress upper_addr;
@@ -57,12 +60,12 @@ bool ExchangeSender::ConnectToUpper(const ExchangeID& exchange_id,
         << exchange_id.exchange_id << std::endl;
     return false;
   }
-
-  if ((host = gethostbyname(upper_addr.ip.c_str())) == 0) {
-    LOG(ERROR) << "gethostbyname errors!" << std::endl;
-    return false;
-  }
-
+#ifdef CONNECTION_VERIFY
+  stringstream ss;
+  ss << "EXCHID" << exchange_id.exchange_id;
+  string upper_passwd = ss.str();
+  int upper_passwd_len = upper_passwd.length();
+#endif
   if ((sock_fd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
     perror("socket creation errors!\n");
     return false;
@@ -70,8 +73,7 @@ bool ExchangeSender::ConnectToUpper(const ExchangeID& exchange_id,
   struct sockaddr_in serv_add;
   serv_add.sin_family = AF_INET;
   serv_add.sin_port = htons(atoi(upper_addr.port.c_str()));
-  serv_add.sin_addr = *((struct in_addr*)host->h_addr);
-  // serv_add.sin_addr.s_addr=inet_addr(host->h_name);
+  serv_add.sin_addr.s_addr = inet_addr(upper_addr.ip.c_str());
   bzero(&(serv_add.sin_zero), 8);
 
   int returnvalue;
@@ -79,12 +81,24 @@ bool ExchangeSender::ConnectToUpper(const ExchangeID& exchange_id,
   if ((returnvalue = connect(sock_fd, (struct sockaddr*)&serv_add,
                              sizeof(struct sockaddr))) == -1) {
     LOG(ERROR) << "Fails to connect remote socket: "
-               << inet_ntoa(serv_add.sin_addr) << " , port= " << upper_port
+               << inet_ntoa(serv_add.sin_addr) << " , port= " << upper_addr.port
                << std::endl;
     return false;
   }
-  LOG(INFO) << "connected to the Master socket :" << returnvalue << std::endl;
-
+  LOG(INFO) << "exchid=" << exchange_id.exchange_id
+		  << "upper_offset=" << exchange_id.partition_offset
+		  << " connected to the upper socket.("<< upper_addr.ip.c_str() <<":"  << upper_addr.port.c_str()
+		  << " sock_fd=" << sock_fd
+		  <<") return value:" << returnvalue << std::endl;
+#ifdef CONNECTION_VERIFY
+  if ((returnvalue = send(sock_fd, upper_passwd.c_str(), upper_passwd_len, 0))  == -1 ) {
+  	LOG(ERROR) << "Failed to send acknowledgement to the upper socket. returnvalue:[" << returnvalue 
+		<< "] errno:[" << errno << "]";
+	return false;
+  }
+  LOG(INFO) << "send acknowledgement to the upper socket: ("<< upper_passwd <<")" << std::endl;
+  WaitingForNotification(sock_fd);
+#endif
   return true;
 }
 
@@ -94,6 +108,7 @@ void ExchangeSender::WaitingForNotification(const int& target_socket_fd) const {
   if ((recvbytes = recv(target_socket_fd, &byte, sizeof(char), 0)) == -1) {
     LOG(ERROR) << "recv error!" << std::endl;
   }
+  LOG(INFO) << "wait for connection acknowledge notification:" << byte;
 }
 
 void ExchangeSender::WaitingForCloseNotification(
@@ -101,9 +116,11 @@ void ExchangeSender::WaitingForCloseNotification(
   char byte;
   int recvbytes;
   if ((recvbytes = recv(target_socket_fd, &byte, sizeof(char), 0)) == -1) {
-    LOG(ERROR) << "recv error!" << std::endl;
+    LOG(ERROR) << "sock_fd:" <<  target_socket_fd
+    		<< " recv error!";
   } else {
-    LOG(INFO) << " received close message from one merger" << endl;
+    LOG(INFO) << "sock_fd:" <<  target_socket_fd
+    		<< " received close message from one merger" << endl;
   }
   FileClose(target_socket_fd);
 }

@@ -29,9 +29,14 @@
 #ifndef LOGICAL_OPERATOR_LOGICAL_CROSS_JOIN_H_
 #define LOGICAL_OPERATOR_LOGICAL_CROSS_JOIN_H_
 
+#include <vector>
 #include "../physical_operator/physical_operator_base.h"
 #include "../common/error_define.h"
+#include "../common/expression/expr_node.h"
 #include "../logical_operator/logical_operator.h"
+#include "../sql_parser/ast_node/ast_node.h"
+
+using claims::common::ExprNode;
 
 namespace claims {
 namespace logical_operator {
@@ -43,10 +48,21 @@ class LogicalCrossJoin : public LogicalOperator {
  public:
   LogicalCrossJoin();
   LogicalCrossJoin(LogicalOperator* left_child, LogicalOperator* right_child);
+  LogicalCrossJoin(LogicalOperator* left_child, LogicalOperator* right_child,
+                   std::vector<ExprNode*> join_condi);
+
   virtual ~LogicalCrossJoin();
   PlanContext GetPlanContext();
   PhysicalOperatorBase* GetPhysicalPlan(const unsigned& blocksize);
   void Print(int level = 0) const;
+  void GetTxnInfo(QueryReq& request) const override {
+    left_child_->GetTxnInfo(request);
+    right_child_->GetTxnInfo(request);
+  }
+  void SetTxnInfo(const Query& query) override {
+    left_child_->SetTxnInfo(query);
+    right_child_->SetTxnInfo(query);
+  }
 
  protected:
   /**
@@ -97,6 +113,8 @@ class LogicalCrossJoin : public LogicalOperator {
   LogicalOperator* right_child_;
   PlanContext* plan_context_;
   JoinPolicy join_policy_;
+
+  std::vector<ExprNode*> join_condi_;
 };
 }  // namespace logical_operator
 }  // namespace claims

@@ -5,7 +5,7 @@
 %parse-param { struct ParseResult* result}
 %glr-parser
 %expect 4
-%expect-rr 61
+%expect-rr 62
 %defines
 %{
 #include <stdlib.h>
@@ -15,6 +15,9 @@
 #include <string>
 #include <stdio.h>
 #include <malloc.h>
+#include <boost/format.hpp>
+#include <boost/tokenizer.hpp>
+#include <boost/algorithm/string.hpp>
 #include <vector>
 using namespace std;
 #include "../ast_node/ast_node.h"
@@ -26,6 +29,8 @@ using namespace std;
 #include "../ast_node/ast_load_stmt.h"
 #include "../ast_node/ast_show_stmt.h"
 #include "../ast_node/ast_delete_stmt.h"
+#include "../ast_node/ast_desc_stmt.h"
+#include "../ast_node/ast_update_stmt.h"
 
 void yyerror(struct ParseResult *pp,const char *s, ...);
 void emit(char *s, ...);
@@ -154,6 +159,7 @@ should replace YYLEX with the following clause in sql.tab.cpp, why so? I don't k
 %token FORCE
 %token FOREIGN
 %token FROM
+%token FULL
 %token FULLTEXT
 %token GRANT
 %token GROUP
@@ -376,7 +382,7 @@ should replace YYLEX with the following clause in sql.tab.cpp, why so? I don't k
 %token HASH
 %token BDB
 %token OPEN
-%token FULL
+
 
 %token FSUBSTRING
 %token FTRIM
@@ -393,7 +399,7 @@ should replace YYLEX with the following clause in sql.tab.cpp, why so? I don't k
 %token FMAX
 
 
-%type <intval> select_opts opt_with_rollup opt_asc_desc opt_inner_cross left_or_right 
+%type <intval> select_opts opt_with_rollup opt_asc_desc opt_inner_cross left_right_full 
 %type <intval> opt_left_or_right_outer opt_outer  
 %type <ast_node> stmt_list  select_expr_list
 %type <ast_node>  opt_where select_stmt stmt opt_groupby select_expr
@@ -417,6 +423,7 @@ should replace YYLEX with the following clause in sql.tab.cpp, why so? I don't k
 %type <ast_node> opt_col_names enum_list opt_length
 %type <ast_node> column_atts data_type load_table_stmt
 %type <ast_node> delete_opts delete_list delete_stmt
+%type <ast_node> update_stmt update_set_list
 
 
 %type <intval> opt_if_exists opt_if_not_exists opt_ignore_replace
@@ -597,6 +604,7 @@ outer 4
 left 8
 right 16
 nature 32
+full 64
 straight_join -1
 */
 
@@ -604,7 +612,7 @@ join_table:
 	table_reference opt_inner_cross JOIN table_factor opt_join_condition		{ $$ = new AstJoin(AST_JOIN, $2, $1, $4, $5);}
 	| table_reference STRAIGHT_JOIN table_factor 								{ $$ = new AstJoin(AST_JOIN, -1, $1, $3, NULL);}
 	| table_reference STRAIGHT_JOIN table_factor ON expr  						{ $$ = new AstJoin(AST_JOIN, -1, $1, $3, $5);}
-  	| table_reference left_or_right opt_outer JOIN table_factor join_condition	{ $$ = new AstJoin(AST_JOIN, $2 + $3, $1, $5, $6);}
+  	| table_reference left_right_full opt_outer JOIN table_factor join_condition	{ $$ = new AstJoin(AST_JOIN, $2 + $3, $1, $5, $6);}
   	| table_reference NATURAL opt_left_or_right_outer JOIN table_factor			{ $$ = new AstJoin(AST_JOIN, 32 + $3, $1, $5, NULL);}
   	;
 
@@ -617,14 +625,16 @@ opt_outer:			{ $$ = 4; }
 	| OUTER			{ $$ = 4; }
    	;
 
-left_or_right: 
+left_right_full: 
 	LEFT			{ $$ = 8; }
     | RIGHT 		{ $$ = 16; }
+    | FULL          { $$ = 64; }
     ;
 
 opt_left_or_right_outer:
 	  LEFT opt_outer	{ $$ = 8 + $2; }
-	| RIGHT opt_outer  	{ $$ = 16 + $2; }
+	| RIGHT opt_outer  	{ $$ = 16 + $2;}
+	| FULL opt_outer    { $$ = 64 + $2;}
 	| /* nil */ 		{ $$ = 0; }
 	;
 
@@ -990,13 +1000,13 @@ stmt: load_table_stmt	                    { $$ = $1;}
 load_table_stmt: LOAD TABLE NAME FROM expr_list WITH STRING ',' STRING SAMPLE COMPARISON APPROXNUM
 		{
 		  if ($11 != 4) { yyerror(result,"please give a specific number"); } 
-		  else {$$ = new AstLoadTable(AST_LOAD_TABLE, string($3), $5, string($7), string($9), atof($12), 0);}
+		  else {$$ = new AstLoadTable(AST_LOAD_TABLE, string($3), $5, string($7), string($9), atof($12), 1);}
 		}
-	| LOAD TABLE NAME FROM expr_list WITH STRING ',' STRING { $$ = new AstLoadTable(AST_LOAD_TABLE, string($3), $5, string($7), string($9), 1.0, 0);}
-	| APPEND TABLE NAME FROM expr_list WITH STRING ',' STRING { $$ = new AstLoadTable(AST_LOAD_TABLE, string($3), $5, string($7), string($9), 1.0, 1);}
+	| LOAD TABLE NAME FROM expr_list WITH STRING ',' STRING { $$ = new AstLoadTable(AST_LOAD_TABLE, string($3), $5, string($7), string($9), 1.0, 1);}
+	| APPEND TABLE NAME FROM expr_list WITH STRING ',' STRING { $$ = new AstLoadTable(AST_LOAD_TABLE, string($3), $5, string($7), string($9), 1.0, 2);}
 	| APPEND TABLE NAME FROM expr_list WITH STRING ',' STRING SAMPLE COMPARISON APPROXNUM 
 		{ if ($11 != 4) { yyerror(result,"please give a specific number"); } 
-		 else {$$ = new AstLoadTable(AST_LOAD_TABLE, string($3), $5, string($7), string($9), atof($12), 1);}
+		 else {$$ = new AstLoadTable(AST_LOAD_TABLE, string($3), $5, string($7), string($9), atof($12), 2);}
 		}
 	;
 
@@ -1134,8 +1144,8 @@ show_stmt: SHOW opt_full TABLES opt_from opt_like_string	{ $$ = new AstShowStmt(
    | SHOW WARNINGS opt_limit									{ $$ = NULL; }
    | SHOW expr WARNINGS /* expr = COUNT(*) */					{ $$ = NULL; }
    ;
-opt_full: /* nil */	{ $$ = 0; }
-   | FULL	{ $$ = 1; }
+   opt_full: /* nil */	{ $$ = 0; }
+   /* | FULL	{ $$ = 1; }*/
    ;
    
 opt_from: /* nil */	{ $$ = NULL; }
@@ -1157,6 +1167,9 @@ opt_trans_level: /* nil */	{ $$ = 0; }
    | GLOBAL					{ $$ = 1; }
    | SESSION				{ $$ = 2; }
    ;
+   /* description clause*/
+stmt: DESC NAME { $$ = new AstDescStmt(AST_DESC_STMT, $2); }
+    ;
    
 stmt: delete_stmt { $$ = $1; }
 	;
@@ -1188,12 +1201,22 @@ delete_list: NAME opt_dot_star {  }
 opt_dot_star: /* nil */ 
    | '.' '*' 
    ;
-   
+
+stmt: update_stmt { $$ = $1; }
+   ;
+
+update_stmt: UPDATE table_factor SET update_set_list opt_where { $$ = new AstUpdateStmt(AST_UPDATE_STMT, $4, $2, $5); }
+   ;
+
+update_set_list: expr COMPARISON expr { $$ = new AstUpdateSetList(AST_UPDATE_SET_LIST, $1, $3, NULL); }
+   | update_set_list ',' expr COMPARISON expr { $$ = new AstUpdateSetList(AST_UPDATE_SET_LIST, $3, $5, $1); }
+   ;
+
 %%
 
 void emit(char *s, ...)
 {
- 	/* 
+ 	/*
  	extern int yylineno;
 	va_list ap;
   	va_start(ap, s);
@@ -1203,15 +1226,87 @@ void emit(char *s, ...)
   	*/
 }
 
-void yyerror(struct ParseResult *pp,const char *  s, ...)
-{
-	/*  
-	va_list ap;
-	va_start(ap, s);	
-	fprintf(stderr, "%d: error: ", yyget_lineno(pp->yyscan_info_));
-	vfprintf(stderr, s, ap);
-	fprintf(stderr, "\n");
-	*/
-	fprintf (stderr, "%s\n", s);
+void yyerror(struct ParseResult *pp,const char *  s, ...) {
+  va_list ap;
+  va_start(ap, s);
+  string sql_clause = pp->sql_clause;
+  vector<string> tokens;
+  boost::split(tokens, sql_clause, boost::is_any_of("\n"));
+  ostringstream ostr;
+  int columnno = 0;
+  int lineno = yyget_lineno(pp->yyscan_info_);
+  lineno = lineno % tokens.size();
+  lineno++;
+  // Because find() can only find the first place where the word appears,
+  // so this method may not find the certain place.
+  /*
+  for (int i = 0; i < tokens.size(); i++) {
+    columnno = tokens[i].find(yyget_text(pp->yyscan_info_)) + 1;
+    if (-1 != columnno && ((lineno - 1) == i)) {
+      cout << "In clause \'"
+           << "\e[1m" << tokens[i] << "\e[0m\'" << endl;
+      for (int j = 0; j < (columnno + 9); j++) {
+        cout << ".";
+      }
+      cout << "^" << endl;
+      ostr << "In clause \'"
+           << "\e[1m" << tokens[i] << "\e[0m\'" << endl;
+      for (int j = 0; j < (columnno + 9); j++) {
+        ostr << ".";
+      }
+      ostr << "^" << endl;
+      break;
+    }
+  }
+  */
+  string wrong_clause = tokens[lineno - 1];
+  vector<string> words_in_clause;
+  boost::split(words_in_clause, tokens[lineno - 1], boost::is_any_of(" "));
+  int yyget_col_no = yyget_column(pp->yyscan_info_);
+  if (yyget_col_no == 0) {
+    yyget_col_no = 1;
+  }
+  cout << "yyget_col_no = " << yyget_col_no << endl;
+  int column_num = 1;
+  for (int i = 0; i < words_in_clause.size(); i++) {
+    if (i == (yyget_col_no - 1)) {
+      cout << "In clause \'"
+           << "\e[1m" << tokens[lineno - 1] << "\e[0m\'" << endl;
+      ostr << "In clause \'"
+           << "\e[1m" << tokens[lineno - 1] << "\e[0m\'" << endl;
+      for (int j = 0; j < (column_num + 10); j++) {
+        ostr << ".";
+        cout << ".";
+      }
+      cout << "^" << endl;
+      ostr << "^" << endl;
+
+      break;
+    } else {
+      column_num = column_num + words_in_clause[i].size() + 1;
+    }
+  }
+  ostr << "SQL syntax error at \e[1mline: " << lineno << ","
+       << "\e[0m near \'\e[1m";
+  ostr << yyget_text(pp->yyscan_info_);
+  // ostr << "\e[1mLINE: " << lineno << "," << columnno << "\e[0m error: ";
+  // ostr << "near \'\e[1m";
+  // ostr << yyget_text(pp->yyscan_info_);
+  ostr << "\e[0m\'." << endl;
+  pp->error_info_ = ostr.str();
+  cout << "SQL syntax error at \e[1mline: " << lineno << ","
+       << "\e[0m near \'\e[1m";
+  cout << yyget_text(pp->yyscan_info_);
+  cout << "\e[0m\'." << endl;
+  /*
+  cout << "\e[1mLINE: " << lineno << "\e[0m error: ";
+  cout << "near \'\e[1m";
+  cout << yyget_text(pp->yyscan_info_);
+  cout << "\e[0m\'." << endl;
+  */
+  yyset_column(0, pp->yyscan_info_);
+
+  vfprintf(stderr, s, ap);
+  fprintf(stderr, "\n");
 }
 

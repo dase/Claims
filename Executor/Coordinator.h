@@ -22,34 +22,36 @@
 #include "../common/Logging.h"
 
 class Coordinator {
-public:
-	Coordinator();
-	virtual ~Coordinator();
-private:
-	bool PrepareTheSocket();
-	bool SetupTheTheron();
-	bool CreateListeningThread();
-	bool SendReadyNotificationToNewNode(int socket_new_node);
+ public:
+  Coordinator();
+  virtual ~Coordinator();
 
-	bool SendCoordinatorEndPointPort(int socket_new_node);
-	static void* ListeningNewNode(void * arg);
-private:
-	int socket_fd;
-	Theron::EndPoint* endpoint;
-	Theron::Framework* framework;
-	std::string EndPointPort;
-	std::vector<std::pair<std::string,std::string> > PeersIpPort;
-	Logging* logging;
-	pthread_t prochaseId;
-/**
- * Actor
- */
-///////////////////////////////////////////////////////////////////////
-public:
-	class CoordinateActor:public Theron::Actor{
-	public:
-		CoordinateActor(Theron::Framework *framework, const char* Name);
-	};
+ private:
+  bool PrepareTheSocket();
+  bool SetupTheTheron();
+  bool CreateListeningThread();
+  bool SendReadyNotificationToNewNode(int socket_new_node, char signal);
+
+  bool SendCoordinatorEndPointPort(int socket_new_node);
+  static void* ListeningNewNode(void* arg);
+
+ private:
+  int socket_fd;
+  Theron::EndPoint* endpoint;
+  Theron::Framework* framework;
+  std::string EndPointPort;
+  std::vector<std::pair<std::string, std::string> > PeersIpPort;
+  Logging* logging;
+  pthread_t prochaseId;
+  /**
+   * Actor
+   */
+  ///////////////////////////////////////////////////////////////////////
+ public:
+  class CoordinateActor : public Theron::Actor {
+   public:
+    CoordinateActor(Theron::Framework* framework, const char* Name);
+  };
 };
 
 #endif /* COORDINATOR_H_ */

@@ -185,6 +185,32 @@ bool Partitioner::allPartitionBound() const {
   return true;
 }
 
+void Partitioner::addPartitionCardinality(unsigned partition_index,
+                                          unsigned long value) {
+  partition_info_list[partition_index]->number_of_tuples_ += value;
+}
+
+void Partitioner::addPartitionBlocks(unsigned partition_index, unsigned value) {
+  partition_info_list[partition_index]->number_of_blocks += value;
+}
+
+void Partitioner::addPartitionChunks(unsigned partition_index, unsigned value) {
+  partition_info_list[partition_index]->number_of_blocks += value * 1024;
+}
+
+void Partitioner::setPartitionCardinality(unsigned partition_index,
+                                          unsigned long value) {
+  partition_info_list[partition_index]->number_of_tuples_ = value;
+}
+
+void Partitioner::setPartitionBlocks(unsigned partition_index, unsigned value) {
+  partition_info_list[partition_index]->number_of_blocks = value;
+}
+
+void Partitioner::setPartitionChunks(unsigned partition_index, unsigned value) {
+  partition_info_list[partition_index]->number_of_blocks = value * 1024;
+}
+
 vector<PartitionID> Partitioner::getPartitionIDList() {
   vector<PartitionID> ret;
   ret.clear();

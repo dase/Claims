@@ -1,10 +1,9 @@
 AM_CPPFLAGS= -fPIC -fpermissive\
--I${HADOOP_HOME}/src/c++/libhdfs\
+-I${HADOOP_HOME}/include\
 -I${JAVA_HOME}/include\
 -I${JAVA_HOME}/include/linux \
 -I${BOOST_HOME} \
 -I${BOOST_HOME}/boost/serialization \
--I${THERON_HOME}/Include \
 -I${GTEST_HOME}/include
 
 AM_LDFLAGS=-lc -lm -lrt -lboost_serialization -lxs -lpthread  -lglog
@@ -26,18 +25,19 @@ LDADD =	../../Executor/libexecutor.a \
 		../../utility/libutility.a \
 		/usr/local/lib/libglog.a	\
 		/usr/local/lib/libglog.so	\
-		${HADOOP_HOME}/c++/Linux-amd64-64/lib/libhdfs.a\
+		${HADOOP_HOME}/lib/native/libhdfs.a\
 		${JAVA_HOME}/jre/lib/amd64/server/libjvm.so\
 		${BOOST_HOME}/stage/lib/libboost_serialization.a \
 		${BOOST_HOME}/stage/lib/libboost_serialization.so \
-		${THERON_HOME}/Lib/libtherond.a  \
 		${GTEST_HOME}/libgtest.a
 
 
 noinst_LIBRARIES=libast_node.a
 
 libast_node_a_SOURCES = \
-    ast_delete_stmt.cpp          ast_delete.h  \
+    ast_desc_stmt.cpp           ast_desc_stmt.h \
+    ast_delete_stmt.cpp          ast_delete_stmt.h  \
+    ast_update_stmt.cpp          ast_update_stmt.h  \
 	ast_show_stmt.cpp           ast_show_stmt.h \
 	ast_select_stmt.cpp			ast_select_stmt.h \
 	ast_create_stmt.cpp			ast_create_stmt.h \

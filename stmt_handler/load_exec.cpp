@@ -31,9 +31,9 @@
 #include <string>
 #include "../stmt_handler/load_exec.h"
 #include "../Environment.h"
-#include "../loader/data_injector.h"
+#include "../loader/data_ingestion.h"
 using std::vector;
-using claims::loader::DataInjector;
+using claims::loader::DataIngestion;
 namespace claims {
 namespace stmt_handler {
 #define NEWRESULT
@@ -119,9 +119,11 @@ RetCode LoadExec::Execute(ExecutedResult *exec_result) {
   GETCURRENTTIME(start_time);
 // LOG(INFO) << buf << std::endl;
 #ifdef NEW_LOADER
-  DataInjector *injector =
-      new DataInjector(table, column_separator, tuple_separator);
-  ret = injector->LoadFromFile(path_names,
+
+  DataIngestion *injestion =
+      new DataIngestion(table, column_separator, tuple_separator);
+  ret = injestion->LoadFromFile(path_names,
+ 
                                static_cast<FileOpenFlag>(load_ast_->mode_),
                                exec_result, load_ast_->sample_);
   double load_time_ms = GetElapsedTime(start_time);
@@ -140,7 +142,7 @@ RetCode LoadExec::Execute(ExecutedResult *exec_result) {
     oss << "load data successfully (" << load_time_ms / 1000.0 << " sec) ";
     exec_result->SetResult(oss.str(), NULL);
   }
-  DELETE_PTR(injector);
+  DELETE_PTR(injestion);
 #else
   Hdfsloader *loader =
       new Hdfsloader(column_separator[0], tuple_separator[0], path_names, table,

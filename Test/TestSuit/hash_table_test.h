@@ -13,15 +13,12 @@
 #include "../../common/ids.h"
 #include "../../common/hash.h"
 #include "../../common/Block/BlockStreamBuffer.h"
-<<<<<<< HEAD
-#include "../../Catalog/Column.h"
-=======
 
-#include "../../catalog/Column.h"
+#include "../../catalog/column.h"
 
->>>>>>> FETCH_HEAD
 #include "../../physical_operator/physical_operator_base.h"
 #include "../../storage/PartitionStorage.h"
+#include "../../storage/PartitionReaderIterator.h"
 #include "../../storage/BlockManager.h"
 
 #define block_size (1024 * 1024)
@@ -167,55 +164,56 @@ static void startup_catalog() {
                                              1);  // G1
 
     catalog->add_table(table_2);
-    for (unsigned i = 0; i < table_1->getProjectoin(0)
+    for (unsigned i = 0; i < table_1->getProjection(0)
                                  ->getPartitioner()
                                  ->getNumberOfPartitions();
          i++) {
       catalog->getTable(0)
-          ->getProjectoin(0)
+          ->getProjection(0)
           ->getPartitioner()
           ->RegisterPartition(i, 2);
     }
 
-    for (unsigned i = 0; i < table_1->getProjectoin(1)
+    for (unsigned i = 0; i < table_1->getProjection(1)
                                  ->getPartitioner()
                                  ->getNumberOfPartitions();
          i++) {
       catalog->getTable(0)
-          ->getProjectoin(1)
+          ->getProjection(1)
           ->getPartitioner()
           ->RegisterPartition(i, 6);
     }
 
     // sb_table
-    for (unsigned i = 0; i < table_2->getProjectoin(0)
+    for (unsigned i = 0; i < table_2->getProjection(0)
                                  ->getPartitioner()
                                  ->getNumberOfPartitions();
          i++) {
       catalog->getTable(1)
-          ->getProjectoin(0)
+          ->getProjection(0)
           ->getPartitioner()
           ->RegisterPartition(i, 2);
     }
 
-    for (unsigned i = 0; i < table_2->getProjectoin(1)
+    for (unsigned i = 0; i < table_2->getProjection(1)
                                  ->getPartitioner()
                                  ->getNumberOfPartitions();
          i++) {
       catalog->getTable(1)
-          ->getProjectoin(1)
+          ->getProjection(1)
           ->getPartitioner()
           ->RegisterPartition(i, 6);
     }
   }
 }
+
 struct Arg {
   BlockStreamBuffer* buffer;
   BasicHashTable** hash_table;
   Schema* schema;
   PartitionFunction* hash;
   PhysicalOperatorBase* iterator;
-  PartitionStorage::PartitionReaderItetaor* partition_reader;
+  PartitionReaderIterator* partition_reader;
   Barrier* barrier;
   unsigned tid;
 };
@@ -231,7 +229,7 @@ void* insert_into_hash_table_from_projection(void* argment) {
     const unsigned bucketsize = 256 - 8;
     TableDescriptor* table =
         Environment::getInstance()->getCatalog()->getTable("sb");
-    Schema* schema = table->getProjectoin(1)->getSchema();
+    Schema* schema = table->getProjection(1)->getSchema();
     *arg.hash_table =
         generate_hashtable(schema->getTupleMaxSize(), nbuckets, bucketsize);
   }
@@ -245,7 +243,7 @@ void* insert_into_hash_table_from_projection(void* argment) {
   unsigned nbuckets = arg.hash->getNumberOfPartitions();
   unsigned long long int start = curtick();
   printf("tuple length=%d\n", arg.schema->getTupleMaxSize());
-  while (arg.partition_reader->nextBlock(fetched_block)) {
+  while (arg.partition_reader->NextBlock(fetched_block)) {
     void* tuple;
     BlockStreamBase::BlockStreamTraverseIterator* it =
         fetched_block->createIterator();
@@ -289,17 +287,17 @@ static double projection_scan(unsigned degree_of_parallelism) {
   printf("nthread=%d\n", nthreads);
   TableDescriptor* table =
       Environment::getInstance()->getCatalog()->getTable("sb");
-  Schema* schema = table->getProjectoin(1)->getSchema();
+  Schema* schema = table->getProjection(1)->getSchema();
   //	BasicHashTable*
   // hashtable=generate_hashtable(schema->getTupleMaxSize(),nbuckets,bucketsize);
 
-  LogicalScan* scan = new LogicalScan(table->getProjectoin(1));
+  LogicalScan* scan = new LogicalScan(table->getProjection(1));
   scan->GetPlanContext();
   PhysicalOperatorBase* warm_up_iterator = scan->GetPhysicalPlan(1024 * 64);
 
   PhysicalProjectionScan::State ps_state;
   ps_state.block_size_ = 1024 * 64;
-  ps_state.projection_id_ = table->getProjectoin(1)->getProjectionID();
+  ps_state.projection_id_ = table->getProjection(1)->getProjectionID();
   ps_state.schema_ = schema;
 
   BlockStreamBase* block_for_asking =
@@ -315,9 +313,9 @@ static double projection_scan(unsigned degree_of_parallelism) {
   //	arg.hash_table=hashtable;
   arg.schema = schema;
   arg.partition_reader = BlockManager::getInstance()
-                             ->getPartitionHandle(PartitionID(
-                                 table->getProjectoin(1)->getProjectionID(), 0))
-                             ->createAtomicReaderIterator();
+                             ->GetPartitionHandle(PartitionID(
+                                 table->getProjection(1)->getProjectionID(), 0))
+                             ->CreateAtomicReaderIterator();
   arg.barrier = new Barrier(nthreads);
   pthread_t pid[1000];
   unsigned long long int start = curtick();

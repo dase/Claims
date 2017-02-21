@@ -26,13 +26,98 @@
  *
  */
 
-#include "validity.h"
+#include "./validity.h"
+#include <string>
+#include "../catalog/table.h"
 
+using claims::catalog::TableDescriptor;
+using namespace claims::common;  // NOLINT
 namespace claims {
 namespace loader {
 
-Validity::~Validity() {
-  // TODO Auto-generated destructor stub
+Validity::~Validity() {}
+
+string Validity::GenerateDataValidityInfo(const Validity& vali,
+                                          const TableDescriptor* table,
+                                          int line, const string& file) {
+  ostringstream oss;
+  oss.clear();
+  switch (vali.check_res_) {
+    case rTooLargeData: {
+      oss << "Data larger than range value for column '"
+          << table->getAttribute(vali.column_index_).attrName
+          << "' at line: " << line;
+      if ("" != file) oss << " in file: " << file;
+      oss << "\n";
+      break;
+    }
+    case rTooSmallData: {
+      oss << "Data smaller than range value for column '"
+          << table->getAttribute(vali.column_index_).attrName
+          << "' at line: " << line;
+      if ("" != file) oss << " in file: " << file;
+      oss << "\n";
+      break;
+    }
+    case rInterruptedData: {
+      oss << "Data truncated from non-digit for column '"
+          << table->getAttribute(vali.column_index_).attrName
+          << "' at line: " << line;
+      if ("" != file) oss << " in file: " << file;
+      oss << "\n";
+      break;
+    }
+    case rTooLongData: {
+      oss << "Data truncated for column '"
+          << table->getAttribute(vali.column_index_).attrName
+          << "' at line: " << line;
+      if ("" != file) oss << " in file: " << file;
+      oss << "\n";
+      break;
+    }
+    case rIncorrectData: {
+      oss << "Incorrect format value for column '"
+          << table->getAttribute(vali.column_index_).attrName
+          << "' at line: " << line;
+      if ("" != file) oss << " in file: " << file;
+      oss << "\n";
+      break;
+    }
+    case rInvalidNullData: {
+      oss << "Null Data value is invalid for column '"
+          << table->getAttribute(vali.column_index_).attrName
+          << "' at line: " << line;
+      if ("" != file) oss << " in file: " << file;
+      oss << "\n";
+      break;
+    }
+    case rTooFewColumn: {
+      oss << "Line: " << line;
+      if ("" != file) oss << " in file: " << file;
+      oss << " doesn't contain data for all columns\n";
+      break;
+    }
+    case rTooManyColumn: {
+      oss << "Line: " << line;
+      if ("" != file) oss << " in file: " << file;
+      oss << " was truncated; it contained more data than there were "
+             "input columns\n";
+      break;
+    }
+    case rInvalidInsertData: {
+      oss << "Data value is invalid for column '"
+          << table->getAttribute(vali.column_index_).attrName
+          << "' at line: " << line;
+      if ("" != file) oss << " in file: " << file;
+      oss << "\n";
+      break;
+    }
+    default:
+      LOG(ERROR) << "Unknown ERROR" << endl;
+      oss << "Unknown ERROR\n";
+      break;
+  }
+  return oss.str();
 }
 
 } /* namespace loader */

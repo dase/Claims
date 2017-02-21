@@ -2,8 +2,7 @@
 AM_CPPFLAGS= -fPIC -fpermissive\
 -I${BOOST_HOME} \
 -I${BOOST_HOME}/boost/serialization \
--I${THERON_HOME}/Include \
--I${HADOOP_HOME}/src/c++/libhdfs\
+-I${HADOOP_HOME}/include\
 -I${JAVA_HOME}/include\
 -I${JAVA_HOME}/include/linux
 
@@ -21,11 +20,10 @@ LDADD =	../BlockStreamIterator/libblockstreamiterator.a \
 		../common/libcommon.a \
 		../common/Schema/libschema.a \
 		../common/Block/libblock.a \
-		${HADOOP_HOME}/c++/Linux-amd64-64/lib/libhdfs.a\
+		${HADOOP_HOME}/lib/native/libhdfs.a\
 		${JAVA_HOME}/jre/lib/amd64/server/libjvm.so\
 		${BOOST_HOME}/stage/lib/libboost_serialization.a \
-		${BOOST_HOME}/stage/lib/libboost_serialization.so \
-		${THERON_HOME}/Lib/libtherond.a 
+		${BOOST_HOME}/stage/lib/libboost_serialization.so 
 
 noinst_LIBRARIES=libindexmanager.a
 libindexmanager_a_SOURCES = \

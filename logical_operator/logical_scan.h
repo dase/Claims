@@ -35,6 +35,7 @@
 #include "../catalog/attribute.h"
 #include "../catalog/table.h"
 #include "../logical_operator/logical_operator.h"
+#include "../logical_operator/plan_context.h"
 #include "../physical_operator/physical_operator_base.h"
 
 namespace claims {
@@ -52,7 +53,7 @@ class LogicalScan : public LogicalOperator {
   LogicalScan(std::vector<Attribute> attribute_list);
   LogicalScan(const TableID&);
   LogicalScan(ProjectionDescriptor* projection, const float sample_rate_ = 1);
-  LogicalScan(ProjectionDescriptor* projection, const string table_alias,
+  LogicalScan(ProjectionDescriptor* const projection, string table_alias,
               const float sample_rate_ = 1);
 
   LogicalScan(const TableID&,
@@ -64,6 +65,19 @@ class LogicalScan : public LogicalOperator {
                               PhysicalPlanDescriptor& physical_plan_descriptor,
                               const unsigned& kBlock_size = 4096 * 1024);
   void ChangeAliasAttr();
+  void GetTxnInfo(QueryReq& request) const override {
+    auto table_id = target_projection_->getProjectionID().table_id;
+    auto proj_id = target_projection_->getProjectionID().projection_off;
+    auto part_count =
+        target_projection_->getPartitioner()->getNumberOfPartitions();
+    for (auto part_id = 0; part_id < part_count; part_id++) {
+      request.part_list_.push_back(GetGlobalPartId(table_id, proj_id, part_id));
+    }
+  }
+  void SetTxnInfo(const Query& query) override {
+    query_ = query;
+    query_.GenTxnInfo();
+  }
 
  private:
   /**check whether all the involved attributes are in the same projection.*/
@@ -76,6 +90,7 @@ class LogicalScan : public LogicalOperator {
   PlanContext* plan_context_;
   string table_alias_;
   float sample_rate_;
+  Query query_;
 };
 
 }  // namespace logical_operator
