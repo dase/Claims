@@ -43,12 +43,10 @@ TableDescriptor::TableDescriptor() {}
 
 TableDescriptor::TableDescriptor(const string& name, const TableID table_id)
     : tableName(name), table_id_(table_id), row_number_(0) {
-  write_connector_ = new TableFileConnector(
-      Config::local_disk_mode ? FilePlatform::kDisk : FilePlatform::kHdfs, this,
-      common::kAppendFile);
+  InitConnector();
 }
 
-TableDescriptor::~TableDescriptor() {}
+TableDescriptor::~TableDescriptor() { DELETE_PTR(write_connector_); }
 
 void TableDescriptor::addAttribute(Attribute attr) {
   LockGuard<SpineLock> guard(update_lock_);
@@ -222,6 +220,14 @@ Schema* TableDescriptor::getSchema() const {
     columns.push_back(*(attributes[i].attrType));
   }
   return new SchemaFix(columns);
+}
+
+void TableDescriptor::InitConnector() {
+  if (NULL == write_connector_) {
+    write_connector_ = new TableFileConnector(
+        Config::local_disk_mode ? FilePlatform::kDisk : FilePlatform::kHdfs,
+        this, common::kAppendFile);
+  }
 }
 
 } /* namespace catalog */

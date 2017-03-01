@@ -8,6 +8,7 @@
 #ifndef RESOURCEMANAGERSLAVE_H_
 #define RESOURCEMANAGERSLAVE_H_
 #include "../common/Message.h"
+#include "../Resource/NodeTracker.h"
 #include "CPUResource.h"
 typedef int NodeID;
 /*
@@ -20,6 +21,8 @@ class InstanceResourceManager {
   virtual ~InstanceResourceManager();
   void ReportStorageBudget(StorageBudgetMessage&);
   void setStorageBudget(unsigned long memory, unsigned long disk);
+
+  NodeID Register();
 
  private:
   CPUResourceManager cpu_resource_;

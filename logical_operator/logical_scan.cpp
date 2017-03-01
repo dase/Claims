@@ -210,6 +210,7 @@ PhysicalOperatorBase* LogicalScan::GetPhysicalPlan(const unsigned& block_size) {
   state.projection_id_ = target_projection_->getProjectionID();
   state.schema_ = GetSchema(plan_context_->attribute_list_);
   state.sample_rate_ = sample_rate_;
+  state.query_ = query_;
   return new PhysicalProjectionScan(state);
 }
 

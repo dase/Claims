@@ -95,6 +95,13 @@ class LogicalAggregation : public LogicalOperator {
                      LogicalOperator* child);
   virtual ~LogicalAggregation();
 
+  void GetTxnInfo(QueryReq& request) const override {
+    child_->GetTxnInfo(request);
+  }
+  void SetTxnInfo(const Query& query) override  {
+    child_->SetTxnInfo(query);
+  }
+
  protected:
   /**
    * get plan context resulting from executing aggregation operator.

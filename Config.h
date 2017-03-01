@@ -80,6 +80,22 @@ class Config {
   static int memory_utilization;
 
   static int load_thread_num;
+  static bool is_master_loader;
+  static std::string master_loader_ip;
+  static int master_loader_port;
+  static std::string amq_url;
+  static std::string amq_topic;
+
+  static bool enable_txn_server;
+  static int txn_server_cores;
+  static std::string txn_server_ip;
+  static int txn_server_port;
+
+  static bool enable_txn_log;
+  static std::string txn_log_path;
+
+  static int master_loader_thread_num;
+  static int slave_loader_thread_num;
 
  private:
   static Config* instance_;

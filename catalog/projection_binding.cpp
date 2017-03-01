@@ -35,6 +35,12 @@
 #include <vector>
 #include "../Environment.h"
 #include "../utility/maths.h"
+#include "caf/io/all.hpp"
+
+#include "../Config.h"
+#include "../loader/load_packet.h"
+using caf::io::remote_actor;
+using claims::loader::BindPartAtom;
 
 namespace claims {
 namespace catalog {
@@ -142,8 +148,35 @@ bool ProjectionBinding::BindingEntireProjection(
       const unsigned number_of_chunks = part->getPartitionChunks(partition_off);
       BlockManagerMaster::getInstance()->SendBindingMessage(
           partition_id, number_of_chunks, desriable_storage_level, node_id);
+
       /* update the information in Catalog*/
       part->bindPartitionToNode(partition_off, node_id);
+ 
+
+      /* notify the master loader the binding info*/
+      DLOG(INFO) << "going to send node info to (" << Config::master_loader_ip
+                 << ":" << Config::master_loader_port << ")";
+      int retry_max_time = 10;
+      int time = 0;
+      while (1) {
+        try {
+          caf::actor master_actor = remote_actor(Config::master_loader_ip,
+                                                 Config::master_loader_port);
+          caf::scoped_actor self;
+          self->sync_send(master_actor, BindPartAtom::value, partition_id,
+                          node_id).await([&](int r) {
+            LOG(INFO) << "sent bind part info and received response";
+          });
+          break;
+        } catch (exception& e) {
+          cout << "new remote actor " << Config::master_loader_ip << ","
+               << Config::master_loader_port << "failed for " << ++time
+               << " time. " << e.what() << endl;
+          usleep(100 * 1000);
+          if (time >= retry_max_time) return false;
+        }
+      }
+ 
     }
 
     lock_.release();

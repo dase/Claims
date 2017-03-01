@@ -46,7 +46,7 @@
 using claims::common::rNoPartitionIdScan;
 using claims::common::rSuccess;
 using claims::common::rCodegenFailed;
-
+using claims::txn::GetGlobalPartId;
 namespace claims {
 namespace physical_operator {
 PhysicalProjectionScan::PhysicalProjectionScan(State state)
@@ -102,8 +102,24 @@ bool PhysicalProjectionScan::Open(SegmentExecStatus* const exec_status,
                         .c_str() << CStrError(rNoPartitionIdScan) << std::endl;
       SetReturnStatus(false);
     } else {
-      partition_reader_iterator_ =
-          partition_handle_->CreateAtomicReaderIterator();
+      auto table_id = state_.projection_id_.table_id;
+      auto proj_id = state_.projection_id_.projection_off;
+      auto part_id = kPartitionOffset;
+      auto global_part_id = GetGlobalPartId(table_id, proj_id, part_id);
+      auto cp = state_.query_.scan_cp_list_[global_part_id];
+      //      cout << "table:" << table_id << ",proj:" << proj_id
+      //           << ",part_id:" << part_id << ",cp:" << cp << endl;
+      partition_reader_iterator_ = partition_handle_->CreateTxnReaderIterator(
+          cp, state_.query_.scan_snapshot_[global_part_id]);
+      cout << "version:" << state_.query_.ts_ << ",part:" << global_part_id
+           << ",checkpoint :"
+           << "block:" << cp / BLOCK_SIZE << "," << cp % BLOCK_SIZE << endl;
+      for (auto& part : state_.query_.scan_snapshot_[global_part_id])
+        cout << "[<" << part.first / BLOCK_SIZE << ","
+             << part.first % BLOCK_SIZE << ">," << part.second << "]";
+      cout << endl;
+      //  partition_reader_iterator_ =
+      //     partition_handle_->CreateAtomicReaderIterator();
       SetReturnStatus(true);
     }
 

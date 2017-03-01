@@ -35,14 +35,14 @@
 
 #include "../common/Block/BlockStream.h"
 #include "../common/Block/ResultSet.h"
-#include "../loader/data_injector.h"
+#include "../loader/data_ingestion.h"
 #include "../catalog/table.h"
 #include "../catalog/projection.h"
 #include "../Daemon/Daemon.h"
 #include "../sql_parser/ast_node/ast_select_stmt.h"
 #include "../stmt_handler/select_exec.h"
 #include "../common/error_define.h"
-using claims::loader::DataInjector;
+using claims::loader::DataIngestion;
 using std::endl;
 using std::string;
 using std::vector;
@@ -235,7 +235,7 @@ void UpdateStmtExec::InsertUpdatedDataIntoTable(string table_name,
     return;
   }
 
-  DataInjector* injector = new DataInjector(table);
+  DataIngestion* injector = new DataIngestion(table);
   injector->InsertFromString(ostr.str(), exec_result);
   Environment::getInstance()->getCatalog()->saveCatalog();
 }

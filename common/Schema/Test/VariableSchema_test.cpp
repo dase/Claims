@@ -55,16 +55,16 @@ static int variable_schema_test() {
   catalog->add_table(table_1);
 
   for (unsigned i = 0;
-       i < table_1->getProjectoin(0)->getPartitioner()->getNumberOfPartitions();
+       i < table_1->getProjection(0)->getPartitioner()->getNumberOfPartitions();
        i++) {
-    catalog->getTable(0)->getProjectoin(0)->getPartitioner()->RegisterPartition(
+    catalog->getTable(0)->getProjection(0)->getPartitioner()->RegisterPartition(
         i, 1);
   }
 
   ProjectionBinding* pb = new ProjectionBinding();
   cout << "in ======================================" << endl;
   pb->BindingEntireProjection(
-      catalog->getTable(0)->getProjectoin(0)->getPartitioner(), HDFS);
+      catalog->getTable(0)->getProjection(0)->getPartitioner(), HDFS);
 
   cout << "in ======================================" << endl;
 
@@ -74,7 +74,7 @@ static int variable_schema_test() {
   column_list.push_back(column_type(t_double));
   column_list.push_back(column_type(t_string));
   PhysicalProjectionScan::State scan_state(
-      catalog->getTable(0)->getProjectoin(0)->getProjectionID(),
+      catalog->getTable(0)->getProjection(0)->getProjectionID(),
       new SchemaVar(column_list), 64 * 1024 - sizeof(unsigned));
   PhysicalOperatorBase* scan = new PhysicalProjectionScan(scan_state);
   //------------------------------------------------------------------

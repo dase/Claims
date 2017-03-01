@@ -27,6 +27,8 @@
  */
 
 #include "../catalog/projection.h"
+
+#include <glog/logging.h>
 #include <vector>
 #include <string>
 
@@ -77,6 +79,7 @@ bool ProjectionDescriptor::AllPartitionBound() const {
 }
 std::vector<Attribute> ProjectionDescriptor::getAttributeList() const {
   std::vector<Attribute> ret;
+  //  DLOG(INFO) << "the length of column list is:" << column_list_.size();
   for (unsigned i = 0; i < this->column_list_.size(); i++) {
     ret.push_back((Attribute)column_list_[i]);
   }

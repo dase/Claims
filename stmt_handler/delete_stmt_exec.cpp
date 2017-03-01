@@ -34,14 +34,14 @@
 
 #include "../common/Block/BlockStream.h"
 #include "../common/Block/ResultSet.h"
-#include "../loader/data_injector.h"
 #include "../catalog/table.h"
 #include "../catalog/projection.h"
 #include "../Daemon/Daemon.h"
 #include "../sql_parser/ast_node/ast_select_stmt.h"
 #include "../stmt_handler/select_exec.h"
 #include "../common/error_define.h"
-using claims::loader::DataInjector;
+#include "../loader/data_ingestion.h"
+using claims::loader::DataIngestion;
 using std::endl;
 using std::string;
 using std::vector;
@@ -265,8 +265,8 @@ void DeleteStmtExec::InsertDeletedDataIntoTableDEL(
     delete tuple_it;
   }
 
-  DataInjector* injector = new DataInjector(table_del);
-  injector->InsertFromString(ostr.str(), exec_result);
+  DataIngestion* injestion = new DataIngestion(table_del);
+  injestion->InsertFromString(ostr.str(), exec_result);
   //  HdfsLoader* Hl = new HdfsLoader(tabledel);
   //  string tmp = ostr.str();
   //  Hl->append(ostr.str());

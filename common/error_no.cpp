@@ -159,6 +159,10 @@ ErrorInit::ErrorInit() {
   DefineErrorAndMessage(rFileInUsing, "Someone is still using this file");
   DefineErrorAndMessage(rResourceIsLocked, "other hold the lock of resource");
 
+  DefineErrorAndMessage(rSentMessageError, "failed to send network message");
+  DefineErrorAndMessage(rReceiveMessageError,
+                        "failed to receive network message");
+
   // schema assocated
   DefineErrorAndMessage(rEmptyAttributeName,
                         "the given attribute associated with empty name");
@@ -212,8 +216,18 @@ ErrorInit::ErrorInit() {
   DefineErrorAndMessage(rTooFewColumn, "too few column data");
   DefineErrorAndMessage(rTooManyColumn, "too many column data");
 
+//  DefineErrorAndMessage(rLinkTmTimeout, "link to txn manager time out");
+//  DefineErrorAndMessage(rLinkTmFail,"link to txn manager failed");
+//  DefineErrorAndMessage(rBeginIngestTxnFail, "Begin ingest txn failed ");
+//  DefineErrorAndMessage(rCommitIngestTxnFail, "Commit ingest txn failed");
+//  DefineErrorAndMessage(rAbortIngestTxnFail, "Abort ingest txn failed");
+//  DefineErrorAndMessage(rBeginQueryFail, "Begin query failed");
+//  DefineErrorAndMessage(rBeginCheckpointFail, "Begin checkpoint failed");
+//  DefineErrorAndMessage(rCommitCheckpointFail, "Commit checkpoint failed");
+
   /* errorno for codegen -3001 ~ -4000 */
   DefineErrorAndMessage(rTestError, "test it is error ");
+
 
   /* errorno for logical_operator -4001~ -5000 */
   DefineErrorAndMessage(rUninitializedJoinPolicy,

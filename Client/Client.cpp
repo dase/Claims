@@ -58,7 +58,8 @@ Client::query_result Client::submit(std::string command, std::string &message,
 
   command = "#" + command;
 
-  write(m_clientFd, command.c_str(), command.length() + 1);
+  int bytes = write(m_clientFd, command.c_str(), command.length() + 1);
+  if (bytes != command.length() + 1) perror("failed to send SQL to claims");
   ClientLogging::log("Client: message from server!\n");
   const int maxBytes = 75536 + sizeof(int) * 2;
   char *buf = new char[maxBytes];

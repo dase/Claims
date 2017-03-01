@@ -16,18 +16,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * /Claims/loader/data_injector.h
+ * /Claims/loader/data_injestion.h
  *
  *  Created on: Oct 22, 2015
  *      Author: yukai
  *		   Email: yukai2014@gmail.com
  *
- * Description: class for injecting data from files or string
+ * Description: class for ingesting data from files or string
  *
  */
 
-#ifndef LOADER_DATA_INJECTOR_H_
-#define LOADER_DATA_INJECTOR_H_
+#ifndef LOADER_DATA_INGESTION_H_
+#define LOADER_DATA_INGESTION_H_
 #include <list>
 #include <vector>
 #include <string>
@@ -52,7 +52,7 @@ class ExecutedResult;
 namespace claims {
 namespace loader {
 class TableFileConnector;
-class DataInjector {
+class DataIngestion {
  public:
   struct LoadTask {
     std::string tuple_;
@@ -64,7 +64,7 @@ class DataInjector {
   };
 
  public:
-  //  DataInjector() {}
+  //  DataIngestion() {}
   /**
    * @brief Method description: get necessary info from table and init
    * connector_
@@ -72,10 +72,10 @@ class DataInjector {
    * @param col_separator: column separator
    * @param row_separator: row separator
    */
-  DataInjector(TableDescriptor* table, const string col_separator = "|",
-               const string row_separator = "\n");
+  DataIngestion(TableDescriptor* table, const string col_separator = "|",
+                const string& row_separator = "\n");
 
-  virtual ~DataInjector();
+  virtual ~DataIngestion();
 
   /**
    * @brief Method description: load/append data from multiple files into table
@@ -157,8 +157,9 @@ class DataInjector {
                            string data_source, uint64_t row_id_in_raw_data,
                            ExecutedResult* result);
 
-  string GenerateDataValidityInfo(const Validity& vali, TableDescriptor* table,
-                                  int line, const string& file);
+  //  string GenerateDataValidityInfo(const Validity& vali, TableDescriptor*
+  //  table,
+  //                                  int line, const string& file);
   void AnnounceIAmLoading();
 
   static void* HandleTuple(void* ptr);
@@ -175,11 +176,11 @@ class DataInjector {
   RetCode DestroyLocalPJBuffer(vector<vector<BlockStreamBase*>>& pj_buffer);
 
  public:
-  static istream& GetTupleTerminatedBy(ifstream& ifs, string& res,
+  static istream& GetTupleTerminatedBy(istream& ifs, string& res,
                                        const string& terminator);
 
  private:
-  TableDescriptor* table_;
+  const TableDescriptor* table_;
   TableFileConnector& connector_;
 
   Schema* table_schema_;
@@ -239,4 +240,4 @@ class DataInjector {
 } /* namespace loader */
 } /* namespace claims */
 
-#endif  // LOADER_DATA_INJECTOR_H_
+#endif  // LOADER_DATA_INGESTION_H_

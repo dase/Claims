@@ -263,11 +263,11 @@ RetCode Catalog::restoreCatalog() {
   } else if (!read_connector_->CanAccess()) {
     LOG(INFO) << "The catalog file and data file all are not existed" << endl;
     return rSuccess;
-  } else if (!IsDataFileExist()) {
+  } /* else if (!IsDataFileExist()) {
     LOG(WARNING) << "There are no data file while catalog file exists. "
                     "The catalog file will be overwrite" << endl;
     return rSuccess;
-  } else {
+  }*/ else {
     EXEC_AND_ONLY_LOG_ERROR(ret, read_connector_->Open(),
                             "failed to open catalog file: "
                                 << Config::catalog_file << " with Read mode");
@@ -354,24 +354,33 @@ void Catalog::GetAllTables(ostringstream& ostr) const {
     }
   }
 }
-vector<TableID> Catalog::GetAllTablesID()const
-{
+
+vector<TableID> Catalog::getVisibleTablesIDs() const {
   vector<TableID> table_id_list;
-  for (int id = 0; id < getTableCount(); ++id){
+  for (int id = 0; id < getTableCount(); ++id) {
     auto it_tableid_to_table = tableid_to_table.find(id);
     if (tableid_to_table.end() != it_tableid_to_table) {
       string tbname = it_tableid_to_table->second->getTableName();
       int len = tbname.length();
       if (len >= 4 && tbname.substr(len - 4, len) == "_DEL" &&
-               name_to_table.find(tbname.substr(0, len - 4)) !=
-                   name_to_table.cend()) {
-             // hide the deleted data table created by claims
-      }else{
+          name_to_table.find(tbname.substr(0, len - 4)) !=
+              name_to_table.cend()) {
+        // hide the deleted data table created by claims
+      } else {
         table_id_list.push_back(it_tableid_to_table->first);
       }
     }
   }
   return table_id_list;
 }
+
+vector<TableID> Catalog::getAllTableIDs() const {
+  vector<TableID> ids;
+  for (auto it = tableid_to_table.begin(); it != tableid_to_table.end(); it++)
+    ids.push_back(it->first);
+
+  return ids;
+}
+
 } /* namespace catalog */
 } /* namespace claims */

@@ -51,7 +51,7 @@ using claims::utility::LockGuard;
 
 namespace claims {
 namespace loader {
-class DataInjector;
+class DataIngestion;
 class TableFileConnector;
 };
 
@@ -59,7 +59,7 @@ namespace catalog {
 using claims::loader::TableFileConnector;
 class TableDescriptor {
  public:
-  friend class claims::loader::DataInjector;
+  friend class claims::loader::DataIngestion;
   friend class claims::loader::TableFileConnector;
 
  public:
@@ -216,6 +216,8 @@ class TableDescriptor {
   //  vector<vector<Lock>> partitions_write_lock_;
 
   TableFileConnector* write_connector_ = NULL;
+
+  void InitConnector();
 
   friend class boost::serialization::access;
   template <class Archive>

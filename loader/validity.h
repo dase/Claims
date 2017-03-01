@@ -28,16 +28,28 @@
 
 #ifndef LOADER_VALIDITY_H_
 #define LOADER_VALIDITY_H_
+#include <string>
+
 #include "../common/error_define.h"
 
 namespace claims {
+namespace catalog {
+class TableDescriptor;
+}
+
 namespace loader {
+using claims::catalog::TableDescriptor;
+using std::string;
 
 struct Validity {
  public:
   Validity(int column_index, RetCode check_res)
       : column_index_(column_index), check_res_(check_res) {}
   virtual ~Validity();
+
+  static string GenerateDataValidityInfo(const Validity& vali,
+                                         const TableDescriptor* table, int line,
+                                         const string& file);
 
  public:
   int column_index_;

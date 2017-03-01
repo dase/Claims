@@ -26,7 +26,15 @@
 #include "node_manager/slave_node.h"
 #include "Resource/BufferManager.h"
 
+namespace claims {
+namespace loader {
+class SlaveLoader;
+class MasterLoader;
+}
+}
 using claims::catalog::Catalog;
+using claims::loader::SlaveLoader;
+using claims::loader::MasterLoader;
 using claims::MasterNode;
 using claims::SegmentExecTracker;
 using claims::SlaveNode;
@@ -64,6 +72,9 @@ class Environment {
   StmtExecTracker* get_stmt_exec_tracker() { return stmt_exec_tracker_; }
   SegmentExecTracker* get_segment_exec_tracker() { return seg_exec_tracker_; }
 
+  MasterLoader* get_master_loader() const { return master_loader_; }
+  SlaveLoader* get_slave_loader() const { return slave_loader_; }
+
  private:
   void AnnounceCafMessage();
   void readConfigFile();
@@ -76,6 +87,14 @@ class Environment {
   void destoryClientListener();
   bool initializeThreadPool();
   void InitMembership();
+
+  bool InitLoader();
+
+  bool InitTxnManager();
+
+  bool InitTxnLog();
+
+  bool AdvancedBindAllPart();
 
  private:
   static Environment* _instance;
@@ -100,6 +119,8 @@ class Environment {
   ClientListener* listener_;
 
   ThreadPool* thread_pool_;
+  MasterLoader* master_loader_;
+  SlaveLoader* slave_loader_;
   MasterNode* master_node_;
   SlaveNode* slave_node_;
 

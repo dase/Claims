@@ -48,6 +48,8 @@
 #include "../physical_operator/physical_nest_loop_join.h"
 #include "../physical_operator/physical_operator_base.h"
 #include "../stmt_handler/stmt_handler.h"
+#include "../txn_manager/txn.hpp"
+#include "../txn_manager/txn_client.hpp"
 #include "caf/io/all.hpp"
 using caf::io::remote_actor;
 using claims::logical_operator::LogicalQueryPlanRoot;
@@ -63,6 +65,9 @@ using std::string;
 using std::cout;
 using std::make_pair;
 using claims::common::rStmtCancelled;
+using claims::txn::Query;
+using claims::txn::QueryReq;
+using claims::txn::TxnClient;
 
 namespace claims {
 namespace stmt_handler {
@@ -180,7 +185,16 @@ RetCode SelectExec::Execute() {
   logic_plan->Print();
   cout << "--------------begin physical plan -------------------" << endl;
 #endif
+  /**
+   * Add Txn information for  plan
+   */
 
+  QueryReq request;
+  Query query;
+  logic_plan->GetTxnInfo(request);
+  TxnClient::BeginQuery(request, query);
+  logic_plan->SetTxnInfo(query);
+ // cout << request.ToString() << endl;
   PhysicalOperatorBase* physical_plan = logic_plan->GetPhysicalPlan(64 * 1024);
 #ifndef PRINTCONTEXT
   physical_plan->Print();
@@ -292,7 +306,8 @@ void* SelectExec::SendAllSegments(void* arg) {
 
         LOG(INFO) << "sending plan of "
                   << select_exec->get_stmt_exec_status()->get_query_id()
-                  << " , " << segment_id << "succeed!!!" << endl;
+                  << " , " << segment_id << " , partition:" << i
+                  << " succeed!!!" << endl;
       }
     } else {
       LOG(ERROR) << "asking upper exchange failed!" << endl;

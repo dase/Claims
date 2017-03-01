@@ -59,6 +59,15 @@ typedef int RetCode;  // means return code
     }                                        \
   } while (0)
 
+#define EXEC_AND_DLOG(ret, f, info, err_info) \
+  do {                                        \
+    if (rSuccess == (ret = f)) {              \
+      DLOG(INFO) << info << std::endl;        \
+    } else {                                  \
+      ELOG(ret, err_info)                     \
+    }                                         \
+  } while (0)
+
 #define EXEC_AND_LOG_RETURN(ret, f, info, err_info) \
   do {                                              \
     if (rSuccess == (ret = f)) {                    \
@@ -67,6 +76,16 @@ typedef int RetCode;  // means return code
       ELOG(ret, err_info)                           \
       return ret;                                   \
     }                                               \
+  } while (0)
+
+#define EXEC_AND_DLOG_RETURN(ret, f, info, err_info) \
+  do {                                               \
+    if (rSuccess == (ret = f)) {                     \
+      DLOG(INFO) << info << std::endl;               \
+    } else {                                         \
+      ELOG(ret, err_info)                            \
+      return ret;                                    \
+    }                                                \
   } while (0)
 
 #define EXEC_AND_PLOG(ret, f, info, err_info)                       \
@@ -203,6 +222,9 @@ const int rFileInUsing = -102;
 
 const int rResourceIsLocked = -103;
 
+const int rSentMessageError = -104;
+const int rReceiveMessageError = -105;
+
 // schema associated
 const int rEmptyAttributeName = -501;
 const int rEmptyTableAlias = -502;
@@ -251,6 +273,18 @@ const int rIncorrectData = -2007;    // a
 const int rInvalidNullData = -2008;
 const int rTooFewColumn = -2009;
 const int rTooManyColumn = -2010;
+
+const int rLinkTmTimeout = -2499;
+const int rLinkTmFail = -2500;
+const int rBeginIngestTxnFail = -2501;
+const int rCommitIngestTxnFail = -2502;
+const int rAbortIngestTxnFail = -2503;
+const int rBeginQueryFail = -2504;
+const int rBeginCheckpointFail = -2505;
+const int rCommitCheckpointFail = -2506;
+
+const int rGetFileHandleFail = -2507;
+const int rGetMemoryHandleFail = -2508;
 
 /* errorno for codegen -3001 ~ -4000 */
 const int rTestError = -3001;

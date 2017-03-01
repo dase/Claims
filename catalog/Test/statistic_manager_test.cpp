@@ -254,22 +254,22 @@ static int statistic_manager_test() {
     //////////////////ONE DAY////////////////////////////////////////////////
     // cj_table
     // 4 partitions partitioned by order_no
-    for (unsigned i = 0; i < table_1->getProjectoin(0)
+    for (unsigned i = 0; i < table_1->getProjection(0)
                                  ->getPartitioner()
                                  ->getNumberOfPartitions();
          i++) {
       catalog->getTable(0)
-          ->getProjectoin(0)
+          ->getProjection(0)
           ->getPartitioner()
           ->RegisterPartition(i, 2);
     }
 
-    for (unsigned i = 0; i < table_1->getProjectoin(1)
+    for (unsigned i = 0; i < table_1->getProjection(1)
                                  ->getPartitioner()
                                  ->getNumberOfPartitions();
          i++) {
       catalog->getTable(0)
-          ->getProjectoin(1)
+          ->getProjection(1)
           ->getPartitioner()
           ->RegisterPartition(i, 6);
     }
@@ -294,22 +294,22 @@ static int statistic_manager_test() {
     //		}
 
     // sb_table
-    for (unsigned i = 0; i < table_2->getProjectoin(0)
+    for (unsigned i = 0; i < table_2->getProjection(0)
                                  ->getPartitioner()
                                  ->getNumberOfPartitions();
          i++) {
       catalog->getTable(1)
-          ->getProjectoin(0)
+          ->getProjection(0)
           ->getPartitioner()
           ->RegisterPartition(i, 2);
     }
 
-    for (unsigned i = 0; i < table_2->getProjectoin(1)
+    for (unsigned i = 0; i < table_2->getProjection(1)
                                  ->getPartitioner()
                                  ->getNumberOfPartitions();
          i++) {
       catalog->getTable(1)
-          ->getProjectoin(1)
+          ->getProjection(1)
           ->getPartitioner()
           ->RegisterPartition(i, 6);
     }

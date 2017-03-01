@@ -88,6 +88,8 @@ bool MemoryChunkStore::ApplyChunk(ChunkID chunk_id, void*& start_address) {
   if (NULL != (start_address = chunk_pool_.malloc())) {
     chunk_list_[chunk_id] = HdfsInMemoryChunk(start_address, CHUNK_SIZE);
     lock_.release();
+    cout << "apply meme chunk:" << chunk_id.partition_id.partition_off << ","
+         << chunk_id.chunk_off << ", pool size:" << chunk_list_.size() << endl;
     return true;
   } else {
     ELOG(rMemoryPoolMallocFail, "Error occurs when memalign!");

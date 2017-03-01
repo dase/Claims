@@ -38,7 +38,7 @@ static void query_select_fzh() {
   TableDescriptor* table =
       Environment::getInstance()->getCatalog()->getTable("LINEITEM");
   //===========================scan===========================
-  LogicalOperator* scan = new LogicalScan(table->getProjectoin(0));
+  LogicalOperator* scan = new LogicalScan(table->getProjection(0));
 
   //==========================project=========================
   vector<vector<ExpressionItem> > expr_list1;
@@ -157,7 +157,7 @@ static void query_select_aggregation_ing() {
   TableDescriptor* table =
       Environment::getInstance()->getCatalog()->getTable("LINEITEM");
   //===========================scan===========================
-  LogicalOperator* scan = new LogicalScan(table->getProjectoin(0));
+  LogicalOperator* scan = new LogicalScan(table->getProjection(0));
 
   //==========================project=========================
   vector<vector<ExpressionItem> > expr_list1;
@@ -383,9 +383,9 @@ static void init_single_node_tpc_h_envoriment_ing(bool master = true) {
   catalog->add_table(table_1);
 
   for (unsigned i = 0;
-       i < table_1->getProjectoin(0)->getPartitioner()->getNumberOfPartitions();
+       i < table_1->getProjection(0)->getPartitioner()->getNumberOfPartitions();
        i++) {
-    catalog->getTable(0)->getProjectoin(0)->getPartitioner()->RegisterPartition(
+    catalog->getTable(0)->getProjection(0)->getPartitioner()->RegisterPartition(
         i, 1);
   }
 }

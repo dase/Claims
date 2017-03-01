@@ -27,16 +27,17 @@
  *
  */
 #include <hdfs.h>
-#include "ChunkStorage.h"
-#include "../common/file_handle/hdfs_connector.h"
-#include "BlockManager.h"
-#include "../Debug.h"
-#include "../utility/warmup.h"
-#include "../utility/rdtsc.h"
-#include "../Config.h"
+#include <glog/logging.h>
+#include "./BlockManager.h"
+#include "./ChunkStorage.h"
 #include "../common/error_define.h"
 #include "../common/error_no.h"
-
+#include "../common/file_handle/hdfs_connector.h"
+#include "../Config.h"
+#include "../Debug.h"
+#include "../utility/rdtsc.h"
+#include "../utility/warmup.h"
+#include "../loader/slave_loader.cpp"
 using claims::common::CStrError;
 using claims::common::rUnkownStroageLevel;
 using claims::common::rFailOpenFileInDiskChunkReaderIterator;
@@ -44,6 +45,7 @@ using claims::common::rFailReadOneBlockInDiskChunkReaderIterator;
 using claims::common::rFailOpenHDFSFileInStorage;
 using claims::common::rFailSetStartOffsetInStorage;
 using claims::common::HdfsConnector;
+using claims::loader::SlaveLoader;
 bool ChunkReaderIterator::NextBlock() {
   lock_.acquire();
   if (this->cur_block_ >= this->number_of_blocks_) {
@@ -55,17 +57,68 @@ bool ChunkReaderIterator::NextBlock() {
   return true;
 }
 
-ChunkStorage::ChunkStorage(const ChunkID& chunk_id, const unsigned& block_size,
-                           const StorageLevel& desirable_storage_level)
+ChunkStorage::ChunkStorage(const ChunkID& chunk_id, const unsigned block_size,
+                           const StorageLevel desirable_storage_level)
     : chunk_id_(chunk_id),
       block_size_(block_size),
       desirable_storage_level_(desirable_storage_level),
       current_storage_level_(HDFS),
       chunk_size_(CHUNK_SIZE) {}
 
+ChunkStorage::ChunkStorage(const ChunkID& chunk_id, const unsigned block_size,
+                           const StorageLevel desirable_storage_level,
+                           const StorageLevel current_storage_level)
+    : chunk_id_(chunk_id),
+      block_size_(block_size),
+      desirable_storage_level_(desirable_storage_level),
+      current_storage_level_(current_storage_level),
+      chunk_size_(CHUNK_SIZE) {}
+
 ChunkStorage::~ChunkStorage() {
-  // TODO(wangli): Auto-generated destructor stub
+  // TODO(wangli): Auto-generated destructor  stub
 }
+
+// apply memory for chunk size for writing later by slave loader
+RetCode ChunkStorage::ApplyMemory() {
+  RetCode ret = claims::common::rSuccess;
+  HdfsInMemoryChunk chunk_info;
+  chunk_info.length = CHUNK_SIZE;
+  if (BlockManager::getInstance()->getMemoryChunkStore()->ApplyChunk(
+          chunk_id_, chunk_info.hook)) {
+    /* there is enough memory storage space, so the storage level can be
+     * shifted.*/
+    current_storage_level_ = MEMORY;
+
+    /*
+     * set each block tail to "zero" in new chunk
+     */
+    for (auto offset = BLOCK_SIZE; offset <= CHUNK_SIZE; offset += BLOCK_SIZE) {
+      *reinterpret_cast<unsigned*>(chunk_info.hook + offset -
+                                   sizeof(unsigned)) = 0;
+    }
+
+    /*    cout << "Success to apply mem chunk:"
+             << chunk_id_.partition_id.partition_off << "," <<
+       chunk_id_.chunk_off
+             << endl;*/
+    /* update the chunk info in the Chunk store in case that the
+     * chunk_info is updated.*/
+    BlockManager::getInstance()->getMemoryChunkStore()->UpdateChunkInfo(
+        chunk_id_, chunk_info);
+  } else {
+    /*
+     * The storage memory is full, some swap algorithm is needed here.
+     * TODO: swap algorithm.
+     */
+    /*    cout << "Failed to apply mem chunk:" <<
+       chunk_id_.partition_id.partition_off
+             << "," << chunk_id_.chunk_off << endl;*/
+    ret = claims::common::rNoMemory;
+    assert(false);
+  }
+  return ret;
+}
+
 /**
  * The function create the chunk iterator. Meantime, according to the storage
  * level, create the chunk reader iterator in which storage level. It is a
@@ -75,6 +128,7 @@ ChunkStorage::~ChunkStorage() {
 ChunkReaderIterator* ChunkStorage::CreateChunkReaderIterator() {
   lock_.acquire();
   ChunkReaderIterator* ret;
+
   HdfsInMemoryChunk chunk_info;
   if (current_storage_level_ == MEMORY &&
       !BlockManager::getInstance()->getMemoryChunkStore()->GetChunk(
@@ -88,7 +142,7 @@ ChunkReaderIterator* ChunkStorage::CreateChunkReaderIterator() {
       if (BlockManager::getInstance()->getMemoryChunkStore()->GetChunk(
               chunk_id_, chunk_info))
         ret = new InMemoryChunkReaderItetaor(chunk_info.hook, chunk_info.length,
-                                             chunk_info.length / block_size_,
+                                             CHUNK_SIZE / BLOCK_SIZE,
                                              block_size_, chunk_id_);
       else
         ret = NULL;
@@ -129,6 +183,7 @@ ChunkReaderIterator* ChunkStorage::CreateChunkReaderIterator() {
            * chunk_info is updated.*/
           BlockManager::getInstance()->getMemoryChunkStore()->UpdateChunkInfo(
               chunk_id_, chunk_info);
+          //  printf("%lx current is set to memory!\n");
           ret = new InMemoryChunkReaderItetaor(
               chunk_info.hook, chunk_info.length,
               chunk_info.length / block_size_, block_size_, chunk_id_);
@@ -391,6 +446,8 @@ void ChunkReaderIterator::InMemeryBlockAccessor::GetBlock(
   int tuple_count =
       *(unsigned*)((char*)target_block_start_address_ +
                    block->getSerializedBlockSize() - sizeof(unsigned));
+  DLOG(INFO) << "Get Block whose tuple counts is:" << tuple_count
+             << ", start address is:" << target_block_start_address_;
   dynamic_cast<BlockStreamFix*>(block)->setTuplesInBlock(tuple_count);
 //  ((BlockStreamFix*)block)->free_ =
 //      (char*)block->getBlock() +
@@ -410,4 +467,60 @@ void ChunkReaderIterator::InHDFSBlockAccessor::GetBlock(
     BlockStreamBase*& block) const {
   printf("InHDFSBlockAccessor::getBlock() is not implemented!\n");
   assert(false);
+}
+
+uint64_t InMemoryChunkWriterIterator::Write(const void* const buffer_to_write,
+                                            uint64_t length_to_write) {
+  DLOG(INFO) << "current block id is:" << block_id_
+             << ", block size is:" << block_size_;
+  void* block_offset = chunk_offset_ + block_id_ * block_size_;
+  assert(block_offset < chunk_offset_ + CHUNK_SIZE &&
+         "this block is not in this chunk");
+
+  unsigned* tuple_count_in_block = reinterpret_cast<unsigned*>(
+      block_offset + block_size_ - sizeof(unsigned));
+  int left_space = block_size_ - sizeof(unsigned) - pos_in_block_;
+  int can_store_tuple_count = left_space / tuple_size_;
+
+  //  int can_store_tuple_count =
+  //      (block_size_ - sizeof(unsigned)) / tuple_size_ -
+  //      *tuple_count_in_block;
+  assert(can_store_tuple_count >= 0);
+  DLOG(INFO) << "block whose id is " << block_id_ << " stored "
+             << *tuple_count_in_block << " tuple and leaf "
+             << can_store_tuple_count
+             << " tuple space. and tuple size is:" << tuple_size_;
+
+  /// there are space to store data
+  if (can_store_tuple_count > 0) {
+    int actual_written_tuple_count = length_to_write > left_space
+                                         ? can_store_tuple_count
+                                         : length_to_write / tuple_size_;
+    DLOG(INFO) << "memcpy " << actual_written_tuple_count
+               << " tuples to memory whose start pos is "
+               << block_offset + pos_in_block_
+               << ". buffer to write: " << buffer_to_write;
+    memcpy(block_offset + pos_in_block_, buffer_to_write,
+           actual_written_tuple_count * tuple_size_);
+    /*    for (auto p = 0; p < actual_written_tuple_count; p++) {
+          for (auto c = 1; c < schema_->getncolumns(); c++)
+            SlaveLoader::logfile
+                << schema_->getColumnValue(buffer_to_write + p * tuple_size_, c)
+                << "|";
+          SlaveLoader::logfile << schema_->getTupleMaxSize() << endl;
+        }*/
+    /*
+        SlaveLoader::logfile << block_id_ << "," << pos_in_block_ << ","
+                             << pos_in_block_ +
+                                    actual_written_tuple_count* tuple_size_ <<
+       endl;
+    */
+
+    DLOG(INFO) << "copy " << actual_written_tuple_count * tuple_size_
+               << " bytes into block:" << block_id_;
+
+    __sync_add_and_fetch(tuple_count_in_block, actual_written_tuple_count);
+    return actual_written_tuple_count * tuple_size_;
+  }
+  return 0;
 }

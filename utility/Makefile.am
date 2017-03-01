@@ -24,5 +24,5 @@ libutility_a_SOURCES = \
 	string_process.h 		task.cpp \
 	task.h 					test_tool.h \
 	thread_pool.cpp 		thread_pool.h \
-	warmup.h
+	warmup.h				resource_guard.h
 	

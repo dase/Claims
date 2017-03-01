@@ -36,9 +36,10 @@
 #include "../common/error_define.h"
 #include "../Config.h"
 #include "../Environment.h"
-#include "../loader/data_injector.h"
 #include "../loader/table_file_connector.h"
 #include "../stmt_handler/drop_table_exec.h"
+
+#include "../loader/data_ingestion.h"
 using claims::common::FilePlatform;
 using claims::loader::TableFileConnector;
 using claims::catalog::Catalog;

@@ -49,7 +49,8 @@
 #include "../storage/PartitionStorage.h"
 #include "../physical_operator/physical_operator.h"
 #include "../common/ExpandedThreadTracker.h"
-
+#include "../txn_manager/txn.hpp"
+using claims::txn::Query;
 namespace claims {
 namespace physical_operator {
 
@@ -111,10 +112,11 @@ class PhysicalProjectionScan : public PhysicalOperator {
     ProjectionID projection_id_;
     unsigned block_size_;
     float sample_rate_;
+    Query query_;
     friend class boost::serialization::access;
     template <class Archive>
     void serialize(Archive& ar, const unsigned int version) {
-      ar& schema_& projection_id_& block_size_& sample_rate_;
+      ar& schema_& projection_id_& block_size_& sample_rate_& query_;
     }
   };
   PhysicalProjectionScan(State state);
@@ -138,6 +140,10 @@ class PhysicalProjectionScan : public PhysicalOperator {
   bool Close(SegmentExecStatus* const exec_status);
   void Print();
   RetCode GetAllSegments(stack<Segment*>* all_segments);
+  void SetTxnInfo(const Query& query) {
+    state_.query_ = query;
+    state_.query_.GenTxnInfo();
+  }
 
  private:
   bool PassSample() const;

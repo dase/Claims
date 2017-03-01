@@ -2,9 +2,36 @@ AC_INIT([Claims], [0.3], [imdb@ecnu])
 AM_INIT_AUTOMAKE([-Wall foreign subdir-objects])
 AM_PROG_AR
 AC_PROG_LIBTOOL
-CPPFLAGS="-w -O2 -DTHERON_XS -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS"
 AM_CONDITIONAL(OPT_TCMALLOC, true)
-CXXFLAGS=${CXXFLAGS="-g  -std=c++11"}
+#AM_CONDITIONAL(OPT_DEBUG, true)
+
+CPPFLAGS=" -w -O2 -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS "
+
+CXXFLAGS=${CXXFLAGS=" -std=c++11 "}
+
+# enable debug or not 	--- add by YuKai                                                    
+AC_ARG_ENABLE(debug, AS_HELP_STRING([--enable-debug], [enable DEBUG mode(default=yes)]),
+              [],                                                            
+              [enable_debug=yes])                                              
+AS_IF([test "x$enable_debug" = "xyes"],[	CPPFLAGS+=" -g -DTHERON_XS " 
+											AM_CONDITIONAL(OPT_DEBUG, true)
+											#CXXFLAGS+=" ${THERON_HOME}/Lib/libtherond.a "
+									   ],        
+      [test "x$enable_debug" = "xno"], [	CPPFLAGS+=" -DNDEBUG "
+      										AM_CONDITIONAL(OPT_DEBUG, false)
+											#CXXFLAGS+=" ${THERON_HOME}/Lib/libtheron.a "
+									   ]
+	) 
+
+
+#if OPT_DEBUG; then
+#	CPPFLAGS-=" -DNDEBUG"
+#	CPPFLAGS+="-g -DTHERON_XS -DDEBUG"
+#else
+#	CPPFLAGS-="-g -DTHERON_XS -DDEBUG"
+#	CPPFLAGS+=" -DNDEBUG"
+#fi
+
 AC_PROG_CXX
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([
@@ -13,8 +40,6 @@ AC_CONFIG_FILES([
   catalog/Test/Makefile
   catalog/stat/Makefile 
   Client/Makefile 
-  Client/Test/Makefile 
-  Client/json/Makefile
   common/Makefile 
   common/Block/Makefile 
   common/Expression/Makefile 
@@ -48,6 +73,7 @@ AC_CONFIG_FILES([
   Test/Makefile
   Test/common/Makefile
   Test/utility/Makefile
+  txn_manager/Makefile
   utility/Makefile
   codegen/Makefile 
   stmt_handler/Makefile

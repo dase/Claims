@@ -50,8 +50,9 @@ class HdfsConnector {
       fs_ =
           hdfsConnect(Config::hdfs_master_ip.c_str(), Config::hdfs_master_port);
       if (NULL == fs_) {
-        LOG(ERROR) << "failed to connect to HDFS(ip:" << Config::hdfs_master_ip
-                   << ", port:" << Config::hdfs_master_port << ")" << std::endl;
+        PLOG(ERROR) << "failed to connect to HDFS(ip:" << Config::hdfs_master_ip
+                    << ", port:" << Config::hdfs_master_port << ")"
+                    << std::endl;
         assert(false);
       }
       LOG(INFO) << "connected to HDFS(ip:" << Config::hdfs_master_ip

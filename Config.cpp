@@ -91,6 +91,23 @@ int Config::thread_pool_init_thread_num;
 int Config::load_thread_num;
 int Config::memory_utilization;
 
+bool Config::is_master_loader;
+std::string Config::master_loader_ip;
+int Config::master_loader_port;
+std::string Config::amq_url;
+std::string Config::amq_topic;
+
+bool Config::enable_txn_server;
+int Config::txn_server_cores;
+std::string Config::txn_server_ip;
+int Config::txn_server_port;
+
+bool Config::enable_txn_log = false;
+std::string Config::txn_log_path;
+
+int Config::master_loader_thread_num;
+int Config::slave_loader_thread_num;
+
 Config *Config::getInstance() {
   if (instance_ == 0) {
     instance_ = new Config();
@@ -152,6 +169,33 @@ void Config::initialize() {
 
   load_thread_num = getInt("load_thread_num", sysconf(_SC_NPROCESSORS_CONF));
 
+  is_master_loader = getBoolean("is_master_loader", true);
+
+  master_loader_ip = getString("master_loader_ip", "10.11.1.193");
+
+  master_loader_port = getInt("master_loader_port", 9001);
+
+  amq_url = getString("amq_url", "58.198.176.92:61616");
+
+  amq_topic = getString("amq_topic", "claims");
+
+  // txn manager
+  enable_txn_server = getBoolean("txn_server", true);
+
+  txn_server_cores = getInt("txn_server_cores", 4);
+
+  txn_server_ip = getString("txn_server_ip", "127.0.0.1");
+
+  txn_server_port = getInt("txn_server_port", 9100);
+
+  // txn log
+  enable_txn_log = getBoolean("txn_log", true);
+
+  txn_log_path = getString("txn_log_path", ".");
+
+  master_loader_thread_num = getInt("master_loader_thread_num", 4);
+  slave_loader_thread_num = getInt("slave_loader_thread_num", 4);
+
   memory_utilization = getInt("memory_utilization", 100);
 
 #ifdef DEBUG_Config
@@ -212,6 +256,16 @@ void Config::print_configure() const {
   std::cout << "catalog_file:" << catalog_file << std::endl;
   std::cout << "codegen:" << enable_codegen << std::endl;
   std::cout << "load_thread_num:" << load_thread_num << std::endl;
+  std::cout << "amq_url:" << amq_url << std::endl;
+  std::cout << "amq_topic:" << amq_topic << std::endl;
+
+  std::cout << "enable_txn_serverr:" << enable_txn_server << std::endl;
+  std::cout << "txn_server_cores:" << txn_server_cores << std::endl;
+  std::cout << "txn_server_ip:" << txn_server_ip << std::endl;
+  std::cout << "txn_server_port:" << txn_server_port << std::endl;
+
+  std::cout << "enable_txn_log:" << enable_txn_log << std::endl;
+  std::cout << "txn_log_path:" << txn_log_path << std::endl;
 }
 
 void Config::setConfigFile(std::string file_name) { config_file = file_name; }

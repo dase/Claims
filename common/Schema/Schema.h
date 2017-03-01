@@ -7,11 +7,12 @@
 
 #ifndef SCHEMA_H_
 #define SCHEMA_H_
-#include <vector>
 #include <assert.h>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/serialization/vector.hpp>
+#include <string>
+#include <vector>
 #ifdef DMALLOC
 #include "dmalloc.h"
 #endif
@@ -27,7 +28,7 @@ class Schema {
   enum schema_type { fixed, varaible };
   Schema(const std::vector<column_type>& columns);
   Schema(const Schema& r);
-  Schema(){};
+  Schema() {}
   virtual ~Schema();
   virtual unsigned getTupleMaxSize() const = 0;
 
@@ -55,6 +56,13 @@ class Schema {
   virtual void addColumn(column_type ct, unsigned size){};
   virtual void displayTuple(const void* tuple_start_address,
                             const char* spliter = "|") const;
+
+  virtual RetCode ToValue(std::string text_tuple, void* binary_tuple,
+                          const string attr_separator) {
+    assert(false);
+    return claims::common::rFailure;
+  }
+
   /**
    * @brief Method description: see more in its derived class
    */
@@ -63,14 +71,14 @@ class Schema {
                                   RawDataSource raw_data_source,
                                   vector<Validity>& columns_validities) {
     assert(false);
+    return claims::common::rFailure;
   }
-  inline virtual void showAccum_off(){};
+  inline virtual void showAccum_off() {}
   bool hasSameSchema(Schema* schema);
   std::vector<column_type> columns;
 
   virtual std::string getColumnValue(const void* tuple_start_address, int i);
 
- protected:
  private:
   friend class boost::serialization::access;
   template <class Archive>

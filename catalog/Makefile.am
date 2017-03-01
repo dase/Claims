@@ -18,11 +18,7 @@ LDADD =	../storage/libstorage.a \
 		../common/Schema/libschema.a \
 		../loader/libloader.a \
 		../common/file_handle/libfilehandle.a \
-		../common/libcommon.a \
-		${BOOST_HOME}/stage/lib/libboost_serialization.a \
-		${BOOST_HOME}/stage/lib/libboost_serialization.so \
-		${BOOST_HOME}/stage/lib/libboost_system.a \
-		${BOOST_HOME}/stage/lib/libboost_system.so 
+		../common/libcommon.a 
 
 #DIR = ${shell /bin/pwd}
 #INCLUDES = -I${DIR}/ThirdParty

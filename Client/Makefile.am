@@ -17,8 +17,7 @@ LDADD = 	../catalog/libcatalog.a \
 		../common/Block/libblock.a \
 		../common/Schema/libschema.a \
 		${BOOST_HOME}/stage/lib/libboost_serialization.a \
-		${BOOST_HOME}/stage/lib/libboost_serialization.so \
-		${THERON_HOME}/Lib/libtherond.a		
+		${BOOST_HOME}/stage/lib/libboost_serialization.so 
 
 noinst_LIBRARIES=libclient.a
 libclient_a_SOURCES = \
@@ -27,5 +26,5 @@ libclient_a_SOURCES = \
 	ClientResponse.cpp 		ClientResponse.h \
 	jsoncpp.cpp
 
-SUBDIRS = json Test
-DIST_SUBDIRS = json Test
+#SUBDIRS = json Test
+#DIST_SUBDIRS = json Test

@@ -38,12 +38,15 @@
 #include "../logical_operator/Requirement.h"
 #include "../physical_operator/physical_operator_base.h"
 #include "../utility/lock.h"
-
+#include "../txn_manager/txn.hpp"
 static std::atomic_uint MIDINADE_TABLE_ID(1000000);
 namespace claims {
 namespace logical_operator {
 #define kTabSize 4
 using claims::physical_operator::PhysicalOperatorBase;
+using claims::txn::QueryReq;
+using claims::txn::Query;
+using claims::txn::GetGlobalPartId;
 enum OperatorType {
   kLogicalScan,
   kLogicalFilter,
@@ -113,6 +116,13 @@ class LogicalOperator {
   virtual void Print(int level = 0) const = 0;
 
   OperatorType get_operator_type() { return operator_type_; }
+  /**
+   * Get the information(list of partition to scan) for txn creation
+   * Set the txn concurrency information to operator
+   * @param request
+   */
+  virtual void GetTxnInfo(QueryReq& request) const {}
+  virtual void SetTxnInfo(const Query& query) {}
 
  protected:
   Schema* GetSchema(const std::vector<Attribute>&) const;

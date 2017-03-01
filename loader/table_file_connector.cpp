@@ -77,8 +77,8 @@ TableFileConnector::TableFileConnector(FilePlatform platform,
     file_handles_.push_back(projection_files);
     write_locks_.push_back(projection_locks);
   }
-  LOG(INFO) << "open all " << file_handles_.size() << " file successfully"
-            << std::endl;
+  LOG(INFO) << "open all " << file_handles_.size() << " file of table "
+            << table->getTableName() << " successfully" << std::endl;
 }
 
 // TableFileConnector::TableFileConnector(FilePlatform platform,

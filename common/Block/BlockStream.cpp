@@ -62,9 +62,9 @@ BlockStreamBase* BlockStreamBase::createBlockWithDesirableSerilaizedSize(
 
 void* BlockStreamFix::getBlockDataAddress() { return start; }
 
-// void BlockStreamFix::setBlockDataAddress(void* addr){
-//	data_=(char*)addr;
-//}
+void BlockStreamFix::setBlockDataAddress(void* addr) {
+  start = reinterpret_cast<char*>(addr);
+}
 
 bool BlockStreamFix::switchBlock(BlockStreamBase& block) {
   BlockStreamFix* blockfix = (BlockStreamFix*)&block;

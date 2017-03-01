@@ -16,9 +16,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * /Claims/loader/test/data_injector_test.cpp
+ * /Claims/loader/loader_message.h
  *
- *  Created on: Oct 30, 2015
+ *  Created on: Apr 9, 2016
  *      Author: yukai
  *		   Email: yukai2014@gmail.com
  *
@@ -26,32 +26,10 @@
  *
  */
 
-#include "./data_injector_test.h"
+#ifndef LOADER_LOADER_MESSAGE_H_
+#define LOADER_LOADER_MESSAGE_H_
 
-#include <vector>
-#include <string>
+#include "caf/all.hpp"
+#include "caf/io/all.hpp"
 
-#include "../../catalog/table.h"
-#include "../../catalog/attribute.h"
-#include "../../common/Block/ResultSet.h"
-using claims::catalog::TableDescriptor;
-using claims::catalog::Attribute;
-using std::string;
-using std::vector;
-
-namespace claims {
-namespace loader {
-
-TEST_F(DataInjectorTest, Load) {
-  //  EXPECT_TRUE(client_.connected());
-  ResultSet rs;
-  string command = "";
-  std::cout << "it is load" << std::endl;
-}
-
-TEST_F(DataInjectorTest, Append) {}
-
-TEST_F(DataInjectorTest, Insert) {}
-
-} /* namespace loader */
-} /* namespace claims */
+#endif  // LOADER_LOADER_MESSAGE_H_

@@ -139,27 +139,27 @@ static void create_poc_data_one_partitions(){
 
 
 	catalog->add_table(table_2);
-	for(unsigned i=0;i<table_1->getProjectoin(0)->getPartitioner()->getNumberOfPartitions();i++){
+	for(unsigned i=0;i<table_1->getProjection(0)->getPartitioner()->getNumberOfPartitions();i++){
 
-		catalog->getTable(0)->getProjectoin(0)->getPartitioner()->RegisterPartition(i,2);
+		catalog->getTable(0)->getProjection(0)->getPartitioner()->RegisterPartition(i,2);
 //			catalog->getTable(0)->getProjectoin(0)->getPartitioner()->RegisterPartition(i,0);
 	}
 
-	for(unsigned i=0;i<table_1->getProjectoin(1)->getPartitioner()->getNumberOfPartitions();i++){
+	for(unsigned i=0;i<table_1->getProjection(1)->getPartitioner()->getNumberOfPartitions();i++){
 
-		catalog->getTable(0)->getProjectoin(1)->getPartitioner()->RegisterPartition(i,6);
+		catalog->getTable(0)->getProjection(1)->getPartitioner()->RegisterPartition(i,6);
 	}
 
 
 	//sb_table
-	for(unsigned i=0;i<table_2->getProjectoin(0)->getPartitioner()->getNumberOfPartitions();i++){
+	for(unsigned i=0;i<table_2->getProjection(0)->getPartitioner()->getNumberOfPartitions();i++){
 
-		catalog->getTable(1)->getProjectoin(0)->getPartitioner()->RegisterPartition(i,2);
+		catalog->getTable(1)->getProjection(0)->getPartitioner()->RegisterPartition(i,2);
 	}
 
-	for(unsigned i=0;i<table_2->getProjectoin(1)->getPartitioner()->getNumberOfPartitions();i++){
+	for(unsigned i=0;i<table_2->getProjection(1)->getPartitioner()->getNumberOfPartitions();i++){
 
-		catalog->getTable(1)->getProjectoin(1)->getPartitioner()->RegisterPartition(i,6);
+		catalog->getTable(1)->getProjection(1)->getPartitioner()->RegisterPartition(i,6);
 	}
 }
 
@@ -292,27 +292,27 @@ static void create_poc_data_four_partitions(){
 
 
 	catalog->add_table(table_2);
-	for(unsigned i=0;i<table_1->getProjectoin(0)->getPartitioner()->getNumberOfPartitions();i++){
+	for(unsigned i=0;i<table_1->getProjection(0)->getPartitioner()->getNumberOfPartitions();i++){
 
-		catalog->getTable(0)->getProjectoin(0)->getPartitioner()->RegisterPartition(i,2);
+		catalog->getTable(0)->getProjection(0)->getPartitioner()->RegisterPartition(i,2);
 //			catalog->getTable(0)->getProjectoin(0)->getPartitioner()->RegisterPartition(i,0);
 	}
 
-	for(unsigned i=0;i<table_1->getProjectoin(1)->getPartitioner()->getNumberOfPartitions();i++){
+	for(unsigned i=0;i<table_1->getProjection(1)->getPartitioner()->getNumberOfPartitions();i++){
 
-		catalog->getTable(0)->getProjectoin(1)->getPartitioner()->RegisterPartition(i,6);
+		catalog->getTable(0)->getProjection(1)->getPartitioner()->RegisterPartition(i,6);
 	}
 
 
 	//sb_table
-	for(unsigned i=0;i<table_2->getProjectoin(0)->getPartitioner()->getNumberOfPartitions();i++){
+	for(unsigned i=0;i<table_2->getProjection(0)->getPartitioner()->getNumberOfPartitions();i++){
 
-		catalog->getTable(1)->getProjectoin(0)->getPartitioner()->RegisterPartition(i,2);
+		catalog->getTable(1)->getProjection(0)->getPartitioner()->RegisterPartition(i,2);
 	}
 
-	for(unsigned i=0;i<table_2->getProjectoin(1)->getPartitioner()->getNumberOfPartitions();i++){
+	for(unsigned i=0;i<table_2->getProjection(1)->getPartitioner()->getNumberOfPartitions();i++){
 
-		catalog->getTable(1)->getProjectoin(1)->getPartitioner()->RegisterPartition(i,6);
+		catalog->getTable(1)->getProjection(1)->getPartitioner()->RegisterPartition(i,6);
 	}
 }
 
@@ -478,27 +478,27 @@ static void startup_mulitple_node_environment_of_poc(){
 
 
 		catalog->add_table(table_2);
-		for(unsigned i=0;i<table_1->getProjectoin(0)->getPartitioner()->getNumberOfPartitions();i++){
+		for(unsigned i=0;i<table_1->getProjection(0)->getPartitioner()->getNumberOfPartitions();i++){
 
-			catalog->getTable(0)->getProjectoin(0)->getPartitioner()->RegisterPartition(i,2);
+			catalog->getTable(0)->getProjection(0)->getPartitioner()->RegisterPartition(i,2);
 //			catalog->getTable(0)->getProjectoin(0)->getPartitioner()->RegisterPartition(i,0);
 		}
 
-		for(unsigned i=0;i<table_1->getProjectoin(1)->getPartitioner()->getNumberOfPartitions();i++){
+		for(unsigned i=0;i<table_1->getProjection(1)->getPartitioner()->getNumberOfPartitions();i++){
 
-			catalog->getTable(0)->getProjectoin(1)->getPartitioner()->RegisterPartition(i,6);
+			catalog->getTable(0)->getProjection(1)->getPartitioner()->RegisterPartition(i,6);
 		}
 
 
 		//sb_table
-		for(unsigned i=0;i<table_2->getProjectoin(0)->getPartitioner()->getNumberOfPartitions();i++){
+		for(unsigned i=0;i<table_2->getProjection(0)->getPartitioner()->getNumberOfPartitions();i++){
 
-			catalog->getTable(1)->getProjectoin(0)->getPartitioner()->RegisterPartition(i,2);
+			catalog->getTable(1)->getProjection(0)->getPartitioner()->RegisterPartition(i,2);
 		}
 
-		for(unsigned i=0;i<table_2->getProjectoin(1)->getPartitioner()->getNumberOfPartitions();i++){
+		for(unsigned i=0;i<table_2->getProjection(1)->getPartitioner()->getNumberOfPartitions();i++){
 
-			catalog->getTable(1)->getProjectoin(1)->getPartitioner()->RegisterPartition(i,6);
+			catalog->getTable(1)->getProjection(1)->getPartitioner()->RegisterPartition(i,6);
 		}
 	}
 }
@@ -647,43 +647,43 @@ static void startup_single_node_environment_of_tpch(bool master=true){
 
 
 	//T0
-	for(unsigned i=0;i<table_1->getProjectoin(0)->getPartitioner()->getNumberOfPartitions();i++){
+	for(unsigned i=0;i<table_1->getProjection(0)->getPartitioner()->getNumberOfPartitions();i++){
 
-		catalog->getTable(0)->getProjectoin(0)->getPartitioner()->RegisterPartition(i,3);
+		catalog->getTable(0)->getProjection(0)->getPartitioner()->RegisterPartition(i,3);
 	}
 
-	for(unsigned i=0;i<table_2->getProjectoin(0)->getPartitioner()->getNumberOfPartitions();i++){
+	for(unsigned i=0;i<table_2->getProjection(0)->getPartitioner()->getNumberOfPartitions();i++){
 
-		catalog->getTable(1)->getProjectoin(0)->getPartitioner()->RegisterPartition(i,1);
+		catalog->getTable(1)->getProjection(0)->getPartitioner()->RegisterPartition(i,1);
 	}
 
-	for(unsigned i=0;i<table_3->getProjectoin(0)->getPartitioner()->getNumberOfPartitions();i++){
+	for(unsigned i=0;i<table_3->getProjection(0)->getPartitioner()->getNumberOfPartitions();i++){
 
-		catalog->getTable(2)->getProjectoin(0)->getPartitioner()->RegisterPartition(i,15);
+		catalog->getTable(2)->getProjection(0)->getPartitioner()->RegisterPartition(i,15);
 	}
 	//T3
-	for(unsigned i=0;i<table_4->getProjectoin(0)->getPartitioner()->getNumberOfPartitions();i++){
+	for(unsigned i=0;i<table_4->getProjection(0)->getPartitioner()->getNumberOfPartitions();i++){
 
-		catalog->getTable(3)->getProjectoin(0)->getPartitioner()->RegisterPartition(i,3);
+		catalog->getTable(3)->getProjection(0)->getPartitioner()->RegisterPartition(i,3);
 	}
 
-	for(unsigned i=0;i<table_5->getProjectoin(0)->getPartitioner()->getNumberOfPartitions();i++){
+	for(unsigned i=0;i<table_5->getProjection(0)->getPartitioner()->getNumberOfPartitions();i++){
 
-		catalog->getTable(4)->getProjectoin(0)->getPartitioner()->RegisterPartition(i,19);
+		catalog->getTable(4)->getProjection(0)->getPartitioner()->RegisterPartition(i,19);
 	}
 
 	//T6
-	for(unsigned i=0;i<table_6->getProjectoin(0)->getPartitioner()->getNumberOfPartitions();i++){
+	for(unsigned i=0;i<table_6->getProjection(0)->getPartitioner()->getNumberOfPartitions();i++){
 
-		table_6->getProjectoin(0)->getPartitioner()->RegisterPartition(i,93);
+		table_6->getProjection(0)->getPartitioner()->RegisterPartition(i,93);
 	}
-	for(unsigned i=0;i<table_7->getProjectoin(0)->getPartitioner()->getNumberOfPartitions();i++){
+	for(unsigned i=0;i<table_7->getProjection(0)->getPartitioner()->getNumberOfPartitions();i++){
 
-		table_7->getProjectoin(0)->getPartitioner()->RegisterPartition(i,1);
+		table_7->getProjection(0)->getPartitioner()->RegisterPartition(i,1);
 	}
-	for(unsigned i=0;i<table_8->getProjectoin(0)->getPartitioner()->getNumberOfPartitions();i++){
+	for(unsigned i=0;i<table_8->getProjection(0)->getPartitioner()->getNumberOfPartitions();i++){
 
-		table_8->getProjectoin(0)->getPartitioner()->RegisterPartition(i,1);
+		table_8->getProjection(0)->getPartitioner()->RegisterPartition(i,1);
 	}
 	catalog->saveCatalog();
 }
@@ -832,43 +832,43 @@ static void startup_single_node_one_partition_environment_of_tpch(bool master=tr
 
 
 	//T0
-	for(unsigned i=0;i<table_1->getProjectoin(0)->getPartitioner()->getNumberOfPartitions();i++){
+	for(unsigned i=0;i<table_1->getProjection(0)->getPartitioner()->getNumberOfPartitions();i++){
 
-		catalog->getTable(0)->getProjectoin(0)->getPartitioner()->RegisterPartition(i,3);
+		catalog->getTable(0)->getProjection(0)->getPartitioner()->RegisterPartition(i,3);
 	}
 
-	for(unsigned i=0;i<table_2->getProjectoin(0)->getPartitioner()->getNumberOfPartitions();i++){
+	for(unsigned i=0;i<table_2->getProjection(0)->getPartitioner()->getNumberOfPartitions();i++){
 
-		catalog->getTable(1)->getProjectoin(0)->getPartitioner()->RegisterPartition(i,1);
+		catalog->getTable(1)->getProjection(0)->getPartitioner()->RegisterPartition(i,1);
 	}
 
-	for(unsigned i=0;i<table_3->getProjectoin(0)->getPartitioner()->getNumberOfPartitions();i++){
+	for(unsigned i=0;i<table_3->getProjection(0)->getPartitioner()->getNumberOfPartitions();i++){
 
-		catalog->getTable(2)->getProjectoin(0)->getPartitioner()->RegisterPartition(i,15);
+		catalog->getTable(2)->getProjection(0)->getPartitioner()->RegisterPartition(i,15);
 	}
 	//T3
-	for(unsigned i=0;i<table_4->getProjectoin(0)->getPartitioner()->getNumberOfPartitions();i++){
+	for(unsigned i=0;i<table_4->getProjection(0)->getPartitioner()->getNumberOfPartitions();i++){
 
-		catalog->getTable(3)->getProjectoin(0)->getPartitioner()->RegisterPartition(i,3);
+		catalog->getTable(3)->getProjection(0)->getPartitioner()->RegisterPartition(i,3);
 	}
 
-	for(unsigned i=0;i<table_5->getProjectoin(0)->getPartitioner()->getNumberOfPartitions();i++){
+	for(unsigned i=0;i<table_5->getProjection(0)->getPartitioner()->getNumberOfPartitions();i++){
 
-		catalog->getTable(4)->getProjectoin(0)->getPartitioner()->RegisterPartition(i,19);
+		catalog->getTable(4)->getProjection(0)->getPartitioner()->RegisterPartition(i,19);
 	}
 
 	//T6
-	for(unsigned i=0;i<table_6->getProjectoin(0)->getPartitioner()->getNumberOfPartitions();i++){
+	for(unsigned i=0;i<table_6->getProjection(0)->getPartitioner()->getNumberOfPartitions();i++){
 
-		table_6->getProjectoin(0)->getPartitioner()->RegisterPartition(i,93);
+		table_6->getProjection(0)->getPartitioner()->RegisterPartition(i,93);
 	}
-	for(unsigned i=0;i<table_7->getProjectoin(0)->getPartitioner()->getNumberOfPartitions();i++){
+	for(unsigned i=0;i<table_7->getProjection(0)->getPartitioner()->getNumberOfPartitions();i++){
 
-		table_7->getProjectoin(0)->getPartitioner()->RegisterPartition(i,1);
+		table_7->getProjection(0)->getPartitioner()->RegisterPartition(i,1);
 	}
-	for(unsigned i=0;i<table_8->getProjectoin(0)->getPartitioner()->getNumberOfPartitions();i++){
+	for(unsigned i=0;i<table_8->getProjection(0)->getPartitioner()->getNumberOfPartitions();i++){
 
-		table_8->getProjectoin(0)->getPartitioner()->RegisterPartition(i,1);
+		table_8->getProjection(0)->getPartitioner()->RegisterPartition(i,1);
 	}
 }
 
@@ -932,19 +932,19 @@ static void startup_multiple_node_environment_of_stock(bool master=true){
 
 
 
-	for(unsigned i=0;i<table_1->getProjectoin(0)->getPartitioner()->getNumberOfPartitions();i++){
+	for(unsigned i=0;i<table_1->getProjection(0)->getPartitioner()->getNumberOfPartitions();i++){
 
-		catalog->getTable(1)->getProjectoin(0)->getPartitioner()->RegisterPartition(i,1);
+		catalog->getTable(1)->getProjection(0)->getPartitioner()->RegisterPartition(i,1);
 	}
 
-	for(unsigned i=0;i<table_2->getProjectoin(0)->getPartitioner()->getNumberOfPartitions();i++){
+	for(unsigned i=0;i<table_2->getProjection(0)->getPartitioner()->getNumberOfPartitions();i++){
 
-		catalog->getTable(2)->getProjectoin(0)->getPartitioner()->RegisterPartition(i,1);
+		catalog->getTable(2)->getProjection(0)->getPartitioner()->RegisterPartition(i,1);
 	}
 
-	for(unsigned i=0;i<table_3->getProjectoin(0)->getPartitioner()->getNumberOfPartitions();i++){
+	for(unsigned i=0;i<table_3->getProjection(0)->getPartitioner()->getNumberOfPartitions();i++){
 
-		catalog->getTable(3)->getProjectoin(0)->getPartitioner()->RegisterPartition(i,445);
+		catalog->getTable(3)->getProjection(0)->getPartitioner()->RegisterPartition(i,445);
 	}
 
 	catalog->saveCatalog();
@@ -1098,43 +1098,43 @@ static void startup_multiple_node_environment_of_tpch(bool master=true){
 
 
 	//T0
-	for(unsigned i=0;i<table_1->getProjectoin(0)->getPartitioner()->getNumberOfPartitions();i++){
+	for(unsigned i=0;i<table_1->getProjection(0)->getPartitioner()->getNumberOfPartitions();i++){
 
-		catalog->getTable(0)->getProjectoin(0)->getPartitioner()->RegisterPartition(i,1);
+		catalog->getTable(0)->getProjection(0)->getPartitioner()->RegisterPartition(i,1);
 	}
 
-	for(unsigned i=0;i<table_2->getProjectoin(0)->getPartitioner()->getNumberOfPartitions();i++){
+	for(unsigned i=0;i<table_2->getProjection(0)->getPartitioner()->getNumberOfPartitions();i++){
 
-		catalog->getTable(1)->getProjectoin(0)->getPartitioner()->RegisterPartition(i,1);
+		catalog->getTable(1)->getProjection(0)->getPartitioner()->RegisterPartition(i,1);
 	}
 
-	for(unsigned i=0;i<table_3->getProjectoin(0)->getPartitioner()->getNumberOfPartitions();i++){
+	for(unsigned i=0;i<table_3->getProjection(0)->getPartitioner()->getNumberOfPartitions();i++){
 
-		catalog->getTable(2)->getProjectoin(0)->getPartitioner()->RegisterPartition(i,15);
+		catalog->getTable(2)->getProjection(0)->getPartitioner()->RegisterPartition(i,15);
 	}
 	//T3
-	for(unsigned i=0;i<table_4->getProjectoin(0)->getPartitioner()->getNumberOfPartitions();i++){
+	for(unsigned i=0;i<table_4->getProjection(0)->getPartitioner()->getNumberOfPartitions();i++){
 
-		catalog->getTable(3)->getProjectoin(0)->getPartitioner()->RegisterPartition(i,3);
+		catalog->getTable(3)->getProjection(0)->getPartitioner()->RegisterPartition(i,3);
 	}
 
-	for(unsigned i=0;i<table_5->getProjectoin(0)->getPartitioner()->getNumberOfPartitions();i++){
+	for(unsigned i=0;i<table_5->getProjection(0)->getPartitioner()->getNumberOfPartitions();i++){
 
-		catalog->getTable(4)->getProjectoin(0)->getPartitioner()->RegisterPartition(i,19);
+		catalog->getTable(4)->getProjection(0)->getPartitioner()->RegisterPartition(i,19);
 	}
 
 	//T6
-	for(unsigned i=0;i<table_6->getProjectoin(0)->getPartitioner()->getNumberOfPartitions();i++){
+	for(unsigned i=0;i<table_6->getProjection(0)->getPartitioner()->getNumberOfPartitions();i++){
 
-		table_6->getProjectoin(0)->getPartitioner()->RegisterPartition(i,93);
+		table_6->getProjection(0)->getPartitioner()->RegisterPartition(i,93);
 	}
-	for(unsigned i=0;i<table_7->getProjectoin(0)->getPartitioner()->getNumberOfPartitions();i++){
+	for(unsigned i=0;i<table_7->getProjection(0)->getPartitioner()->getNumberOfPartitions();i++){
 
-		table_7->getProjectoin(0)->getPartitioner()->RegisterPartition(i,1);
+		table_7->getProjection(0)->getPartitioner()->RegisterPartition(i,1);
 	}
-	for(unsigned i=0;i<table_8->getProjectoin(0)->getPartitioner()->getNumberOfPartitions();i++){
+	for(unsigned i=0;i<table_8->getProjection(0)->getPartitioner()->getNumberOfPartitions();i++){
 
-		table_8->getProjectoin(0)->getPartitioner()->RegisterPartition(i,1);
+		table_8->getProjection(0)->getPartitioner()->RegisterPartition(i,1);
 	}
 
 	// save catalog as a file

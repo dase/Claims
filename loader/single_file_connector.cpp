@@ -47,7 +47,7 @@
 #define DLOG_FC(info)
 #endif
 
-#ifdef DATA_INJECTOR_PREF
+#ifdef DATA_INGESTION_PREF
 #define ATOMIC_ADD(var, value) __sync_add_and_fetch(&var, value);
 #define GET_TIME_DI(var) GETCURRENTTIME(var);
 #else

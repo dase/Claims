@@ -63,6 +63,8 @@ class MasterNode : public BaseNode {
   void RemoveOneNode(unsigned int node_id, MasterNode* master_node);
   RetCode BroastNodeInfo(const unsigned int& node_id, const string& node_ip,
                          const uint16_t& node_port);
+  RetCode AddBlock(int part_id, int block_num);
+
   MasterNode();
   MasterNode(string node_ip, uint16_t node_port);
 

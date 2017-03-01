@@ -21,7 +21,7 @@ LDADD = ../../physical_operator/libphysicalqueryplan.a	\
 		${JAVA_HOME}/jre/lib/amd64/server/libjvm.so\
 		${BOOST_HOME}/stage/lib/libboost_serialization.a \
 		${BOOST_HOME}/stage/lib/libboost_serialization.so 
-		
+
 noinst_LIBRARIES=libserialization.a
 libserialization_a_SOURCES = \
 	RegisterDerivedClass.cpp 		RegisterDerivedClass.h 

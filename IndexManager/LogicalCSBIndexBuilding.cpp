@@ -59,8 +59,8 @@ PhysicalOperatorBase* LogicalCSBIndexBuilding::GetPhysicalPlan(
   bls_column_list.push_back(t_int);  // chunk offset
   bls_column_list.push_back(
       blc_state.schema_->getcolumn(blc_state.key_indexing_));  // sec_code
-  bls_column_list.push_back(t_u_smallInt);  // chunk offset
-  bls_column_list.push_back(t_u_smallInt);  // chunk offset
+  bls_column_list.push_back(t_u_smallInt);                     // chunk offset
+  bls_column_list.push_back(t_u_smallInt);                     // chunk offset
 
   bls_state.schema_ = new SchemaFix(bls_column_list);
   bls_state.child_ = blc;

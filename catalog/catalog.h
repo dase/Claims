@@ -32,6 +32,7 @@
 #define CATALOG_CATALOG_H_
 #include <boost/unordered_map.hpp>
 #include <string>
+#include <vector>
 
 #include "../catalog/projection_binding.h"
 #include "../catalog/table.h"
@@ -47,6 +48,7 @@ class SingleFileConnector;
 };
 
 namespace catalog {
+using std::vector;
 using loader::SingleFileConnector;
 class SingleFileConnector;
 
@@ -84,17 +86,17 @@ class Catalog {
   TableDescriptor* getTable(const TableID&) const;
   TableDescriptor* getTable(const std::string& table_name) const;
   void GetAllTables(ostringstream& ostr) const;
-  vector<TableID> GetAllTablesID()const;
+  vector<TableID> getVisibleTablesIDs()const;
   ProjectionDescriptor* getProjection(const ProjectionID&) const;
   ProjectionBinding* getBindingModele() const;
-
+  vector<TableID> getAllTableIDs() const;
   /**
    * ATTENTION: this method do not return the number of existing table,
    *            other than the next table'id
    * An example is: a table is dropped, but the return value don't change
    */
   unsigned getTableCount() const { return table_id_allocator.table_id_curosr; }
-
+  unsigned getNumberOfTable() const { return tableid_to_table.size();}
   RetCode saveCatalog();     // 2014-3-20---save as a file---by Yu
   RetCode restoreCatalog();  // 2014-3-20---restore from a file---by Yu
   void outPut();

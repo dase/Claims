@@ -54,6 +54,9 @@ class SchemaFix : public Schema {
   void addColumn(column_type ct, unsigned size);
   unsigned getColumnOffset(unsigned index);
 
+  RetCode ToValue(std::string text_tuple, void* binary_tuple,
+                  const string attr_separator);
+
   /**
    * @brief Method description: check the validity of raw data, maybe reset raw
    *        data value to default or truncate raw data value depend on raw data

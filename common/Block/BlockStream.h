@@ -160,7 +160,7 @@ class BlockStreamFix : public BlockStreamBase {
     return free_ + tuple_size_ > start + BlockSize - sizeof(tail_info);
   }
   void* getBlockDataAddress();
-  //	void setBlockDataAddress(void* addr);
+  void setBlockDataAddress(void* addr);
   bool switchBlock(BlockStreamBase& block);
   void copyBlock(void* addr, unsigned length);
   bool insert(void* dest, void* src, unsigned bytes);
@@ -170,6 +170,7 @@ class BlockStreamFix : public BlockStreamBase {
   unsigned getSerializedBlockSize() const;
   unsigned getBlockCapacityInTuples() const;
   unsigned getTuplesInBlock() const;
+  inline unsigned getTupleSize() const {return tuple_size_;}
   /* construct the BlockStream from a storage level block,
    * which last four bytes indicate the number of tuples in the block.*/
   void constructFromBlock(const Block& block);

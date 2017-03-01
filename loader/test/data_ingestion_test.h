@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * /Claims/loader/test/data_injector_test.h
+ * /Claims/loader/test/data_injestion_test.h
  *
  *  Created on: Oct 30, 2015
  *      Author: yukai
@@ -26,14 +26,14 @@
  *
  */
 
-#ifndef LOADER_TEST_DATA_INJECTOR_TEST_H_
-#define LOADER_TEST_DATA_INJECTOR_TEST_H_
+#ifndef LOADER_TEST_DATA_INGESTION_TEST_H_
+#define LOADER_TEST_DATA_INGESTION_TEST_H_
 
 #include <gtest/gtest.h>
 #include <iosfwd>
 #include <string>
-#include "../../loader/data_injector.h"
 #include "../../catalog/catalog.h"
+#include "../data_ingestion.h"
 
 using std::ofstream;
 using claims::catalog::Catalog;
@@ -41,10 +41,10 @@ using claims::catalog::Catalog;
 namespace claims {
 namespace loader {
 
-class DataInjectorTest : public ::testing::Test {
+class DataIngestionTest : public ::testing::Test {
  public:
-  DataInjectorTest() {}
-  virtual ~DataInjectorTest() {}
+  DataIngestionTest() {}
+  virtual ~DataIngestionTest() {}
 
  public:
   //  Client client_;
@@ -52,7 +52,7 @@ class DataInjectorTest : public ::testing::Test {
   int port_;
 };
 
-TEST_F(DataInjectorTest, GetTuple1) {
+TEST_F(DataIngestionTest, GetTuple1) {
   char* data[2] = {"sf|sfs||sfssfs|\n", "sfsf\fw|fsfegbf,s,nn|fwnelweh\n"};
 
   ofstream ofs("test_for_DI_GetTuple");
@@ -62,13 +62,13 @@ TEST_F(DataInjectorTest, GetTuple1) {
   string res;
   string ter("\n");
   int i = 0;
-  while (DataInjector::GetTupleTerminatedBy(ifs, res, ter)) {
+  while (DataIngestion::GetTupleTerminatedBy(ifs, res, ter)) {
     EXPECT_STREQ(data[i++], res.c_str());
     res.clear();
   }
 }
 
-TEST_F(DataInjectorTest, GetTuple2) {
+TEST_F(DataIngestionTest, GetTuple2) {
   char* data[2] = {"sf|sfs||sfssfs|\n", "sfsf\fw|fsfegbf,s,nn|fwnelweh\n|\n"};
 
   ofstream ofs("test_for_DI_GetTuple");
@@ -78,12 +78,12 @@ TEST_F(DataInjectorTest, GetTuple2) {
   string res;
   string ter = "|\n";
   int i = 0;
-  while (DataInjector::GetTupleTerminatedBy(ifs, res, ter)) {
+  while (DataIngestion::GetTupleTerminatedBy(ifs, res, ter)) {
     EXPECT_STREQ(data[i++], res.c_str());
     res.clear();
   }
 }
-TEST_F(DataInjectorTest, GetTuple3) {
+TEST_F(DataIngestionTest, GetTuple3) {
   char* data[3] = {"sf|sfs||sfssfs|\n", "sfsf\fw|fsfegbf,s,nn|fwnelweh\n|\n",
                    "|\n"};
 
@@ -94,13 +94,13 @@ TEST_F(DataInjectorTest, GetTuple3) {
   string res;
   string ter = "|\n";
   int i = 0;
-  while (DataInjector::GetTupleTerminatedBy(ifs, res, ter)) {
+  while (DataIngestion::GetTupleTerminatedBy(ifs, res, ter)) {
     EXPECT_STREQ(data[i++], res.c_str());
     res.clear();
   }
 }
 
-TEST_F(DataInjectorTest, GetTuple4) {
+TEST_F(DataIngestionTest, GetTuple4) {
   char* data[4] = {"sf|sfs||sfssfs||||",
                    "sfsf\fw|fsfe|||gbf,s,nn|fwnelweh\n||||", "|\n||||", "sfsf"};
 
@@ -111,7 +111,7 @@ TEST_F(DataInjectorTest, GetTuple4) {
   string res;
   string ter = "||||";
   int i = 0;
-  while (DataInjector::GetTupleTerminatedBy(ifs, res, ter)) {
+  while (DataIngestion::GetTupleTerminatedBy(ifs, res, ter)) {
     EXPECT_STREQ(data[i++], res.c_str());
     res.clear();
   }
@@ -119,4 +119,4 @@ TEST_F(DataInjectorTest, GetTuple4) {
 } /* namespace loader */
 } /* namespace claims */
 
-#endif  // LOADER_TEST_DATA_INJECTOR_TEST_H_
+#endif  // LOADER_TEST_DATA_INGESTION_TEST_H_

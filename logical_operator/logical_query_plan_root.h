@@ -99,6 +99,12 @@ class LogicalQueryPlanRoot : public LogicalOperator {
    * @return  void
    */
   void Print(int level = 0) const;
+  void GetTxnInfo(QueryReq& request) const override {
+      child_->GetTxnInfo(request);
+    }
+    void SetTxnInfo(const Query& query) override  {
+      child_->SetTxnInfo(query);
+    }
 
  private:
   /**

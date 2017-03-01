@@ -9,12 +9,12 @@
 #define BLOCKMANAGER_H_
 
 #include <boost/unordered_map.hpp>
+#include <stdio.h>
+#include <hdfs.h>
 #include <string>
 #include <vector>
 #include <iostream>
 #include <map>
-#include <stdio.h>
-#include "hdfs.h"
 #include "MemoryManager.h"
 #include "DiskStore.h"
 #include "BlockManagerId.h"
@@ -23,9 +23,11 @@
 #include "../common/ids.h"
 #include "../common/Message.h"
 #include "../common/Logging.h"
+#include "../txn_manager/txn.hpp"
 #include "../utility/lock.h"
 using namespace std;
-
+using claims::txn::UInt64;
+using claims::txn::PStrip;
 struct ChunkInfo {
   ChunkID chunkId;
   void *hook;
@@ -88,11 +90,14 @@ class BlockManager {
   /* poc测试 */
   BlockManagerId *getId();
   string askForMatch(string filename, BlockManagerId bmi);
-  bool ContainsPartition(const PartitionID &part) const;
+  bool ContainsPartition(const PartitionID &part);
   bool AddPartition(const PartitionID &, const unsigned &number_of_chunks,
                     const StorageLevel &desirable_storage_level);
   bool RemovePartition(const PartitionID &);
-  PartitionStorage *GetPartitionHandle(const PartitionID &partition_id) const;
+  PartitionStorage *GetPartitionHandle(const PartitionID &partition_id);
+
+  vector<PartitionID> GetAllPartition();
+  UInt64 MergeHisToRt(PartitionID, const vector<PStrip> &strip_list, UInt64 rt);
 
  private:
   BlockManager();

@@ -5,11 +5,15 @@
  *      Author: wangli
  */
 
-#include "ResourceManagerMaster.h"
+#include "./ResourceManagerMaster.h"
 
+#include <unistd.h>
 #include <glog/logging.h>
-
+#include <vector>
+#include "caf/io/all.hpp"
+#include "../Config.h"
 #include "../Environment.h"
+#include "../loader/load_packet.h"
 ResourceManagerMaster::ResourceManagerMaster() {
   node_tracker_ = NodeTracker::GetInstance();
 }
@@ -48,7 +52,6 @@ bool ResourceManagerMaster::ApplyDiskBuget(NodeID target, unsigned size_in_mb) {
   if (node_to_resourceinfo_[target]->disk.take(size_in_mb)) return true;
   return false;
 }
-
 bool ResourceManagerMaster::ReturnDiskBuget(NodeID target,
                                             unsigned size_in_mb) {
   if (node_to_resourceinfo_.find(target) == node_to_resourceinfo_.cend())
@@ -80,23 +83,23 @@ bool ResourceManagerMaster::RegisterDiskBuget(NodeID report_node_id,
                                               unsigned size_in_mb) {
   if (node_to_resourceinfo_.find(report_node_id) ==
       node_to_resourceinfo_.end()) {
-    LOG(WARNING) << "target slave " << report_node_id << " does not exists!";
+    /* target slave does not exists*/
     return false;
   }
   node_to_resourceinfo_[report_node_id]->disk.initialize(size_in_mb);
-  LOG(INFO) << "Node(id= " << report_node_id
-            << ") reports its disk capacity=" << size_in_mb;
+  DLOG(INFO) << "Node(id=" << report_node_id
+             << ") reports its disk capacity=" << size_in_mb;
   return true;
 }
 bool ResourceManagerMaster::RegisterMemoryBuget(NodeID report_node_id,
                                                 unsigned size_in_mb) {
   if (node_to_resourceinfo_.find(report_node_id) ==
       node_to_resourceinfo_.end()) {
-    LOG(WARNING) << "target slave " << report_node_id << " does not exists!";
+    /* target slave does not exists*/
     return false;
   }
   node_to_resourceinfo_[report_node_id]->memory.initialize(size_in_mb);
-  LOG(INFO) << "Node(id= " << report_node_id
-            << ") reports its memory capacity=" << size_in_mb;
+  DLOG(INFO) << "Node(id=" << report_node_id
+             << ") reports its memory capacity=" << size_in_mb;
   return true;
 }
