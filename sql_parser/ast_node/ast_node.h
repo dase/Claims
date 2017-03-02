@@ -185,13 +185,17 @@ class SemanticContext {
   vector<AstNode*> select_expr_;
   vector<ColumnOffset> index_;  //  for create projection execute function
   string error_msg_;
-
+  // for remember all column we need to choose scan projection.
+  bool is_all;
+  std::unordered_map<string, set<string>> table_to_column;
  private:
   set<AstNode*> aggregation_;
   vector<AstNode*> groupby_attrs_;
   set<AstNode*> select_attrs_;
   multimap<string, string> column_to_table_;
   set<string> tables_;
+
+
 };
 class PushDownConditionContext {
  public:
@@ -290,6 +294,7 @@ class AstNode {
     return rSuccess;
   }
   AstNode* GetAndExpr(const set<AstNode*>& expression);
+  virtual RetCode SetScanAttrList(const SemanticContext &sem_cnxt);
   AstNodeType ast_node_type_;
   string expr_str_;
 };
@@ -311,6 +316,7 @@ class AstStmtList : public AstNode {
   AstStmtList(AstNodeType ast_node_type, AstNode* stmt, AstNode* next);
   ~AstStmtList();
   void Print(int level = 0) const;
+  RetCode SetScanAttrList(const SemanticContext &sem_cnxt);
   RetCode SemanticAnalisys(SemanticContext* sem_cnxt);
   RetCode PushDownCondition(PushDownConditionContext& pdccnxt);
   RetCode GetLogicalPlan(LogicalOperator*& logic_plan);

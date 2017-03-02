@@ -36,6 +36,8 @@
 #include <vector>
 #include <string>
 #include <utility>
+#include <set>
+#include <unordered_map>
 
 #include "../common/error_define.h"
 #include "../common/ids.h"
@@ -129,10 +131,10 @@ RetCode SelectExec::Execute(ExecutedResult* exec_result) {
 }
 
 RetCode SelectExec::Execute() {
-#ifdef PRINTCONTEXT
-  select_ast_->Print();
+//#ifdef PRINTCONTEXT
+//  select_ast_->Print();
   cout << "--------------begin semantic analysis---------------" << endl;
-#endif
+//#endif
   SemanticContext sem_cnxt;
   RetCode ret = rSuccess;
   ret = select_ast_->SemanticAnalisys(&sem_cnxt);
@@ -143,10 +145,22 @@ RetCode SelectExec::Execute() {
     LOG(ERROR) << "semantic analysis error result= : " << ret;
     return ret;
   }
-#ifdef PRINTCONTEXT
+  cout << "--------------scan list---------------" << endl;
+  cout << "is all :"<< sem_cnxt.is_all <<endl;
+  for (auto map_it = sem_cnxt.table_to_column.begin();
+          map_it != sem_cnxt.table_to_column.end(); map_it++) {
+    cout << "table" << (*map_it).first <<":"<< endl;
+    set<string>::const_iterator cset_iter = (*map_it).second.begin();
+    while (cset_iter != (*map_it).second.end()) {
+      cout << (*cset_iter) << endl;
+      cset_iter++;
+    }
+  }
+
+//#ifdef PRINTCONTEXT
   select_ast_->Print();
   cout << "--------------begin push down condition ------------" << endl;
-#endif
+//#endif
   PushDownConditionContext pdccnxt;
   ret = select_ast_->PushDownCondition(pdccnxt);
   if (rSuccess != ret) {
@@ -157,10 +171,18 @@ RetCode SelectExec::Execute() {
     cout << stmt_exec_status_->get_exec_info();
     return ret;
   }
-#ifndef PRINTCONTEXT
+//#ifndef PRINTCONTEXT
+  ret = select_ast_->SetScanAttrList(sem_cnxt);
+  if (rSuccess != ret) {
+     stmt_exec_status_->set_exec_info("semantic analysis error \n" +
+                                      sem_cnxt.error_msg_);
+     stmt_exec_status_->set_exec_status(StmtExecStatus::ExecStatus::kError);
+     LOG(ERROR) << " Set Scan Attribute list error result= : " << ret;
+     return ret;
+  }
   select_ast_->Print();
   cout << "--------------begin logical plan -------------------" << endl;
-#endif
+//#endif
 
   LogicalOperator* logic_plan = NULL;
   ret = select_ast_->GetLogicalPlan(logic_plan);
@@ -176,16 +198,16 @@ RetCode SelectExec::Execute() {
   logic_plan = new LogicalQueryPlanRoot(0, logic_plan, raw_sql_,
                                         LogicalQueryPlanRoot::kResultCollector);
   logic_plan->GetPlanContext();
-#ifndef PRINTCONTEXT
+//#ifndef PRINTCONTEXT
   logic_plan->Print();
   cout << "--------------begin physical plan -------------------" << endl;
-#endif
+//#endif
 
   PhysicalOperatorBase* physical_plan = logic_plan->GetPhysicalPlan(64 * 1024);
-#ifndef PRINTCONTEXT
+//#ifndef PRINTCONTEXT
   physical_plan->Print();
   cout << "--------------begin output result -------------------" << endl;
-#endif
+//#endif
   // collect all plan segments
   physical_plan->GetAllSegments(&all_segments_);
   // create thread to send all segments
