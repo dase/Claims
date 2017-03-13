@@ -1554,18 +1554,10 @@ RetCode AstColumn::GetLogicalPlan(ExprNode*& logic_expr,
   Attribute ret_lattr = left_lplan->GetPlanContext().GetAttribute(
       string(relation_name_ + "." + column_name_));
 
-  cout << "*********************hahaha***********************" <<endl;
   left_lplan->Print();
-  cout << relation_name_ << "." << column_name_
-       << "*********************left***********************"
-       << ret_lattr.attrName << endl;
   if (NULL != right_lplan) {
     Attribute ret_rattr = right_lplan->GetPlanContext().GetAttribute(
         string(relation_name_ + "." + column_name_));
-      cout << relation_name_
-          << "*********************right***********************"
-          << ret_rattr.attrName << endl;
-
     if ((ret_lattr.attrName != "NULL") && (ret_rattr.attrName != "NULL")) {
       assert(false);
       return rFailure;
@@ -1580,10 +1572,6 @@ RetCode AstColumn::GetLogicalPlan(ExprNode*& logic_expr,
                          expr_str_, relation_name_, column_name_);
       return rSuccess;
     } else {
-//      left_lplan->Print();
-//      cout << "***********************************************" << endl;
-//      right_lplan->Print();
-//      cout << "***********************************************" << endl;
       assert(false);
       return rFailure;
     }

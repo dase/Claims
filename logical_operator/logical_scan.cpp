@@ -184,10 +184,6 @@ PlanContext LogicalScan::GetPlanContext() {
       assert(false);
     }
     target_projection_ = table->getProjectoin(target_projection_off);
-    cout << table->getTableName() <<"in " << table->getNumberOfProjection()
-        << " projections, projection "
-         << target_projection_off << " has min cost:" << min_projection_cost
-         << std::endl;
     }
   } else {
     // if is all, select * from tableA, give largest projection;
@@ -203,11 +199,6 @@ PlanContext LogicalScan::GetPlanContext() {
   if (!target_projection_->AllPartitionBound()) {
     Catalog::getInstance()->getBindingModele()->BindingEntireProjection(
         target_projection_->getPartitioner(), DESIRIABLE_STORAGE_LEVEL);
-  }
-
-  for (set<string>::const_iterator it = columns_.begin();
-            it != columns_.end(); it++ ) {
-    cout <<  (*it) << endl;
   }
 
   /**
