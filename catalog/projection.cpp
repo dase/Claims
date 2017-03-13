@@ -72,6 +72,12 @@ bool ProjectionDescriptor::isExist(const string& name) const {
   }
   return false;
 }
+bool ProjectionDescriptor::isExist1(const string& name) const {
+  for (unsigned i = 0; i < column_list_.size(); i++) {
+    if (column_list_[i].attrName == name) return true;
+  }
+  return false;
+}
 bool ProjectionDescriptor::AllPartitionBound() const {
   return partitioner->allPartitionBound();
 }

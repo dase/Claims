@@ -74,6 +74,7 @@ class ProjectionDescriptor {
                          PartitionFunction* partition_functin);
   Partitioner* getPartitioner() const;
   bool isExist(const string& name) const;
+  bool isExist1(const string& name) const;
   inline void setProjectionID(const ProjectionID& pid) { projection_id_ = pid; }
   inline map<string, set<string> > getFileLocations() const {
     return fileLocations;
@@ -91,7 +92,6 @@ class ProjectionDescriptor {
    *           as this projection's cost
    */
   unsigned int getProjectionCost() const;
-
  private:
   //  ProjectionOffset projection_offset_;
   ProjectionID projection_id_;

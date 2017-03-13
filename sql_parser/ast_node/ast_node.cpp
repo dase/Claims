@@ -56,6 +56,10 @@ void AstNode::Print(int level) const {
   cout << setw(level * 8) << " "
        << "This is an AST_NODE!" << endl;
 }
+
+RetCode AstNode::SetScanAttrList(const SemanticContext &sem_cnxt) {
+  return rSuccess;
+}
 RetCode AstNode::SemanticAnalisys(SemanticContext* sem_cnxt) {
   LOG(WARNING) << "This is AstNode's semantic analysis" << endl;
   return rSuccess;
@@ -177,6 +181,7 @@ AstNode* AstNode::GetAndExpr(const set<AstNode*>& expression) {
   }
   return NULL;
 }
+
 void AstStmtList::Print(int level) const {
   cout << setw(level * 8) << " "
        << "|stmt list|" << endl;
@@ -187,6 +192,17 @@ void AstStmtList::Print(int level) const {
     next_->Print(level++);
   }
 }
+
+RetCode AstStmtList::SetScanAttrList(const SemanticContext &sem_cnxt) {
+  if (stmt_ != NULL) {
+    stmt_->SetScanAttrList(sem_cnxt);
+  }
+  if (next_ != NULL) {
+    next_->SetScanAttrList(sem_cnxt);
+  }
+  return rSuccess;
+}
+
 RetCode AstStmtList::SemanticAnalisys(SemanticContext* sem_cnxt) {
   RetCode ret = rSuccess;
   if (NULL != stmt_) {
@@ -225,6 +241,7 @@ SemanticContext::SemanticContext() {
   clause_type_ = kNone;
   have_agg = false;
   select_expr_have_agg = false;
+  is_all = false;
 }
 
 SemanticContext::~SemanticContext() {}
