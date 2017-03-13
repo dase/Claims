@@ -293,9 +293,6 @@ PlanContext LogicalOuterJoin::GetPlanContext() {
       auto lt = left_dataflow.plan_partitioner_.get_partition_key();
       auto rt = right_dataflow.plan_partitioner_.get_partition_key();
 
-//      cout<< "left :"<<  lt.attrName<<" index:" << lt.index << " table:" << lt.table_id_<<endl;
-//      cout<< "right :"<<  rt.attrName<<" index:" << rt.index << " table:" << rt.table_id_<<endl;
-
       ret.plan_partitioner_ = DecideOutputDataflowProperty(
           left_dataflow, right_dataflow, join_type_);
       auto it = ret.plan_partitioner_.get_partition_key();
@@ -736,13 +733,7 @@ int LogicalOuterJoin::GetIdInRightJoinKeys(
 int LogicalOuterJoin::GetIdInAttributeList(
     const std::vector<Attribute>& attributes,
     const Attribute& attribute) const {
-//  std::cout<< "!!!!!!outer join!!!!!!!!!!!!!"
-//      << attribute.attrName << "     "<< attribute.table_id_
-//      << "     "<< attribute.index <<endl;
   for (unsigned i = 0; i < attributes.size(); i++) {
-    std::cout<< "In attribute list !!!" <<attributes[i].attrName
-        << "     "<< attributes[i].table_id_
-    << "     " <<attributes[i].index <<endl;
     if (attributes[i] == attribute) {
       return i;
     }

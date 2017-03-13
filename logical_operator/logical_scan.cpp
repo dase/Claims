@@ -201,6 +201,11 @@ PlanContext LogicalScan::GetPlanContext() {
         target_projection_->getPartitioner(), DESIRIABLE_STORAGE_LEVEL);
   }
 
+  for (set<string>::const_iterator it = columns_.begin();
+            it != columns_.end(); it++ ) {
+    cout <<  (*it) << endl;
+  }
+
   /**
    * @brief build the PlanContext
    */
@@ -218,9 +223,6 @@ PlanContext LogicalScan::GetPlanContext() {
   plan_context_->plan_partitioner_.UpdateTableNameOfPartitionKey(table_alias_);
   plan_context_->commu_cost_ = 0;
   lock_->release();
-  for (auto it : plan_context_->attribute_list_) {
-    cout << it.getName() << endl;
-  }
 
   return *plan_context_;
 }

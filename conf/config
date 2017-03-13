@@ -34,9 +34,9 @@ client_listener_port = 10000
 #data="/home/imdb/data/stock/"
 #data="/home/zzh/data/1partition/"
 #data="/claimsdata/"
-#data="/home/zzh/data/sf-1-p4/"
+data="/home/zzh/data/sf-1-p4/"
 #data="/home/zzh/Desktop/test_data/"
-data="/home/zzh/Desktop/test_data_old/"
+#data="/home/zzh/Desktop/test_data_old/"
 #data="/home/fish/data/test/"
 #data="/home/imdb/data/POC/"
 #data="/home/imdb/data/POC/"
@@ -64,3 +64,4 @@ local_disk_mode=1
 
 scan_batch=100
 
+log="/home/zzh/Desktop/"
