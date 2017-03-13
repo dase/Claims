@@ -201,10 +201,6 @@ PlanContext LogicalScan::GetPlanContext() {
         target_projection_->getPartitioner(), DESIRIABLE_STORAGE_LEVEL);
   }
 
-  for (set<string>::const_iterator it = columns_.begin();
-            it != columns_.end(); it++ ) {
-    cout <<  (*it) << endl;
-  }
 
   /**
    * @brief build the PlanContext

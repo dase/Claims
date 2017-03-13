@@ -293,6 +293,9 @@ PlanContext LogicalOuterJoin::GetPlanContext() {
       auto lt = left_dataflow.plan_partitioner_.get_partition_key();
       auto rt = right_dataflow.plan_partitioner_.get_partition_key();
 
+//      cout<< "left :"<<  lt.attrName<<" index:" << lt.index << " table:" << lt.table_id_<<endl;
+//      cout<< "right :"<<  rt.attrName<<" index:" << rt.index << " table:" << rt.table_id_<<endl;
+
       ret.plan_partitioner_ = DecideOutputDataflowProperty(
           left_dataflow, right_dataflow, join_type_);
       auto it = ret.plan_partitioner_.get_partition_key();
