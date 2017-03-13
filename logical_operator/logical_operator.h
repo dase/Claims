@@ -32,6 +32,9 @@
 #include <vector>
 #include <string>
 #include <atomic>
+#include <iosfwd>
+#include <set>
+
 #include "../common/ids.h"
 #include "../common/Schema/SchemaFix.h"
 #include "../logical_operator/plan_context.h"
@@ -55,7 +58,8 @@ enum OperatorType {
   kLogicalCrossJoin,
   kLogicalLimit,
   kLogicalSubquery,
-  kLogicalDeleteFilter
+  kLogicalDeleteFilter,
+  kLogicalOuterJoin
 };
 
 typedef PhysicalOperatorBase* PhysicalPlan;
@@ -74,8 +78,9 @@ typedef struct PhysicalPlanDescriptor {
  */
 class LogicalOperator {
  public:
-  LogicalOperator(){};
-  LogicalOperator(OperatorType operator_type) : operator_type_(operator_type) {
+  LogicalOperator() {}
+  LogicalOperator(OperatorType operator_type) {
+    operator_type_ = operator_type;
     lock_ = new Lock();
   }
   virtual ~LogicalOperator() {
@@ -109,8 +114,10 @@ class LogicalOperator {
       const unsigned& block_size = 4096 * 1024){};
 
   virtual void Print(int level = 0) const = 0;
-
+  virtual void PruneProj(set<string>& above_attrs) {}
   OperatorType get_operator_type() { return operator_type_; }
+  LogicalOperator* DecideAndCreateProject(set<string>& attrs,
+                                          LogicalOperator* child);
 
  protected:
   Schema* GetSchema(const std::vector<Attribute>&) const;
@@ -131,7 +138,7 @@ class LogicalOperator {
   Lock* lock_;
   //  static std::atomic_uint MIDINADE_TABLE_ID;
 
- private:
+ protected:
   OperatorType operator_type_;
 };
 

@@ -36,6 +36,8 @@
 #include <boost/serialization/utility.hpp>
 #include <string>
 #include <map>
+#include <stack>
+
 #include "../physical_operator/physical_operator_base.h"
 #include "../utility/lock.h"
 #include "../Executor/IteratorExecutorMaster.h"
@@ -48,6 +50,9 @@
 #include "../common/Block/BlockStream.h"
 #include "../common/Block/BlockStreamBuffer.h"
 #include "../physical_operator/physical_operator.h"
+
+#define CONNECTION_VERIFY
+
 namespace claims {
 namespace physical_operator {
 /**
@@ -102,11 +107,13 @@ class ExchangeMerger : public PhysicalOperator {
    * 4. create receive thread, if one block is enough, then will be put into
    * all_merged_block_buffer
    */
-  bool Open(const PartitionOffset& partition_offset = 0);
+  bool Open(SegmentExecStatus* const exec_status,
+            const PartitionOffset& partition_offset = 0);
   /// fetch block from all_merged_block_buffer and return.
-  bool Next(BlockStreamBase* block);
-  bool Close();
+  bool Next(SegmentExecStatus* const exec_status, BlockStreamBase* block);
+  bool Close(SegmentExecStatus* const exec_status);
   void Print();
+  RetCode GetAllSegments(stack<Segment*>* all_segments);
 
  private:
   /// prepare socket at this node, waiting senders connect it
@@ -152,13 +159,25 @@ class ExchangeMerger : public PhysicalOperator {
   int epoll_fd_;
   int* socket_fd_lower_list_;
   std::vector<std::string> lower_ip_list_;
+#ifdef CONNECTION_VERIFY
+  std::map<int ,std::string> lower_fd_to_ip_;
+  std::map<int ,std::string> lower_fd_to_passwd_;
+#endif
   pthread_t receiver_thread_id_;
   pthread_t debug_thread_id_;
   unsigned exhausted_lowers;
   unsigned partition_offset_;
   semaphore sem_new_block_or_eof_;
+#ifdef CONNECTION_VERIFY
+  set<int> lower_sock_fd_list_;
+#endif
   std::map<int, int> lower_sock_fd_to_id_;
   PerformanceInfo* perf_info_;
+  bool is_registered_to_tracker_;
+#ifdef CONNECTION_VERIFY
+  double confirm_sender_time;
+  int frequence;
+#endif
 
  private:
   friend class boost::serialization::access;

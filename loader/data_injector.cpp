@@ -79,7 +79,7 @@ using claims::catalog::Partitioner;
 using claims::catalog::ProjectionDescriptor;
 using claims::catalog::Catalog;
 using boost::lexical_cast;
-using namespace claims::common;
+using namespace claims::common;  // NOLINT
 /*
 #define DEFINE_DEBUG_LOG(FLAG, log) \
   #ifdef CLAIMS_DEBUG_LOG \
@@ -152,7 +152,9 @@ DataInjector::DataInjector(TableDescriptor* table, const string col_separator,
                            const string row_separator)
     : table_(table),
       col_separator_(col_separator),
-      row_separator_(row_separator) {
+      row_separator_(row_separator),
+      row_id_in_table_(table_->row_number_),
+      connector_(table_->get_connector()) {
   sub_tuple_generator_.clear();
   table_schema_ = table_->getSchema();
   for (int i = 0; i < table_->getNumberOfProjection(); i++) {
@@ -192,16 +194,14 @@ DataInjector::DataInjector(TableDescriptor* table, const string col_separator,
 
   sblock_ = new Block(BLOCK_SIZE);
 
-#ifdef DATA_DO_LOAD
-  connector_ = new TableFileConnector(
-      Config::local_disk_mode ? FilePlatform::kDisk : FilePlatform::kHdfs,
-      write_path_);
-#endif
+  // #ifdef DATA_DO_LOAD
+  //   connector_ = table_->get_connector();
+  // #endif
 }
 
 DataInjector::~DataInjector() {
   DELETE_PTR(table_schema_);
-  DELETE_PTR(connector_);
+  //  DELETE_PTR(connector_);
   DELETE_PTR(sblock_);
   for (auto it : pj_buffer_) {
     for (auto iter : it) {
@@ -236,14 +236,15 @@ RetCode DataInjector::PrepareInitInfo(FileOpenFlag open_flag) {
                 j));
         tmp_block_num.push_back(
             table_->getProjectoin(i)->getPartitioner()->getPartitionBlocks(j));
-      } else {
+      } else if (kCreateFile == open_flag) {
         tmp_tuple_count.push_back(0);
         tmp_block_num.push_back(0);
+      } else {
+        LOG(ERROR) << "Invalid open_flag. kReadFile shouldn't be here.";
+        assert(open_flag != FileOpenFlag::kReadFile);
       }
-      LOG(INFO)
-          << "init number of partitions " << i << "\t" << j << "\t:"
-          << table_->getProjectoin(i)->getPartitioner()->getPartitionBlocks(j)
-          << endl;
+      LOG(INFO) << "init number of partitions (" << i << "," << j
+                << "):" << tmp_block_num[j];
     }
     pj_buffer_.push_back(temp_v);
     blocks_per_partition_.push_back(tmp_block_num);
@@ -334,7 +335,7 @@ RetCode DataInjector::LoadFromFileSingleThread(vector<string> input_file_names,
                                        << row_id_in_file << ". ret:" << ret);
       total_insert_time_ += GetElapsedTimeInUs(start_insert_time);
 
-      ++row_id_in_table_;
+      __sync_add_and_fetch(&row_id_in_table_, 1L);
       tuple_record.clear();
     }
 
@@ -393,9 +394,11 @@ RetCode DataInjector::SetTableState(FileOpenFlag open_flag,
       }
     }
     LOG(INFO) << "\n--------------------Load  Begin!------------------------\n";
-  } else {
-    row_id_in_table_ = table_->getRowNumber();
+  } else if (FileOpenFlag::kAppendFile == open_flag) {
     LOG(INFO) << "\n------------------Append  Begin!-----------------------\n";
+  } else {
+    LOG(ERROR) << "Invalid open_flag, kReadFile shouldn't be here.";
+    assert(open_flag != FileOpenFlag::kReadFile);
   }
   return ret;
 }
@@ -429,8 +432,10 @@ RetCode DataInjector::PrepareEverythingForLoading(
   // open files
   GET_TIME_DI(open_start_time);
 #ifdef DATA_DO_LOAD
-  EXEC_AND_RETURN_ERROR(ret, connector_->Open(open_flag),
-                        " failed to open connector");
+  if (kCreateFile == open_flag)
+    EXEC_AND_LOG(ret, connector_.DeleteAllTableFiles(),
+                 "deleted all table files", "failed to delete all table files");
+  EXEC_AND_RETURN_ERROR(ret, connector_.Open(), " failed to open connector");
 #endif
   PLOG_DI("open connector time: " << GetElapsedTimeInUs(open_start_time) /
                                          1000000.0);
@@ -454,7 +459,7 @@ RetCode DataInjector::FinishJobAfterLoading(FileOpenFlag open_flag) {
   int ret = rSuccess;
 
 #ifdef DATA_DO_LOAD
-  EXEC_AND_LOG(ret, connector_->Close(), "closed connector.",
+  EXEC_AND_LOG(ret, connector_.Close(), "closed connector.",
                "Failed to close connector. ret:" << ret);
 #endif
 
@@ -616,7 +621,7 @@ RetCode DataInjector::LoadFromFile(vector<string> input_file_names,
   total_read_sem_fail_count_ = 0;
   total_unread_sem_fail_count_ = 0;
   total_append_warning_time_ = 0;
-
+  assert(open_flag != FileOpenFlag::kReadFile);
 #ifndef MULTI_THREAD_LOAD
   return LoadFromFileSingleThread(input_file_names, open_flag, result,
                                   sample_rate);
@@ -836,11 +841,8 @@ RetCode DataInjector::InsertFromString(const string tuples,
   EXEC_AND_RETURN_ERROR(ret, PrepareInitInfo(kAppendFile),
                         "failed to prepare initialization info");
 #ifdef DATA_DO_LOAD
-  EXEC_AND_RETURN_ERROR(ret, connector_->Open(kAppendFile),
-                        " failed to open connector");
+  EXEC_AND_RETURN_ERROR(ret, connector_.Open(), " failed to open connector");
 #endif
-
-  row_id_in_table_ = table_->getRowNumber();
   LOG(INFO) << "\n------------------Insert  Begin!-----------------------\n";
 
   string::size_type cur = 0;
@@ -854,7 +856,6 @@ RetCode DataInjector::InsertFromString(const string tuples,
 
     EXEC_AND_ONLY_LOG_ERROR(ret, AddRowIdColumn(tuple_record),
                             "failed to add row_id column for tuple.");
-    --row_id_in_table_;  // it will be added in line 894
     LOG(INFO) << "row " << line << ": " << tuple_record << endl;
 
     vector<Validity> columns_validities;
@@ -866,9 +867,6 @@ RetCode DataInjector::InsertFromString(const string tuples,
         (ret = CheckAndToValue(tuple_record, tuple_buffer, RawDataSource::kSQL,
                                columns_validities))) {
       // contain data error, which is stored in the end of columns_validities
-
-      // eliminate the side effect in row_id_in_table_
-      row_id_in_table_ -= correct_tuple_buffer.size();
       for (auto it : correct_tuple_buffer) DELETE_PTR(it);
       correct_tuple_buffer.clear();
 
@@ -891,7 +889,6 @@ RetCode DataInjector::InsertFromString(const string tuples,
     if (rSuccess != ret) return ret;
 
     correct_tuple_buffer.push_back(tuple_buffer);
-    ++row_id_in_table_;
     ++line;
     prev_cur = cur + 1;
   }
@@ -908,7 +905,7 @@ RetCode DataInjector::InsertFromString(const string tuples,
                "flush all last block that are not full",
                "failed to flush all last block");
 #ifdef DATA_DO_LOAD
-  EXEC_AND_LOG(ret, connector_->Close(), "closed connector.",
+  EXEC_AND_LOG(ret, connector_.Close(), "closed connector.",
                "Failed to close connector.");
 #endif
   EXEC_AND_ONLY_LOG_ERROR(ret, UpdateCatalog(kAppendFile),
@@ -921,6 +918,7 @@ RetCode DataInjector::InsertFromString(const string tuples,
 // flush the last block which is not full of 64*1024Byte
 RetCode DataInjector::FlushNotFullBlock(
     Block* block_to_write, vector<vector<BlockStreamBase*>>& pj_buffer) {
+  TableDescriptor* table = table_;
   int ret = rSuccess;
   for (int i = 0; i < table_->getNumberOfProjection(); i++) {
     for (
@@ -931,8 +929,8 @@ RetCode DataInjector::FlushNotFullBlock(
         pj_buffer[i][j]->serialize(*block_to_write);
 #ifdef DATA_DO_LOAD
         EXEC_AND_LOG(ret,
-                     connector_->AtomicFlush(i, j, block_to_write->getBlock(),
-                                             block_to_write->getsize()),
+                     connector_.AtomicFlush(i, j, block_to_write->getBlock(),
+                                            block_to_write->getsize()),
                      "flushed the last block from buffer(" << i << "," << j
                                                            << ") into file",
                      "failed to flush the last block from buffer("
@@ -948,8 +946,6 @@ RetCode DataInjector::FlushNotFullBlock(
 
 RetCode DataInjector::UpdateCatalog(FileOpenFlag open_flag) {
   int ret = rSuccess;
-  // register the number of rows in table to catalog
-  table_->setRowNumber(row_id_in_table_);
   // register the partition information to catalog
   for (int i = 0; i < table_->getNumberOfProjection(); i++) {
     for (
@@ -1018,14 +1014,16 @@ RetCode DataInjector::InsertTupleIntoProjection(
                        << " tuples");
   void* block_tuple_addr =
       local_pj_buffer[i][part]->allocateTuple(tuple_max_length);
+  TableDescriptor* table = table_;
+
   if (NULL == block_tuple_addr) {
     // if buffer is full, write buffer(64K) to HDFS/disk
     local_pj_buffer[i][part]->serialize(*block_to_write);
 #ifdef DATA_DO_LOAD
     EXEC_AND_ONLY_LOG_ERROR(
-        ret, connector_->AtomicFlush(i, part, block_to_write->getBlock(),
-                                     block_to_write->getsize()),
-        "failed to write to data file. ret:" << ret);
+        ret, connector_.AtomicFlush(i, part, block_to_write->getBlock(),
+                                    block_to_write->getsize()),
+        /* "written to data file", */ "failed to write to data file. ");
 #endif
     __sync_add_and_fetch(&blocks_per_partition_[i][part], 1);
     local_pj_buffer[i][part]->setEmpty();
@@ -1183,12 +1181,12 @@ string DataInjector::GenerateDataValidityInfo(const Validity& vali,
              "input columns\n";
       break;
     }
-	case rInvalidInsertData: {
-		oss << "Data value is invalid for column '"
-			<< table_->getAttribute(vali.column_index_).attrName
-			<< "' at line: " << line;
-		if ("" != file) oss << " in file: " << file;
-		oss << "\n";
+    case rInvalidInsertData: {
+      oss << "Data value is invalid for column '"
+          << table_->getAttribute(vali.column_index_).attrName
+          << "' at line: " << line;
+      if ("" != file) oss << " in file: " << file;
+      oss << "\n";
       break;
     }
     default:

@@ -45,6 +45,7 @@
 #include "../physical_operator/physical_operator_base.h"
 #include "../physical_operator/physical_sort.h"
 using claims::common::ExprNode;
+using claims::common::LogicInitCnxt;
 using claims::physical_operator::ExchangeMerger;
 using claims::physical_operator::Expander;
 using claims::physical_operator::PhysicalSort;
@@ -77,8 +78,8 @@ LogicalSort::~LogicalSort() {
 PlanContext LogicalSort::GetPlanContext() {
   lock_->acquire();
   if (NULL != plan_context_) {
-    lock_->release();
-    return *plan_context_;
+    delete plan_context_;
+    plan_context_ = NULL;
   }
   // Get the information from its child
   PlanContext child_plan_context_ = child_->GetPlanContext();
@@ -97,10 +98,12 @@ PlanContext LogicalSort::GetPlanContext() {
   partition_list.push_back(par);
   ret.plan_partitioner_.set_partition_list(partition_list);
   SetColumnId(child_plan_context_);
-  Schema *input_schema = GetSchema(child_plan_context_.attribute_list_);
+  LogicInitCnxt licnxt;
+  licnxt.schema0_ = GetSchema(child_plan_context_.attribute_list_);
+  GetColumnToId(child_plan_context_.attribute_list_, licnxt.column_id0_);
   for (int i = 0; i < order_by_attrs_.size(); ++i) {
-    order_by_attrs_[i].first->InitExprAtLogicalPlan(
-        order_by_attrs_[i].first->actual_type_, column_to_id_, input_schema);
+    licnxt.return_type_ = order_by_attrs_[i].first->actual_type_;
+    order_by_attrs_[i].first->InitExprAtLogicalPlan(licnxt);
   }
   plan_context_ = new PlanContext();
   *plan_context_ = ret;
@@ -206,5 +209,15 @@ void LogicalSort::Print(int level) const {
   PrintOrderByAttr(level);
   child_->Print(level);
 }
+
+void LogicalSort::PruneProj(set<string> &above_attrs) {
+  set<string> above_attrs_copy = above_attrs;
+  for (int i = 0, size = order_by_attrs_.size(); i < size; ++i) {
+    order_by_attrs_[i].first->GetUniqueAttr(above_attrs_copy);
+  }
+  child_->PruneProj(above_attrs_copy);
+  child_ = DecideAndCreateProject(above_attrs_copy, child_);
+}
+
 }  // namespace logical_operator
 }  // namespace claims

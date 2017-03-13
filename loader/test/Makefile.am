@@ -2,7 +2,7 @@
 AM_CPPFLAGS= -fPIC -fpermissive \
 -I${BOOST_HOME} \
 -I${BOOST_HOME}/boost/serialization \
--I${HADOOP_HOME}/src/c++/libhdfs\
+-I${HADOOP_HOME}/include\
 -I${JAVA_HOME}/include \
 -I${JAVA_HOME}/include/linux \
 -I${GTEST_HOME}/include	\
@@ -16,14 +16,14 @@ endif
 
 LDADD = ../../catalog/libcatalog.a \
 		../libloader.a \
-		${HADOOP_HOME}/c++/Linux-amd64-64/lib/libhdfs.a\
+		${HADOOP_HOME}/lib/native/libhdfs.a\
 		${JAVA_HOME}/jre/lib/amd64/server/libjvm.so\
 		${BOOST_HOME}/stage/lib/libboost_serialization.a \
-		${BOOST_HOME}/stage/lib/libboost_serialization.so \
-		${THERON_HOME}/Lib/libtherond.a 
+		${BOOST_HOME}/stage/lib/libboost_serialization.so 
 
 noinst_LIBRARIES=libtest.a
 libtest_a_SOURCES = \
-	single_file_connector_test.h	single_file_connector_test.cpp\
-	table_file_connector_test.h		table_file_connector_test.cpp \
+	single_file_connector_test.h	single_file_connector_test.cpp \
+	single_thread_single_file_connector_test.h\
+	table_file_connector_test.h 	table_file_connector_test.cpp \
 	data_injector_test.cpp			data_injector_test.h

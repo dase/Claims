@@ -1,4 +1,5 @@
-#include "../common/error_no.h"
+#include "../common/expression/expr_node.h"
+#include "../common/memory_handle.h"
 
 /*
  * Copyright [2012-2015] DaSE@ECNU
@@ -29,6 +30,10 @@
  */
 #define GLOG_NO_ABBREVIATED_SEVERITIES
 
+#include <map>
+#include <vector>
+#include <string>
+#include "../common/error_no.h"
 #include "../Config.h"
 #include "../IDsGenerator.h"
 #include "../Resource/NodeTracker.h"
@@ -38,6 +43,7 @@
 #include "../physical_operator/exchange_merger.h"
 #include "../logical_operator/logical_cross_join.h"
 #include "../physical_operator/physical_nest_loop_join.h"
+using claims::common::LogicInitCnxt;
 using claims::physical_operator::ExchangeMerger;
 using claims::physical_operator::Expander;
 using claims::physical_operator::PhysicalNestLoopJoin;
@@ -60,6 +66,17 @@ LogicalCrossJoin::LogicalCrossJoin(LogicalOperator* left_child,
       left_child_(left_child),
       right_child_(right_child),
       plan_context_(NULL),
+      join_policy_(kUninitialized) {
+  join_condi_.clear();
+}
+LogicalCrossJoin::LogicalCrossJoin(LogicalOperator* left_child,
+                                   LogicalOperator* right_child,
+                                   std::vector<ExprNode*> join_condi)
+    : LogicalOperator(kLogicalCrossJoin),
+      left_child_(left_child),
+      right_child_(right_child),
+      plan_context_(NULL),
+      join_condi_(join_condi),
       join_policy_(kUninitialized) {}
 LogicalCrossJoin::~LogicalCrossJoin() {
   if (NULL != plan_context_) {
@@ -104,8 +121,8 @@ int LogicalCrossJoin::get_join_policy_() {
 PlanContext LogicalCrossJoin::GetPlanContext() {
   lock_->acquire();
   if (NULL != plan_context_) {
-    lock_->release();
-    return *plan_context_;
+    delete plan_context_;
+    plan_context_ = NULL;
   }
   PlanContext left_plan_context = left_child_->GetPlanContext();
   PlanContext right_plan_context = right_child_->GetPlanContext();
@@ -190,6 +207,16 @@ PlanContext LogicalCrossJoin::GetPlanContext() {
       }
       default: { assert(false); }
     }
+    // initialize expression
+    LogicInitCnxt licnxt;
+    GetColumnToId(left_plan_context.attribute_list_, licnxt.column_id0_);
+    GetColumnToId(right_plan_context.attribute_list_, licnxt.column_id1_);
+    licnxt.schema0_ = left_plan_context.GetSchema();
+    licnxt.schema1_ = right_plan_context.GetSchema();
+    for (int i = 0; i < join_condi_.size(); ++i) {
+      licnxt.return_type_ = join_condi_[i]->actual_type_;
+      join_condi_[i]->InitExprAtLogicalPlan(licnxt);
+    }
     plan_context_ = new PlanContext();
     *plan_context_ = ret;
   } else {
@@ -256,6 +283,7 @@ PhysicalOperatorBase* LogicalCrossJoin::GetPhysicalPlan(
   PlanContext right_plan_context = right_child_->GetPlanContext();
   PhysicalNestLoopJoin::State state;
   state.block_size_ = block_size;
+  state.join_condi_ = join_condi_;
   state.input_schema_left_ = GetSchema(left_plan_context.attribute_list_);
   state.input_schema_right_ = GetSchema(right_plan_context.attribute_list_);
   state.output_schema_ = GetSchema(plan_context_->attribute_list_);
@@ -263,6 +291,20 @@ PhysicalOperatorBase* LogicalCrossJoin::GetPhysicalPlan(
   state.child_right_ = child_iterator_right;
   cross_join_iterator = new PhysicalNestLoopJoin(state);
   return cross_join_iterator;
+}
+
+void LogicalCrossJoin::PruneProj(set<string>& above_attrs) {
+  set<string> above_attrs_copy = above_attrs;
+
+  for (int i = 0, size = join_condi_.size(); i < size; ++i) {
+    join_condi_[i]->GetUniqueAttr(above_attrs_copy);
+  }
+  set<string> above_attrs_right = above_attrs_copy;
+  left_child_->PruneProj(above_attrs_copy);
+  left_child_ = DecideAndCreateProject(above_attrs_copy, left_child_);
+
+  right_child_->PruneProj(above_attrs_right);
+  right_child_ = DecideAndCreateProject(above_attrs_right, right_child_);
 }
 
 int LogicalCrossJoin::GenerateChildPhysicalQueryPlan(
@@ -312,7 +354,7 @@ int LogicalCrossJoin::GenerateChildPhysicalQueryPlan(
       expander_state.block_size_ = blocksize;
       expander_state.init_thread_count_ = Config::initial_degree_of_parallelism;
       expander_state.child_ = right_child_->GetPhysicalPlan(blocksize);
-      expander_state.schema_ = left_plan_context.GetSchema();
+      expander_state.schema_ = right_plan_context.GetSchema();
       PhysicalOperatorBase* expander = new Expander(expander_state);
       ExchangeMerger::State exchange_state;
       exchange_state.block_size_ = blocksize;

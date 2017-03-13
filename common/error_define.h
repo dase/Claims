@@ -59,6 +59,16 @@ typedef int RetCode;  // means return code
     }                                        \
   } while (0)
 
+#define EXEC_AND_LOG_RETURN(ret, f, info, err_info) \
+  do {                                              \
+    if (rSuccess == (ret = f)) {                    \
+      LOG(INFO) << info << std::endl;               \
+    } else {                                        \
+      ELOG(ret, err_info)                           \
+      return ret;                                   \
+    }                                               \
+  } while (0)
+
 #define EXEC_AND_PLOG(ret, f, info, err_info)                       \
   do {                                                              \
     if (rSuccess == (ret = f)) {                                    \
@@ -189,6 +199,9 @@ const int rAccessDiskFileFail = -98;
 const int rAccessHdfsFileFail = -99;
 const int rNoMemory = -100;
 const int rDataPathError = -101;
+const int rFileInUsing = -102;
+
+const int rResourceIsLocked = -103;
 
 // schema associated
 const int rEmptyAttributeName = -501;
@@ -255,6 +268,19 @@ const int rCodegenFailed =
 const int rCatalogRestoreInvild = -5004;
 const int rCatalogNotFound = -5005;
 
+/* errorno for storage -6001 ~ -7000 */
+const int rMemoryPoolMallocFail = -6001;
+const int rNoEnoughMemory = -6002;
+const int rReturnFailFindTargetChunkId = -6003;
+const int rUnkownStroageLevel = -6004;
+const int rFailOpenFileInDiskChunkReaderIterator = -6005;
+const int rFailReadOneBlockInDiskChunkReaderIterator = -6006;
+const int rFailOpenHDFSFileInStorage = -6007;
+const int rFailSetStartOffsetInStorage = -6008;
+const int rLoadFromHdfsOpenFailed = -6009;
+const int rUnbindPartitionFailed = -6010;
+const int rLoadFromDiskOpenFailed = -6011;
+
 /* errorno for stmt_handler -14001 ~ -15000*/
 const int rStmtHandlerCreateTableExisted = -14002;
 const int rStmtHandlerTypeNotSupport = -14003;
@@ -307,6 +333,17 @@ const int rLimitParaCouldnotLessZero = -14137;
 const int rLimitParaShouldNaturalNumber = -14138;
 const int rCreateProjectionOnDelTableFailed = -14138;
 const int rNULLDropTableName = -14139;
+const int rStmtCancelled = -14140;
+const int rUnknowStmtType = -14141;
+
+// for node_manager
+const int rConRemoteActorError = -14300;
+const int rRegisterToMasterTimeOut = -14301;
+const int rRegisterToMasterError = -14302;
+// for exec_tracker
+const int rCouldnotFindCancelQueryId = -14400;
+const int rNetworkError = -14401;
+const int rSendingTimeout = -14402;
 }  // end namespace common
 }  // end namespace claims
 

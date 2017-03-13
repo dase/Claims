@@ -32,10 +32,15 @@
 
 #include "../physical_operator/physical_hash_join.h"
 #include <glog/logging.h>
+#include <stack>
+
 #include "../codegen/ExpressionGenerator.h"
+#include "../common/expression/expr_node.h"
 #include "../Config.h"
 #include "../Executor/expander_tracker.h"
 #include "../utility/rdtsc.h"
+
+using claims::common::ExprNode;
 
 // #define _DEBUG_
 
@@ -50,6 +55,7 @@ PhysicalHashJoin::PhysicalHashJoin(State state)
       eftt_(0),
       memcpy_(0),
       memcat_(0) {
+  set_phy_oper_type(kPhysicalHashJoin);
   // sema_open_.set_value(1);
   InitExpandedStatus();
 }
@@ -61,19 +67,34 @@ PhysicalHashJoin::PhysicalHashJoin()
       eftt_(0),
       memcpy_(0),
       memcat_(0) {
+  set_phy_oper_type(kPhysicalHashJoin);
+
   // sema_open_.set_value(1);
   InitExpandedStatus();
 }
 
-PhysicalHashJoin::~PhysicalHashJoin() {}
+PhysicalHashJoin::~PhysicalHashJoin() {
+  if (NULL != state_.child_right_) {
+    delete state_.child_right_;
+    state_.child_right_ = NULL;
+  }
+  if (NULL != state_.child_left_) {
+    delete state_.child_left_;
+    state_.child_left_ = NULL;
+  }
+  for (int i = 0; i < state_.join_condi_.size(); ++i) {
+    DELETE_PTR(state_.join_condi_[i]);
+  }
+  state_.join_condi_.clear();
+}
 
 PhysicalHashJoin::State::State(
     PhysicalOperatorBase* child_left, PhysicalOperatorBase* child_right,
     Schema* input_schema_left, Schema* input_schema_right,
     Schema* output_schema, Schema* ht_schema,
     std::vector<unsigned> joinIndex_left, std::vector<unsigned> joinIndex_right,
-    std::vector<unsigned> payload_left, std::vector<unsigned> payload_right,
-    unsigned ht_nbuckets, unsigned ht_bucketsize, unsigned block_size)
+    unsigned ht_nbuckets, unsigned ht_bucketsize, unsigned block_size,
+    vector<ExprNode*> join_condi)
     : child_left_(child_left),
       child_right_(child_right),
       input_schema_left_(input_schema_left),
@@ -82,16 +103,18 @@ PhysicalHashJoin::State::State(
       hashtable_schema_(ht_schema),
       join_index_left_(joinIndex_left),
       join_index_right_(joinIndex_right),
-      payload_left_(payload_left),
-      payload_right_(payload_right),
       hashtable_bucket_num_(ht_nbuckets),
       hashtable_bucket_size_(ht_bucketsize),
-      block_size_(block_size) {}
+      block_size_(block_size),
+      join_condi_(join_condi) {}
 
-bool PhysicalHashJoin::Open(const PartitionOffset& partition_offset) {
+bool PhysicalHashJoin::Open(SegmentExecStatus* const exec_status,
+                            const PartitionOffset& partition_offset) {
 #ifdef TIME
   startTimer(&timer);
 #endif
+
+  RETURN_IF_CANCELLED(exec_status);
 
   RegisterExpandedThreadToAllBarriers();
 
@@ -101,29 +124,18 @@ bool PhysicalHashJoin::Open(const PartitionOffset& partition_offset) {
     winning_thread = true;
     ExpanderTracker::getInstance()->addNewStageEndpoint(
         pthread_self(), LocalStageEndPoint(stage_desc, "Hash join build", 0));
-    unsigned output_index = 0;
-    for (unsigned i = 0; i < state_.join_index_left_.size(); i++) {
-      join_index_left_to_output_[i] = output_index;
-      output_index++;
-    }
-    for (unsigned i = 0; i < state_.payload_left_.size(); i++) {
-      payload_left_to_output_[i] = output_index;
-      output_index++;
-    }
-    for (unsigned i = 0; i < state_.payload_right_.size(); i++) {
-      payload_right_to_output_[i] = output_index;
-      output_index++;
-    }
     hash_func_ = PartitionFunctionFactory::createBoostHashFunction(
         state_.hashtable_bucket_num_);
     unsigned long long hash_table_build = curtick();
     hashtable_ = new BasicHashTable(
         state_.hashtable_bucket_num_, state_.hashtable_bucket_size_,
         state_.input_schema_left_->getTupleMaxSize());
+
 #ifdef _DEBUG_
     consumed_tuples_from_left = 0;
 #endif
 
+#ifdef CodeGen
     QNode* expr = createEqualJoinExpression(
         state_.hashtable_schema_, state_.input_schema_right_,
         state_.join_index_left_, state_.join_index_right_);
@@ -144,6 +156,7 @@ bool PhysicalHashJoin::Open(const PartitionOffset& partition_offset) {
       LOG(INFO) << "Codegen(Join) failed!" << endl;
     }
     delete expr;
+#endif
   }
 
   /**
@@ -156,7 +169,7 @@ bool PhysicalHashJoin::Open(const PartitionOffset& partition_offset) {
    * serialization, then continue processing. Tong
    */
   LOG(INFO) << "join operator begin to open left child" << endl;
-  state_.child_left_->Open(partition_offset);
+  state_.child_left_->Open(exec_status, partition_offset);
   LOG(INFO) << "join operator finished opening left child" << endl;
   BarrierArrive(0);
   BasicHashTable::Iterator tmp_it = hashtable_->CreateIterator();
@@ -179,9 +192,12 @@ bool PhysicalHashJoin::Open(const PartitionOffset& partition_offset) {
 
   unsigned long long int start = curtick();
   unsigned long long int processed_tuple_count = 0;
+  RETURN_IF_CANCELLED(exec_status);
 
   LOG(INFO) << "join operator begin to call left child's next()" << endl;
-  while (state_.child_left_->Next(jtc->l_block_for_asking_)) {
+  while (state_.child_left_->Next(exec_status, jtc->l_block_for_asking_)) {
+    RETURN_IF_CANCELLED(exec_status);
+
     delete jtc->l_block_stream_iterator_;
     jtc->l_block_stream_iterator_ = jtc->l_block_for_asking_->createIterator();
     while (cur = jtc->l_block_stream_iterator_->nextTuple()) {
@@ -200,6 +216,8 @@ bool PhysicalHashJoin::Open(const PartitionOffset& partition_offset) {
     }
     jtc->l_block_for_asking_->setEmpty();
   }
+  DELETE_PTR(input_schema);
+  DELETE_PTR(oper);
 #ifdef _DEBUG_
   tuples_in_hashtable = 0;
 
@@ -213,12 +231,15 @@ bool PhysicalHashJoin::Open(const PartitionOffset& partition_offset) {
   }
 
   BarrierArrive(1);
-  state_.child_right_->Open(partition_offset);
+  state_.child_right_->Open(exec_status, partition_offset);
   LOG(INFO) << "join operator finished opening right child" << endl;
   return true;
 }
 
-bool PhysicalHashJoin::Next(BlockStreamBase* block) {
+bool PhysicalHashJoin::Next(SegmentExecStatus* const exec_status,
+                            BlockStreamBase* block) {
+  RETURN_IF_CANCELLED(exec_status);
+
   void* result_tuple = NULL;
   void* tuple_from_right_child;
   void* tuple_in_hashtable;
@@ -244,6 +265,8 @@ bool PhysicalHashJoin::Next(BlockStreamBase* block) {
    * send was full, so we need hashtable_iterator_ preserved.
    */
   while (true) {
+    RETURN_IF_CANCELLED(exec_status);
+
     while (NULL != (tuple_from_right_child =
                         jtc->r_block_stream_iterator_->currentTuple())) {
       unsigned bn =
@@ -255,10 +278,14 @@ bool PhysicalHashJoin::Next(BlockStreamBase* block) {
 
       while (NULL !=
              (tuple_in_hashtable = jtc->hashtable_iterator_.readCurrent())) {
+#ifdef CodeGen
         cff_(tuple_in_hashtable, tuple_from_right_child, &key_exit,
              state_.join_index_left_, state_.join_index_right_,
              state_.hashtable_schema_, state_.input_schema_right_, eftt_);
-
+#else
+        key_exit =
+            JoinCondiProcess(tuple_in_hashtable, tuple_from_right_child, jtc);
+#endif
         if (key_exit) {
           if (NULL != (result_tuple = block->allocateTuple(
                            state_.output_schema_->getTupleMaxSize()))) {
@@ -295,7 +322,8 @@ bool PhysicalHashJoin::Next(BlockStreamBase* block) {
     }
     jtc->r_block_for_asking_->setEmpty();
     jtc->hashtable_iterator_ = hashtable_->CreateIterator();
-    if (state_.child_right_->Next(jtc->r_block_for_asking_) == false) {
+    if (state_.child_right_->Next(exec_status, jtc->r_block_for_asking_) ==
+        false) {
       if (block->Empty() == true) {
         return false;
       } else {
@@ -317,7 +345,7 @@ bool PhysicalHashJoin::Next(BlockStreamBase* block) {
   }
 }
 
-bool PhysicalHashJoin::Close() {
+bool PhysicalHashJoin::Close(SegmentExecStatus* const exec_status) {
 #ifdef TIME
   stopTimer(&timer);
   LOG(INFO) << "time consuming: " << timer << ", "
@@ -327,9 +355,12 @@ bool PhysicalHashJoin::Close() {
             << "tuples from left child!" << endl;
   InitExpandedStatus();
   DestoryAllContext();
-  delete hashtable_;
-  state_.child_left_->Close();
-  state_.child_right_->Close();
+  if (NULL != hashtable_) {
+    delete hashtable_;
+    hashtable_ = NULL;
+  }
+  state_.child_left_->Close(exec_status);
+  state_.child_right_->Close(exec_status);
   return true;
 }
 
@@ -374,12 +405,29 @@ inline void PhysicalHashJoin::IsMatchCodegen(
     Schema* l_schema, Schema* r_schema, ExprFuncTwoTuples func) {
   func(l_tuple_addr, r_tuple_addr, return_addr);
 }
-
+inline bool PhysicalHashJoin::JoinCondiProcess(void* tuple_left,
+                                               void* tuple_right,
+                                               JoinThreadContext* const hjtc) {
+  hjtc->expr_eval_cnxt_.tuple[0] = tuple_left;
+  hjtc->expr_eval_cnxt_.tuple[1] = tuple_right;
+  bool pass = false;
+  for (int i = 0; i < hjtc->join_condi_.size(); ++i) {
+    pass = *(bool*)(hjtc->join_condi_[i]->ExprEvaluate(hjtc->expr_eval_cnxt_));
+    if (pass == false) {
+      return false;
+    }
+  }
+  return true;
+}
 PhysicalHashJoin::JoinThreadContext::~JoinThreadContext() {
   delete l_block_for_asking_;
   delete l_block_stream_iterator_;
   delete r_block_for_asking_;
   delete r_block_stream_iterator_;
+  for (int i = 0; i < join_condi_.size(); ++i) {
+    DELETE_PTR(join_condi_[i]);
+  }
+  join_condi_.clear();
 }
 
 ThreadContext* PhysicalHashJoin::CreateContext() {
@@ -390,9 +438,25 @@ ThreadContext* PhysicalHashJoin::CreateContext() {
   jtc->r_block_for_asking_ = BlockStreamBase::createBlock(
       state_.input_schema_right_, state_.block_size_);
   jtc->r_block_stream_iterator_ = jtc->r_block_for_asking_->createIterator();
-
+  ExprNode* new_node = NULL;
+  for (int i = 0; i < state_.join_condi_.size(); ++i) {
+    new_node = state_.join_condi_[i]->ExprCopy();
+    new_node->InitExprAtPhysicalPlan();
+    jtc->join_condi_.push_back(new_node);
+  }
+  jtc->expr_eval_cnxt_.schema[0] = state_.input_schema_left_;
+  jtc->expr_eval_cnxt_.schema[1] = state_.input_schema_right_;
   return jtc;
 }
-
+RetCode PhysicalHashJoin::GetAllSegments(stack<Segment*>* all_segments) {
+  RetCode ret = rSuccess;
+  if (NULL != state_.child_right_) {
+    ret = state_.child_right_->GetAllSegments(all_segments);
+  }
+  if (NULL != state_.child_left_) {
+    ret = state_.child_left_->GetAllSegments(all_segments);
+  }
+  return ret;
+}
 }  // namespace physical_operator
 }  // namespace claims

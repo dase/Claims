@@ -31,16 +31,19 @@
 
 #include "../physical_operator/physical_aggregation.h"
 #include <glog/logging.h>
+#include <stack>
 #include <vector>
 #include "../common/expression/expr_node.h"
 #include "../common/expression/data_type_oper.h"
 #include "../common/expression/expr_unary.h"
+#include "../common/memory_handle.h"
 #include "../common/Schema/Schema.h"
 #include "../Debug.h"
 #include "../utility/rdtsc.h"
 #include "../Executor/expander_tracker.h"
 using claims::common::DataTypeOper;
 using claims::common::DataTypeOperFunc;
+using claims::common::ExprEvalCnxt;
 using claims::common::ExprNode;
 using claims::common::ExprUnary;
 using std::vector;
@@ -53,12 +56,14 @@ PhysicalAggregation::PhysicalAggregation(State state)
       hashtable_(NULL),
       hash_(NULL),
       bucket_cur_(0) {
+  set_phy_oper_type(kPhysicalAggregation);
   InitExpandedStatus();
   assert(state_.hash_schema_);
 }
 
 PhysicalAggregation::PhysicalAggregation()
     : PhysicalOperator(4, 3), hashtable_(NULL), hash_(NULL), bucket_cur_(0) {
+  set_phy_oper_type(kPhysicalAggregation);
   InitExpandedStatus();
 }
 
@@ -132,7 +137,10 @@ PhysicalAggregation::State::State(
  * shared
  * hash table thread by thread synchronized by the hash table lock.
  */
-bool PhysicalAggregation::Open(const PartitionOffset &partition_offset) {
+bool PhysicalAggregation::Open(SegmentExecStatus *const exec_status,
+                               const PartitionOffset &partition_offset) {
+  RETURN_IF_CANCELLED(exec_status);
+
   RegisterExpandedThreadToAllBarriers();
   // copy expression and initialize them
   vector<ExprNode *> group_by_attrs;
@@ -163,7 +171,9 @@ bool PhysicalAggregation::Open(const PartitionOffset &partition_offset) {
     UnregisterExpandedThreadToAllBarriers(1);
     return true;
   }
-  state_.child_->Open(partition_offset);
+  RETURN_IF_CANCELLED(exec_status);
+
+  state_.child_->Open(exec_status, partition_offset);
   ticks start = curtick();
   if (TryEntryIntoSerializedSection(1)) {
     hash_ = PartitionFunctionFactory::createGeneralModuloFunction(
@@ -183,6 +193,8 @@ bool PhysicalAggregation::Open(const PartitionOffset &partition_offset) {
    * with small groups, as private aggregation avoids the contention to the
    * shared hash table.
    */
+  RETURN_IF_CANCELLED(exec_status);
+
   BasicHashTable *private_hashtable =
       new BasicHashTable(state_.num_of_buckets_, state_.bucket_size_,
                          state_.hash_schema_->getTupleMaxSize());
@@ -199,19 +211,26 @@ bool PhysicalAggregation::Open(const PartitionOffset &partition_offset) {
   void *value_in_input_tuple;
   void *value_in_hash_table;
   void *new_tuple_in_hash_table;
+  ExprEvalCnxt eecnxt;
+  eecnxt.schema[0] = state_.input_schema_;
+
   unsigned allocated_tuples_in_hashtable = 0;
   BasicHashTable::Iterator ht_it = hashtable_->CreateIterator();
   BasicHashTable::Iterator pht_it = private_hashtable->CreateIterator();
   int64_t one = 1;
   BlockStreamBase *block_for_asking =
       BlockStreamBase::createBlock(state_.input_schema_, state_.block_size_);
+  BlockStreamBase::BlockStreamTraverseIterator *bsti = NULL;
   block_for_asking->setEmpty();
 
   start = curtick();
   // traverse every block from child
-  while (state_.child_->Next(block_for_asking)) {
-    BlockStreamBase::BlockStreamTraverseIterator *bsti =
-        block_for_asking->createIterator();
+
+  RETURN_IF_CANCELLED(exec_status);
+  while (state_.child_->Next(exec_status, block_for_asking)) {
+    RETURN_IF_CANCELLED(exec_status);
+    DELETE_PTR(bsti);
+    bsti = block_for_asking->createIterator();
     bsti->reset();
     // traverse every tuple from block
     while (NULL != (cur = bsti->currentTuple())) {
@@ -221,9 +240,9 @@ bool PhysicalAggregation::Open(const PartitionOffset &partition_offset) {
        */
       bn = 0;
       // execute group by attributes and get partition key
+      eecnxt.tuple[0] = cur;
       if (state_.group_by_attrs_.size() > 0) {
-        group_by_expr_result =
-            group_by_attrs[0]->ExprEvaluate(cur, state_.input_schema_);
+        group_by_expr_result = group_by_attrs[0]->ExprEvaluate(eecnxt);
         bn = state_.hash_schema_->getcolumn(0).operate->getPartitionValue(
             group_by_expr_result, state_.num_of_buckets_);
       }
@@ -236,8 +255,7 @@ bool PhysicalAggregation::Open(const PartitionOffset &partition_offset) {
          */
         key_exist = true;
         for (int i = 0; i < group_by_attrs.size(); ++i) {
-          group_by_expr_result =
-              group_by_attrs[i]->ExprEvaluate(cur, state_.input_schema_);
+          group_by_expr_result = group_by_attrs[i]->ExprEvaluate(eecnxt);
           key_in_hash_table =
               state_.hash_schema_->getColumnAddess(i, tuple_in_hashtable);
           if (!state_.hash_schema_->getcolumn(i)
@@ -252,9 +270,8 @@ bool PhysicalAggregation::Open(const PartitionOffset &partition_offset) {
           // update function
           for (int i = 0; i < agg_attrs.size(); ++i) {
             agg_attrs[i]->ExprEvaluate(
-                cur, state_.input_schema_,
-                state_.hash_schema_->getColumnAddess(i + group_by_size,
-                                                     tuple_in_hashtable));
+                eecnxt, state_.hash_schema_->getColumnAddess(
+                            i + group_by_size, tuple_in_hashtable));
           }
           bsti->increase_cur_();
           break;
@@ -265,11 +282,11 @@ bool PhysicalAggregation::Open(const PartitionOffset &partition_offset) {
       if (key_exist) {
         continue;
       }
+      eecnxt.tuple[0] = cur;
       new_tuple_in_hash_table = private_hashtable->allocate(bn);
       // set group-by's original value by expression
       for (int i = 0; i < group_by_attrs.size(); ++i) {
-        key_in_input_tuple =
-            group_by_attrs[i]->ExprEvaluate(cur, state_.input_schema_);
+        key_in_input_tuple = group_by_attrs[i]->ExprEvaluate(eecnxt);
         key_in_hash_table =
             state_.hash_schema_->getColumnAddess(i, new_tuple_in_hash_table);
         state_.hash_schema_->getcolumn(i)
@@ -277,8 +294,7 @@ bool PhysicalAggregation::Open(const PartitionOffset &partition_offset) {
       }
       // get value_in_input_tuple from expression
       for (int i = 0; i < agg_attrs.size(); ++i) {
-        value_in_input_tuple =
-            agg_attrs[i]->arg0_->ExprEvaluate(cur, state_.input_schema_);
+        value_in_input_tuple = agg_attrs[i]->arg0_->ExprEvaluate(eecnxt);
         value_in_hash_table = state_.hash_schema_->getColumnAddess(
             group_by_size + i, new_tuple_in_hash_table);
         state_.hash_schema_->getcolumn(group_by_size + i)
@@ -291,7 +307,11 @@ bool PhysicalAggregation::Open(const PartitionOffset &partition_offset) {
 
   // merge private_hash_table into hash_table
   for (int i = 0; i < state_.num_of_buckets_; i++) {
-    private_hashtable->placeIterator(pht_it, i);
+    RETURN_IF_CANCELLED(exec_status);
+
+    if (!private_hashtable->placeIterator(pht_it, i)) {
+      LOG(INFO) << "placeIterator false";
+    }
     // traverse every tuple from block
     while (NULL != (cur = pht_it.readCurrent())) {
       /* get the corresponding bucket index according to the first column in
@@ -373,6 +393,8 @@ bool PhysicalAggregation::Open(const PartitionOffset &partition_offset) {
     UnregisterExpandedThreadToAllBarriers(2);
     return true;
   }
+  RETURN_IF_CANCELLED(exec_status);
+
   BarrierArrive(2);
 
   if (TryEntryIntoSerializedSection(2)) {
@@ -396,6 +418,11 @@ bool PhysicalAggregation::Open(const PartitionOffset &partition_offset) {
     delete private_hashtable;
     private_hashtable = NULL;
   }
+  for (auto &i : agg_attrs) DELETE_PTR(i);
+  agg_attrs.clear();
+  for (auto &i : group_by_attrs) DELETE_PTR(i);
+  group_by_attrs.clear();
+  LOG(INFO) << "Agg open() finish" << endl;
   return GetReturnStatus();
 }
 
@@ -404,7 +431,10 @@ bool PhysicalAggregation::Open(const PartitionOffset &partition_offset) {
  * hash table, which will definitely reduce the degree of parallelism.
  * But it is for now, assuming that the aggregated results are small.
  */
-bool PhysicalAggregation::Next(BlockStreamBase *block) {
+bool PhysicalAggregation::Next(SegmentExecStatus *const exec_status,
+                               BlockStreamBase *block) {
+  RETURN_IF_CANCELLED(exec_status);
+
   if (ExpanderTracker::getInstance()->isExpandedThreadCallBack(
           pthread_self())) {
     UnregisterExpandedThreadToAllBarriers(3);
@@ -462,14 +492,14 @@ bool PhysicalAggregation::Next(BlockStreamBase *block) {
   }
 }
 
-bool PhysicalAggregation::Close() {
+bool PhysicalAggregation::Close(SegmentExecStatus *const exec_status) {
   InitExpandedStatus();
   if (NULL != hashtable_) {
     delete hashtable_;
     hashtable_ = NULL;
   }
 
-  state_.child_->Close();
+  state_.child_->Close(exec_status);
   return true;
 }
 void PhysicalAggregation::Print() {
@@ -485,6 +515,13 @@ void PhysicalAggregation::Print() {
   }
   cout << "---------------" << std::endl;
   state_.child_->Print();
+}
+RetCode PhysicalAggregation::GetAllSegments(stack<Segment *> *all_segments) {
+  RetCode ret = rSuccess;
+  if (NULL != state_.child_) {
+    return state_.child_->GetAllSegments(all_segments);
+  }
+  return ret;
 }
 
 }  // namespace physical_operator

@@ -20,7 +20,7 @@ using namespace std;
 string gete() {
   char *p = getenv("CLAIMS_HOME");
   stringstream sp;
-  sp << string(p).c_str() << "/conf/config";
+  sp << string(p).c_str() << "conf/config";
   return sp.str();
   //	return "/home/imdb/config/wangli/config";
 }
@@ -83,12 +83,14 @@ bool Config::local_disk_mode;
 int Config::client_listener_port;
 
 bool Config::enable_codegen;
+bool Config::enable_prune_column;
 
 std::string Config::catalog_file;
 
 int Config::thread_pool_init_thread_num;
 
 int Config::load_thread_num;
+int Config::memory_utilization;
 
 Config *Config::getInstance() {
   if (instance_ == 0) {
@@ -151,6 +153,10 @@ void Config::initialize() {
 
   load_thread_num = getInt("load_thread_num", sysconf(_SC_NPROCESSORS_CONF));
 
+  memory_utilization = getInt("memory_utilization", 100);
+
+  enable_prune_column = getBoolean("enable_prune_column", true);
+
 #ifdef DEBUG_Config
   print_configure();
 #endif
@@ -208,6 +214,7 @@ void Config::print_configure() const {
   std::cout << "client_lisener_port:" << client_listener_port << std::endl;
   std::cout << "catalog_file:" << catalog_file << std::endl;
   std::cout << "codegen:" << enable_codegen << std::endl;
+  std::cout << "enable_prune_column: " << enable_prune_column << std::endl;
   std::cout << "load_thread_num:" << load_thread_num << std::endl;
 }
 

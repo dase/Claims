@@ -50,6 +50,7 @@
 #include "../../logical_operator/logical_sort.h"
 #include "../../logical_operator/logical_subquery.h"
 #include "../../logical_operator/logical_delete_filter.h"
+#include "../../logical_operator/logical_outer_join.h"
 
 #include "../ast_node/ast_expr_node.h"
 #include "../ast_node/ast_node.h"
@@ -67,7 +68,7 @@ using claims::logical_operator::LogicalSort;
 using claims::logical_operator::LogicalLimit;
 using claims::logical_operator::LogicalSubquery;
 using claims::logical_operator::LogicalDeleteFilter;
-
+using claims::catalog::Attribute;
 using std::bitset;
 using std::endl;
 using std::cout;
@@ -110,6 +111,17 @@ void AstSelectList::Print(int level) const {
     next_->Print(level);
   }
 }
+
+RetCode AstSelectList::SetScanAttrList(const SemanticContext &sem_cnxt) {
+  if (args_ != NULL) {
+    args_->SetScanAttrList(sem_cnxt);
+  }
+  if (next_ != NULL) {
+    next_->SetScanAttrList(sem_cnxt);
+    return rSuccess;
+  }
+}
+
 RetCode AstSelectList::SemanticAnalisys(SemanticContext* sem_cnxt) {
   RetCode ret = rSuccess;
   if (NULL != args_) {
@@ -165,6 +177,9 @@ AstSelectExpr::AstSelectExpr(AstNodeType ast_node_type, std::string expr_alias,
 
 AstSelectExpr::~AstSelectExpr() { delete expr_; }
 
+
+
+
 void AstSelectExpr::Print(int level) const {
   cout << setw(level * TAB_SIZE) << " "
        << "|select expr|" << endl;
@@ -174,6 +189,14 @@ void AstSelectExpr::Print(int level) const {
   cout << setw(level * TAB_SIZE) << " "
        << "expr alias: " << expr_alias_ << endl;
 }
+
+RetCode AstSelectExpr::SetScanAttrList(const SemanticContext &sem_cnxt) {
+  if (expr_ != NULL) {
+     expr_->SetScanAttrList(sem_cnxt);
+  }
+  return rSuccess;
+}
+
 // there is no need to eliminate alias conflict in top select, but in sub query,
 // the alias conflict will be checked by Ast.
 RetCode AstSelectExpr::SemanticAnalisys(SemanticContext* sem_cnxt) {
@@ -260,6 +283,24 @@ void AstFromList::Print(int level) const {
     next_->Print(level);
   }
 }
+
+RetCode AstFromList::SetScanAttrList(const SemanticContext &sem_cnxt) {
+  for (auto it = equal_join_condition_.begin();
+       it != equal_join_condition_.end(); ++it) {
+    (*it)->SetScanAttrList(sem_cnxt);
+  }
+  for (auto it = normal_condition_.begin(); it != normal_condition_.end();
+       ++it) {
+    (*it)->SetScanAttrList(sem_cnxt);
+  }
+  if (args_ != NULL) {
+    args_->SetScanAttrList(sem_cnxt);
+  }
+  if (next_ != NULL) {
+    next_->SetScanAttrList(sem_cnxt);
+  }
+  return rSuccess;
+}
 RetCode AstFromList::SemanticAnalisys(SemanticContext* sem_cnxt) {
   sem_cnxt->clause_type_ = SemanticContext::kFromClause;
   RetCode ret = rSuccess;
@@ -277,24 +318,23 @@ RetCode AstFromList::SemanticAnalisys(SemanticContext* sem_cnxt) {
   return rSuccess;
 }
 
-RetCode AstFromList::PushDownCondition(PushDownConditionContext* pdccnxt) {
-  PushDownConditionContext* cur_pdccnxt = new PushDownConditionContext();
-  cur_pdccnxt->sub_expr_info_ = pdccnxt->sub_expr_info_;
+RetCode AstFromList::PushDownCondition(PushDownConditionContext& pdccnxt) {
+  PushDownConditionContext cur_pdccnxt;
+  cur_pdccnxt.sub_expr_info_ = pdccnxt.sub_expr_info_;
 
   if (NULL != args_) {
-    cur_pdccnxt->from_tables_.clear();
+    cur_pdccnxt.from_tables_.clear();
     args_->PushDownCondition(cur_pdccnxt);
-    pdccnxt->from_tables_.insert(cur_pdccnxt->from_tables_.begin(),
-                                 cur_pdccnxt->from_tables_.end());
+    pdccnxt.from_tables_.insert(cur_pdccnxt.from_tables_.begin(),
+                                cur_pdccnxt.from_tables_.end());
   }
   if (NULL != next_) {
-    cur_pdccnxt->from_tables_.clear();
+    cur_pdccnxt.from_tables_.clear();
     next_->PushDownCondition(cur_pdccnxt);
-    pdccnxt->from_tables_.insert(cur_pdccnxt->from_tables_.begin(),
-                                 cur_pdccnxt->from_tables_.end());
+    pdccnxt.from_tables_.insert(cur_pdccnxt.from_tables_.begin(),
+                                cur_pdccnxt.from_tables_.end());
   }
-  pdccnxt->SetCondition(equal_join_condition_, normal_condition_);
-  delete cur_pdccnxt;
+  pdccnxt.SetCondition(equal_join_condition_, normal_condition_);
   return rSuccess;
 }
 RetCode AstFromList::GetLogicalPlan(LogicalOperator*& logic_plan) {
@@ -308,26 +348,57 @@ RetCode AstFromList::GetLogicalPlan(LogicalOperator*& logic_plan) {
     next_->GetLogicalPlan(next_lplan);
   }
   if (NULL != next_lplan) {
-    if (equal_join_condition_.size() > 0) {
+    if (!equal_join_condition_.empty()) {
       vector<LogicalEqualJoin::JoinPair> join_pair;
       join_pair.clear();
+      // "args_lplan" and "next_lplan" order in GetEqualJoinPair' should be
+      // same as "arg_lplan" and "next_lplan" in "new LogicalJoin"
       ret = GetEqualJoinPair(join_pair, args_lplan, next_lplan,
                              equal_join_condition_);
       if (rSuccess != ret) {
         return ret;
       }
-      logic_plan = new LogicalEqualJoin(join_pair, args_lplan, next_lplan);
-    } else {
-      logic_plan = new LogicalCrossJoin(args_lplan, next_lplan);
-    }
-    if (normal_condition_.size() > 0) {
       vector<ExprNode*> condition;
       condition.clear();
-      ret = GetFilterCondition(condition, normal_condition_, logic_plan);
+      ret = GetJoinCondition(condition, equal_join_condition_, next_lplan,
+                             args_lplan);
       if (rSuccess != ret) {
         return ret;
       }
-      logic_plan = new LogicalFilter(logic_plan, condition);
+      ret = GetJoinCondition(condition, normal_condition_, next_lplan,
+                             args_lplan);
+      if (rSuccess != ret) {
+        return ret;
+      }
+      // judge from join_type "left" "right"
+      string join_type = "";
+      // this->args_ can be AST_TABLE, but treat as join.
+      if (AST_JOIN == (static_cast<AstJoin*>(this->args_))->ast_node_type_) {
+        join_type = (static_cast<AstJoin*>(this->args_))->join_type_;
+      }
+      if (-1 != join_type.find("left")) {
+        int join = 0;
+        logic_plan = new LogicalOuterJoin(join_pair, args_lplan, next_lplan, 0,
+                                          condition);
+      } else if (-1 != join_type.find("right")) {
+        logic_plan = new LogicalOuterJoin(join_pair, args_lplan, next_lplan, 1,
+                                          condition);
+      } else if (-1 != join_type.find("full")) {
+        logic_plan = new LogicalOuterJoin(join_pair, args_lplan, next_lplan, 2,
+                                          condition);
+      } else {
+        logic_plan =
+            new LogicalEqualJoin(join_pair, args_lplan, next_lplan, condition);
+      }
+    } else {
+      vector<ExprNode*> condition;
+      condition.clear();
+      ret = GetJoinCondition(condition, normal_condition_, next_lplan,
+                             args_lplan);
+      if (rSuccess != ret) {
+        return ret;
+      }
+      logic_plan = new LogicalCrossJoin(next_lplan, args_lplan, condition);
     }
   } else {
     logic_plan = args_lplan;
@@ -371,12 +442,38 @@ void AstTable::Print(int level) const {
   cout << setw(level * TAB_SIZE) << " "
        << "table_alias: " << table_alias_ << endl;
 }
+
+RetCode AstTable::SetScanAttrList(const SemanticContext &sem_cnxt) {
+  for (auto it = equal_join_condition_.begin();
+       it != equal_join_condition_.end(); ++it) {
+    (*it)->SetScanAttrList(sem_cnxt);
+  }
+  for (auto it = normal_condition_.begin(); it != normal_condition_.end();
+       ++it) {
+    (*it)->SetScanAttrList(sem_cnxt);
+  }
+  // if sql is not  select *
+  if (sem_cnxt.is_all != true) {
+    is_all_ = false;
+    if (sem_cnxt.table_to_column.find(table_name_) !=
+        sem_cnxt.table_to_column.end()) {
+        columns_ = sem_cnxt.table_to_column[table_name_];
+        return rSuccess;
+    } else {
+      return rTableNotExisted;
+    }
+  } else {
+    is_all_ = true;
+  }
+}
 RetCode AstTable::SemanticAnalisys(SemanticContext* sem_cnxt) {
   RetCode ret = rSuccess;
   TableDescriptor* tbl =
       Environment::getInstance()->getCatalog()->getTable(table_name_);
   if (NULL == tbl) {
     LOG(ERROR) << "table: " << table_name_ << " dosen't exist!" << endl;
+    sem_cnxt->error_msg_ =
+        "table: '\e[1m" + table_name_ + "\e[0m' dosen't exist ";
     return rTableNotExisted;
   }
   if (table_alias_ == "NULL") {
@@ -394,9 +491,9 @@ RetCode AstTable::SemanticAnalisys(SemanticContext* sem_cnxt) {
             << endl;
   return rSuccess;
 }
-RetCode AstTable::PushDownCondition(PushDownConditionContext* pdccnxt) {
-  pdccnxt->from_tables_.insert(table_alias_);
-  pdccnxt->SetCondition(equal_join_condition_, normal_condition_);
+RetCode AstTable::PushDownCondition(PushDownConditionContext& pdccnxt) {
+  pdccnxt.from_tables_.insert(table_alias_);
+  pdccnxt.SetCondition(equal_join_condition_, normal_condition_);
   return rSuccess;
 }
 // TODO(FZH) diver table_name_ to LogicalScan
@@ -409,19 +506,25 @@ RetCode AstTable::GetLogicalPlan(LogicalOperator*& logic_plan) {
           ->getCatalog()
           ->getTable(table_name_)
           ->HasDeletedTuples()) {
-    LogicalOperator* base_table = new LogicalScan(Environment::getInstance()
-                                                      ->getCatalog()
-                                                      ->getTable(table_name_)
-                                                      ->getProjectoin(0),
-                                                  table_alias_);
+//    LogicalOperator* base_table = new LogicalScan(Environment::getInstance()
+//                                                      ->getCatalog()
+//                                                      ->getTable(table_name_)
+//                                                      ->getProjection(0),
+//                                                  table_alias_);
+    LogicalOperator* base_table = new LogicalScan(columns_,
+                                      table_name_, table_alias_, is_all_);
+
     Attribute filter_base =
         base_table->GetPlanContext().plan_partitioner_.get_partition_key();
+//    LogicalOperator* del_table =
+//        new LogicalScan(Environment::getInstance()
+//                            ->getCatalog()
+//                            ->getTable(table_name_ + "_DEL")
+//                            ->getProjection(0),
+//                        table_alias_ + "_DEL");
     LogicalOperator* del_table =
-        new LogicalScan(Environment::getInstance()
-                            ->getCatalog()
-                            ->getTable(table_name_ + "_DEL")
-                            ->getProjectoin(0),
-                        table_alias_ + "_DEL");
+            new LogicalScan(columns_, table_name_+"_DEL",
+                            table_alias_ + "_DEL", is_all_);
     Attribute filter_del =
         del_table->GetPlanContext().plan_partitioner_.get_partition_key();
 
@@ -433,11 +536,12 @@ RetCode AstTable::GetLogicalPlan(LogicalOperator*& logic_plan) {
     logic_plan = new LogicalDeleteFilter(filter_pair, del_table, base_table);
 
   } else {
-    logic_plan = new LogicalScan(Environment::getInstance()
-                                     ->getCatalog()
-                                     ->getTable(table_name_)
-                                     ->getProjectoin(0),
-                                 table_alias_);
+//    logic_plan = new LogicalScan(Environment::getInstance()
+//                                     ->getCatalog()
+//                                     ->getTable(table_name_)
+//                                     ->getProjection(0),
+//                                 table_alias_);
+    logic_plan = new LogicalScan(columns_, table_name_, table_alias_, is_all_);
   }
   if (equal_join_condition_.size() > 0) {
     LOG(ERROR) << "equal join condition shouldn't occur in a single table!"
@@ -450,7 +554,7 @@ RetCode AstTable::GetLogicalPlan(LogicalOperator*& logic_plan) {
     ExprNode* qnode = NULL;
     for (auto it = normal_condition_.begin(); it != normal_condition_.end();
          ++it) {
-      ret = (*it)->GetLogicalPlan(qnode, logic_plan);
+      ret = (*it)->GetLogicalPlan(qnode, logic_plan, NULL);
       if (rSuccess != ret) {
         LOG(ERROR) << "get normal condition upon a table, due to [err: " << ret
                    << " ] !" << endl;
@@ -495,6 +599,22 @@ void AstSubquery::Print(int level) const {
     subquery_->Print(level);
   }
 }
+
+RetCode AstSubquery::SetScanAttrList(const SemanticContext &sem_cnxt) {
+  for (auto it = equal_join_condition_.begin();
+       it != equal_join_condition_.end(); ++it) {
+    (*it)->SetScanAttrList(sem_cnxt);
+  }
+  for (auto it = normal_condition_.begin(); it != normal_condition_.end();
+      ++it) {
+    (*it)->SetScanAttrList(sem_cnxt);
+  }
+  if (subquery_ != NULL) {
+    subquery_->SetScanAttrList(sem_cnxt);
+  }
+  return rSuccess;
+}
+
 RetCode AstSubquery::SemanticAnalisys(SemanticContext* sem_cnxt) {
   SemanticContext sub_sem_cnxt;
   //  // subquery_alias_ == existed_table?
@@ -534,14 +654,15 @@ RetCode AstSubquery::SemanticAnalisys(SemanticContext* sem_cnxt) {
   return sem_cnxt->AddTableColumn(column_to_table);
 }
 
-RetCode AstSubquery::PushDownCondition(PushDownConditionContext* pdccnxt) {
+RetCode AstSubquery::PushDownCondition(PushDownConditionContext& pdccnxt) {
   RetCode ret = rSuccess;
-  ret = subquery_->PushDownCondition(NULL);
+  PushDownConditionContext child_pdccnxt;
+  ret = subquery_->PushDownCondition(child_pdccnxt);
   if (rSuccess != ret) {
     return ret;
   }
-  pdccnxt->from_tables_.insert(subquery_alias_);
-  pdccnxt->SetCondition(equal_join_condition_, normal_condition_);
+  pdccnxt.from_tables_.insert(subquery_alias_);
+  pdccnxt.SetCondition(equal_join_condition_, normal_condition_);
   return rSuccess;
 }
 // may be deliver subquery output schema
@@ -576,6 +697,14 @@ AstJoinCondition::AstJoinCondition(AstNodeType ast_node_type,
       condition_(condition) {}
 
 AstJoinCondition::~AstJoinCondition() { delete condition_; }
+
+RetCode AstJoinCondition::SetScanAttrList(const SemanticContext &sem_cnxt) {
+  if (condition_ != NULL) {
+     condition_->SetScanAttrList(sem_cnxt);
+  }
+  return rSuccess;
+}
+
 void AstJoinCondition::Print(int level) const {
   cout << setw(level * TAB_SIZE) << " "
        << "|join condition| " << join_condition_type_ << endl;
@@ -586,6 +715,7 @@ void AstJoinCondition::Print(int level) const {
          << "null" << endl;
   }
 }
+
 RetCode AstJoinCondition::SemanticAnalisys(SemanticContext* sem_cnxt) {
   if (NULL != condition_) {
     return condition_->SemanticAnalisys(sem_cnxt);
@@ -616,12 +746,17 @@ AstJoin::AstJoin(AstNodeType ast_node_type, int join_type, AstNode* left_table,
     }
     if (bit_num[3] == 1) {
       join_type_ = join_type_ + "left ";
+      left_table_ = right_table;
+      right_table_ = left_table;
     }
     if (bit_num[4] == 1) {
       join_type_ = join_type_ + "right ";
     }
     if (bit_num[5] == 1) {
       join_type_ = join_type_ + "natural ";
+    }
+    if (bit_num[6] == 1) {
+      join_type_ = join_type_ + "full ";
     }
   }
   join_type_ = join_type_ + "join";
@@ -631,6 +766,20 @@ AstJoin::~AstJoin() {
   delete left_table_;
   delete right_table_;
   delete join_condition_;
+}
+RetCode AstJoin::SetScanAttrList(const SemanticContext &sem_cnxt) {
+  for (auto it = equal_join_condition_.begin();
+       it != equal_join_condition_.end(); ++it) {
+    (*it)->SetScanAttrList(sem_cnxt);
+  }
+  for (auto it = normal_condition_.begin(); it != normal_condition_.end();
+       ++it) {
+    (*it)->SetScanAttrList(sem_cnxt);
+  }
+  if (left_table_ != NULL) left_table_->SetScanAttrList(sem_cnxt);
+  if (right_table_ != NULL) right_table_->SetScanAttrList(sem_cnxt);
+  if (join_condition_ != NULL) join_condition_->SetScanAttrList(sem_cnxt);
+  return rSuccess;
 }
 
 void AstJoin::Print(int level) const {
@@ -696,31 +845,57 @@ RetCode AstJoin::SemanticAnalisys(SemanticContext* sem_cnxt) {
   //  join_sem_cnxt.~SemanticContext();
   return ret;
 }
-RetCode AstJoin::PushDownCondition(PushDownConditionContext* pdccnxt) {
-  PushDownConditionContext* cur_pdccnxt = new PushDownConditionContext();
-  cur_pdccnxt->sub_expr_info_ = pdccnxt->sub_expr_info_;
+RetCode AstJoin::PushDownCondition(PushDownConditionContext& pdccnxt) {
+  PushDownConditionContext cur_pdccnxt;
+  // cout << "join type = " << join_type_ << endl;
+  // pdccnxt.sub_expr_info -- conditions from where clause
+  if (-1 == join_type_.find("outer")) {
+    cur_pdccnxt.sub_expr_info_ = pdccnxt.sub_expr_info_;
+  }
+
+  // join_condition_->condition -- conditions from on clause
   if (NULL != join_condition_) {
-    cur_pdccnxt->GetSubExprInfo(
+    cur_pdccnxt.GetSubExprInfo(
         reinterpret_cast<AstJoinCondition*>(join_condition_)->condition_);
   }
 
-  cur_pdccnxt->from_tables_.clear();
-  PushDownConditionContext* child_pdccnxt = new PushDownConditionContext();
-  child_pdccnxt->sub_expr_info_ = cur_pdccnxt->sub_expr_info_;
-  child_pdccnxt->from_tables_.clear();
+  cur_pdccnxt.from_tables_.clear();
+  PushDownConditionContext child_pdccnxt;
+  child_pdccnxt.sub_expr_info_ = cur_pdccnxt.sub_expr_info_;
+  child_pdccnxt.from_tables_.clear();
+
   left_table_->PushDownCondition(child_pdccnxt);
-  cur_pdccnxt->from_tables_.insert(child_pdccnxt->from_tables_.begin(),
-                                   child_pdccnxt->from_tables_.end());
+  cur_pdccnxt.from_tables_.insert(child_pdccnxt.from_tables_.begin(),
+                                  child_pdccnxt.from_tables_.end());
 
-  child_pdccnxt->from_tables_.clear();
-  right_table_->PushDownCondition(child_pdccnxt);
-  cur_pdccnxt->from_tables_.insert(child_pdccnxt->from_tables_.begin(),
-                                   child_pdccnxt->from_tables_.end());
+  child_pdccnxt.from_tables_.clear();
+  if (-1 == join_type_.find("outer")) {
+    right_table_->PushDownCondition(child_pdccnxt);
+    cur_pdccnxt.from_tables_.insert(child_pdccnxt.from_tables_.begin(),
+                                    child_pdccnxt.from_tables_.end());
+  } else {
+    if (right_table_->ast_node_type_ == AST_TABLE) {
+      cur_pdccnxt.from_tables_.insert(
+          reinterpret_cast<AstTable*>(right_table_)->table_alias_);
+    }
+  }
 
-  cur_pdccnxt->SetCondition(equal_join_condition_, normal_condition_);
+  // cout << "!!!" << cur_pdccnxt.sub_expr_info_.size() << endl;
+  cur_pdccnxt.SetCondition(equal_join_condition_, normal_condition_);
+  // cout << "equal :" << equal_join_condition_.size() << endl;
+  // cout << "normal :" << normal_condition_.size() << endl;
 
-  pdccnxt->from_tables_.insert(cur_pdccnxt->from_tables_.begin(),
-                               cur_pdccnxt->from_tables_.end());
+  pdccnxt.from_tables_.insert(cur_pdccnxt.from_tables_.begin(),
+                              cur_pdccnxt.from_tables_.end());
+  if (-1 != join_type_.find("outer")) {
+    //    cout << "When pushdown, normal condi num is: "
+    //         << pdccnxt.sub_expr_info_.size() << endl;
+
+    for (int i = 0; i < pdccnxt.sub_expr_info_.size(); i++) {
+      normal_condition_.push_back(pdccnxt.sub_expr_info_[i]->sub_expr_);
+    }
+  }
+
   return rSuccess;
 }
 RetCode AstJoin::GetLogicalPlan(LogicalOperator*& logic_plan) {
@@ -735,7 +910,26 @@ RetCode AstJoin::GetLogicalPlan(LogicalOperator*& logic_plan) {
   if (rSuccess != ret) {
     return ret;
   }
-  if (equal_join_condition_.size() > 0) {
+
+  // cout << "equal join condition num = " << equal_join_condition_.size() <<
+  // endl;
+  // cout << "normal condition num = " << normal_condition_.size() << endl;
+  if (!equal_join_condition_.empty()) {
+    vector<ExprNode*> condition;
+    condition.clear();
+    ret = GetJoinCondition(condition, equal_join_condition_, left_plan,
+                           right_plan);
+    if (rSuccess != ret) {
+      return ret;
+    }
+    // As for outer join, normal condition can not be processed in hash join
+    if (-1 == join_type_.find("outer")) {
+      ret =
+          GetJoinCondition(condition, normal_condition_, left_plan, right_plan);
+      if (rSuccess != ret) {
+        return ret;
+      }
+    }
     vector<LogicalEqualJoin::JoinPair> join_pair;
     join_pair.clear();
     ret = GetEqualJoinPair(join_pair, left_plan, right_plan,
@@ -743,11 +937,44 @@ RetCode AstJoin::GetLogicalPlan(LogicalOperator*& logic_plan) {
     if (rSuccess != ret) {
       return ret;
     }
-    logic_plan = new LogicalEqualJoin(join_pair, left_plan, right_plan);
+
+    // Outer join should generate a filter to deal with normal conditon.
+    if (-1 != join_type_.find("left")) {
+      logic_plan =
+          new LogicalOuterJoin(join_pair, left_plan, right_plan, 0, condition);
+      ret = GetFilterLogicalPlan(logic_plan);
+    } else if (-1 != join_type_.find("right")) {
+      logic_plan =
+          new LogicalOuterJoin(join_pair, left_plan, right_plan, 1, condition);
+      ret = GetFilterLogicalPlan(logic_plan);
+    } else if (-1 != join_type_.find("full")) {
+      logic_plan =
+          new LogicalOuterJoin(join_pair, left_plan, right_plan, 2, condition);
+      ret = GetFilterLogicalPlan(logic_plan);
+    } else {
+      logic_plan =
+          new LogicalEqualJoin(join_pair, left_plan, right_plan, condition);
+    }
   } else {
-    logic_plan = new LogicalCrossJoin(left_plan, right_plan);
+    if (!normal_condition_.empty()) {
+      vector<ExprNode*> condition;
+      condition.clear();
+      ret =
+          GetJoinCondition(condition, normal_condition_, left_plan, right_plan);
+      if (rSuccess != ret) {
+        return ret;
+      }
+      logic_plan = new LogicalCrossJoin(left_plan, right_plan, condition);
+    } else {
+      logic_plan = new LogicalCrossJoin(left_plan, right_plan);
+    }
   }
-  if (normal_condition_.size() > 0) {
+
+  return rSuccess;
+}
+RetCode AstJoin::GetFilterLogicalPlan(LogicalOperator*& logic_plan) {
+  RetCode ret = rSuccess;
+  if (!normal_condition_.empty()) {
     vector<ExprNode*> condition;
     condition.clear();
     ret = GetFilterCondition(condition, normal_condition_, logic_plan);
@@ -756,13 +983,18 @@ RetCode AstJoin::GetLogicalPlan(LogicalOperator*& logic_plan) {
     }
     logic_plan = new LogicalFilter(logic_plan, condition);
   }
-  return rSuccess;
+  return ret;
 }
-
 AstWhereClause::AstWhereClause(AstNodeType ast_node_type, AstNode* expr)
     : AstNode(ast_node_type), expr_(expr) {}
 
 AstWhereClause::~AstWhereClause() { delete expr_; }
+
+
+RetCode AstWhereClause::SetScanAttrList(const SemanticContext &sem_cnxt) {
+  if (expr_ != NULL) expr_->SetScanAttrList(sem_cnxt);
+  return rSuccess;
+}
 
 void AstWhereClause::Print(int level) const {
   cout << setw(level * TAB_SIZE) << " "
@@ -792,6 +1024,16 @@ AstGroupByList::AstGroupByList(AstNodeType ast_node_type, AstNode* expr,
 AstGroupByList::~AstGroupByList() {
   delete expr_;
   delete next_;
+}
+
+RetCode AstGroupByList::SetScanAttrList(const SemanticContext &sem_cnxt) {
+  if (expr_ != NULL) {
+    expr_->SetScanAttrList(sem_cnxt);
+  }
+  if (next_ != NULL) {
+    next_->SetScanAttrList(sem_cnxt);
+  }
+  return rSuccess;
 }
 
 void AstGroupByList::Print(int level) const {
@@ -873,6 +1115,10 @@ AstGroupByClause::AstGroupByClause(AstNodeType ast_node_type,
 
 AstGroupByClause::~AstGroupByClause() { delete groupby_list_; }
 
+RetCode AstGroupByClause::SetScanAttrList(const SemanticContext &sem_cnxt) {
+  groupby_list_->SetScanAttrList(sem_cnxt);
+  return rSuccess;
+}
 void AstGroupByClause::Print(int level) const {
   cout << setw(level * TAB_SIZE) << " "
        << "|groupby clause| "
@@ -921,6 +1167,11 @@ AstOrderByList::~AstOrderByList() {
   delete next_;
 }
 
+RetCode AstOrderByList::SetScanAttrList(const SemanticContext &sem_cnxt) {
+  if (expr_ != NULL) expr_->SetScanAttrList(sem_cnxt);
+  if (next_ != NULL) next_->SetScanAttrList(sem_cnxt);
+  return rSuccess;
+}
 void AstOrderByList::Print(int level) const {
   cout << setw(level * TAB_SIZE) << " "
        << "|orderby list| " << endl;
@@ -992,6 +1243,11 @@ AstOrderByClause::AstOrderByClause(AstNodeType ast_node_type,
 
 AstOrderByClause::~AstOrderByClause() { delete orderby_list_; }
 
+RetCode AstOrderByClause::SetScanAttrList(const SemanticContext &sem_cnxt) {
+  if (orderby_list_ != NULL) orderby_list_->SetScanAttrList(sem_cnxt);
+  return rSuccess;
+}
+
 void AstOrderByClause::Print(int level) const {
   cout << setw(level * TAB_SIZE) << " "
        << "|orderby clause| " << endl;
@@ -1030,7 +1286,7 @@ RetCode AstOrderByClause::GetLogicalPlan(LogicalOperator*& logic_plan) {
   int direction = 0;
   AstOrderByList* orderby = orderby_list_;
   while (NULL != orderby) {
-    orderby->expr_->GetLogicalPlan(tmp_expr, logic_plan);
+    orderby->expr_->GetLogicalPlan(tmp_expr, logic_plan, NULL);
     direction = orderby->orderby_direction_ == "ASC" ? 0 : 1;
     orderby_expr.push_back(make_pair(tmp_expr, direction));
     orderby = orderby->next_;
@@ -1050,6 +1306,10 @@ AstHavingClause::AstHavingClause(AstNodeType ast_node_type, AstNode* expr)
 
 AstHavingClause::~AstHavingClause() { delete expr_; }
 
+RetCode AstHavingClause::SetScanAttrList(const SemanticContext &sem_cnxt) {
+  if (expr_ != NULL) expr_->SetScanAttrList(sem_cnxt);
+  return rSuccess;
+}
 void AstHavingClause::Print(int level) const {
   cout << setw(level * TAB_SIZE) << " "
        << "|having clause| " << endl;
@@ -1083,7 +1343,7 @@ RetCode AstHavingClause::GetLogicalPlan(LogicalOperator*& logic_plan) {
   if (NULL != expr_) {
     vector<ExprNode*> having_expr;
     ExprNode* expr = NULL;
-    expr_->GetLogicalPlan(expr, logic_plan);
+    expr_->GetLogicalPlan(expr, logic_plan, NULL);
     having_expr.push_back(expr);
     logic_plan = new LogicalFilter(logic_plan, having_expr);
   }
@@ -1107,6 +1367,11 @@ AstLimitClause::~AstLimitClause() {
   delete row_count_;
 }
 
+RetCode AstLimitClause::SetScanAttrList(const SemanticContext &sem_cnxt) {
+  if (offset_ != NULL) offset_->SetScanAttrList(sem_cnxt);
+  if (row_count_ != NULL) row_count_->SetScanAttrList(sem_cnxt);
+  return rSuccess;
+}
 void AstLimitClause::Print(int level) const {
   cout << setw(level * TAB_SIZE) << " "
        << "|limit clause| " << endl;
@@ -1195,6 +1460,10 @@ AstColumn::AstColumn(AstColumn* node)
 }
 AstColumn::~AstColumn() { delete next_; }
 
+RetCode AstColumn::SetScanAttrList(const SemanticContext &sem_cnxt) {
+//  next_->SetScanAttrList(sem_cnxt);
+  return rSuccess;
+}
 void AstColumn::Print(int level) const {
   cout << setw(level * TAB_SIZE) << " "
        << "|column| " << expr_str_ << endl;
@@ -1212,6 +1481,7 @@ RetCode AstColumn::SemanticAnalisys(SemanticContext* sem_cnxt) {
   RetCode ret = rSuccess;
   if (AST_COLUMN_ALL_ALL == ast_node_type_) {
     if (SemanticContext::kSelectClause == sem_cnxt->clause_type_) {
+      sem_cnxt->is_all = true;
       return rSuccess;
     } else {
       return rColumnAllShouldNotInOtherClause;
@@ -1226,14 +1496,21 @@ RetCode AstColumn::SemanticAnalisys(SemanticContext* sem_cnxt) {
     } else {
       return rColumnAllShouldNotInOtherClause;
     }
+    // insert * means all column in relation
+    sem_cnxt->is_all = false;
+    sem_cnxt->table_to_column[relation_name_].insert("*");
     return rSuccess;
   }
   ret = sem_cnxt->IsColumnExist(relation_name_, column_name_);
   if (rSuccess != ret) {
     LOG(ERROR) << "There are errors in ( " << relation_name_ << " , "
                << column_name_ << " )" << endl;
+    sem_cnxt->error_msg_ =
+        "column: '\e[1m" + column_name_ + "\e[0m' is invalid";
     return ret;
   }
+  sem_cnxt->is_all = false;
+  sem_cnxt->table_to_column[relation_name_].insert(column_name_);
   if (NULL != next_) {
     return next_->SemanticAnalisys(sem_cnxt);
   }
@@ -1272,14 +1549,44 @@ void AstColumn::GetRefTable(set<string>& ref_table) {
 }
 
 RetCode AstColumn::GetLogicalPlan(ExprNode*& logic_expr,
-                                  LogicalOperator* child_logic_plan) {
-  logic_expr = new ExprColumn(
-      ExprNodeType::t_qcolcumns,
-      child_logic_plan->GetPlanContext()
-          .GetAttribute(relation_name_, relation_name_ + "." + column_name_)
-          .attrType->type,
-      expr_str_, relation_name_, column_name_);
-  return rSuccess;
+                                  LogicalOperator* const left_lplan,
+                                  LogicalOperator* const right_lplan) {
+  Attribute ret_lattr = left_lplan->GetPlanContext().GetAttribute(
+      string(relation_name_ + "." + column_name_));
+
+  left_lplan->Print();
+  if (NULL != right_lplan) {
+    Attribute ret_rattr = right_lplan->GetPlanContext().GetAttribute(
+        string(relation_name_ + "." + column_name_));
+    if ((ret_lattr.attrName != "NULL") && (ret_rattr.attrName != "NULL")) {
+      assert(false);
+      return rFailure;
+    } else if (ret_lattr.attrName != "NULL") {
+      logic_expr =
+          new ExprColumn(ExprNodeType::t_qcolcumns, ret_lattr.attrType->type,
+                         expr_str_, relation_name_, column_name_);
+      return rSuccess;
+    } else if (ret_rattr.attrName != "NULL") {
+      logic_expr =
+          new ExprColumn(ExprNodeType::t_qcolcumns, ret_rattr.attrType->type,
+                         expr_str_, relation_name_, column_name_);
+      return rSuccess;
+    } else {
+      assert(false);
+      return rFailure;
+    }
+  } else {
+    if (ret_lattr.attrName != "NULL") {
+      logic_expr =
+          new ExprColumn(ExprNodeType::t_qcolcumns, ret_lattr.attrType->type,
+                         expr_str_, relation_name_, column_name_);
+      return rSuccess;
+    } else {
+      logic_expr = NULL;
+      assert(false);
+      return rFailure;
+    }
+  }
 }
 RetCode AstColumn::SolveSelectAlias(
     SelectAliasSolver* const select_alias_solver) {
@@ -1331,6 +1638,18 @@ AstSelectStmt::~AstSelectStmt() {
   delete select_into_clause_;
 }
 
+RetCode AstSelectStmt::SetScanAttrList(const SemanticContext &sem_cnxt) {
+  select_list_->SetScanAttrList(sem_cnxt);
+  if (from_list_ != NULL) from_list_->SetScanAttrList(sem_cnxt);
+  if (where_clause_ != NULL) where_clause_->SetScanAttrList(sem_cnxt);
+  if (groupby_clause_ != NULL) groupby_clause_->SetScanAttrList(sem_cnxt);
+  if (having_clause_ != NULL) having_clause_->SetScanAttrList(sem_cnxt);
+  if (orderby_clause_ != NULL) orderby_clause_->SetScanAttrList(sem_cnxt);
+  if (limit_clause_ != NULL) limit_clause_->SetScanAttrList(sem_cnxt);
+  if (select_into_clause_ != NULL)
+    select_into_clause_->SetScanAttrList(sem_cnxt);
+  return rSuccess;
+}
 void AstSelectStmt::Print(int level) const {
   cout << setw(level * TAB_SIZE) << " "
        << "|select statement| " << endl;
@@ -1507,14 +1826,11 @@ RetCode AstSelectStmt::SemanticAnalisys(SemanticContext* sem_cnxt) {
   return ret;
 }
 
-RetCode AstSelectStmt::PushDownCondition(PushDownConditionContext* pdccnxt) {
-  if (NULL == pdccnxt) {
-    pdccnxt = new PushDownConditionContext();
-  }
+RetCode AstSelectStmt::PushDownCondition(PushDownConditionContext& pdccnxt) {
   if (NULL != where_clause_) {
     AstWhereClause* where_clause =
         reinterpret_cast<AstWhereClause*>(where_clause_);
-    pdccnxt->GetSubExprInfo(where_clause->expr_);
+    pdccnxt.GetSubExprInfo(where_clause->expr_);
   }
   from_list_->PushDownCondition(pdccnxt);
 
@@ -1529,14 +1845,14 @@ RetCode AstSelectStmt::GetLogicalPlanOfAggeration(
   ExprNode* tmp_expr = NULL;
   RetCode ret = rSuccess;
   for (auto it = groupby_attrs_.begin(); it != groupby_attrs_.end(); ++it) {
-    ret = (*it)->GetLogicalPlan(tmp_expr, logic_plan);
+    ret = (*it)->GetLogicalPlan(tmp_expr, logic_plan, NULL);
     if (rSuccess != ret) {
       return ret;
     }
     group_by_attrs.push_back(tmp_expr);
   }
   for (auto it = agg_attrs_.begin(); it != agg_attrs_.end(); ++it) {
-    ret = (*it)->GetLogicalPlan(tmp_expr, logic_plan);
+    ret = (*it)->GetLogicalPlan(tmp_expr, logic_plan, NULL);
     if (rSuccess != ret) {
       return ret;
     }
@@ -1587,7 +1903,7 @@ RetCode AstSelectStmt::GetLogicalPlanOfProject(LogicalOperator*& logic_plan) {
     }
   }
   for (int i = 0; i < ast_expr.size(); ++i) {
-    ret = ast_expr[i]->GetLogicalPlan(tmp_expr, logic_plan);
+    ret = ast_expr[i]->GetLogicalPlan(tmp_expr, logic_plan, NULL);
     if (rSuccess != ret) {
       return rSuccess;
     }

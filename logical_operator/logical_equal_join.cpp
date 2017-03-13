@@ -34,6 +34,7 @@
 #include <string>
 
 #include "../catalog/stat/StatManager.h"
+#include "../common/expression/expr_node.h"
 #include "../Config.h"
 #include "../IDsGenerator.h"
 #include "../common/Logging.h"
@@ -42,6 +43,7 @@
 #include "../physical_operator/physical_hash_join.h"
 #include "../physical_operator/physical_operator_base.h"
 
+using claims::common::LogicInitCnxt;
 using claims::physical_operator::ExchangeMerger;
 using claims::physical_operator::Expander;
 using claims::physical_operator::PhysicalHashJoin;
@@ -57,6 +59,22 @@ LogicalEqualJoin::LogicalEqualJoin(std::vector<JoinPair> joinpair_list,
       joinkey_pair_list_(joinpair_list),
       left_child_(left_input),
       right_child_(right_input),
+      join_policy_(kNull),
+      plan_context_(NULL) {
+  for (unsigned i = 0; i < joinpair_list.size(); ++i) {
+    left_join_key_list_.push_back(joinpair_list[i].left_join_attr_);
+    right_join_key_list_.push_back(joinpair_list[i].right_join_attr_);
+  }
+}
+LogicalEqualJoin::LogicalEqualJoin(std::vector<JoinPair> joinpair_list,
+                                   LogicalOperator* left_input,
+                                   LogicalOperator* right_input,
+                                   vector<ExprNode*> join_condi)
+    : LogicalOperator(kLogicalEqualJoin),
+      joinkey_pair_list_(joinpair_list),
+      left_child_(left_input),
+      right_child_(right_input),
+      join_condi_(join_condi),
       join_policy_(kNull),
       plan_context_(NULL) {
   for (unsigned i = 0; i < joinpair_list.size(); ++i) {
@@ -117,9 +135,8 @@ void LogicalEqualJoin::DecideJoinPolicy(const PlanContext& left_dataflow,
 PlanContext LogicalEqualJoin::GetPlanContext() {
   lock_->acquire();
   if (NULL != plan_context_) {
-    // the data flow has been computed*/
-    lock_->release();
-    return *plan_context_;
+    delete plan_context_;
+    plan_context_ = NULL;
   }
 
   /**
@@ -127,6 +144,28 @@ PlanContext LogicalEqualJoin::GetPlanContext() {
    */
   PlanContext left_dataflow = left_child_->GetPlanContext();
   PlanContext right_dataflow = right_child_->GetPlanContext();
+  // update the left and right join key list
+  for (int i = 0, size = left_join_key_list_.size(); i < size; ++i) {
+    for (int j = 0, jsize = left_dataflow.attribute_list_.size(); j < jsize;
+         ++j) {
+      if (left_join_key_list_[i].attrName ==
+          left_dataflow.attribute_list_[j].attrName) {
+        left_join_key_list_[i] = left_dataflow.attribute_list_[j];
+        joinkey_pair_list_[i].left_join_attr_ =
+            left_dataflow.attribute_list_[j];
+      }
+    }
+    for (int j = 0, jsize = right_dataflow.attribute_list_.size(); j < jsize;
+         ++j) {
+      if (right_join_key_list_[i].attrName ==
+          right_dataflow.attribute_list_[j].attrName) {
+        right_join_key_list_[i] = right_dataflow.attribute_list_[j];
+        joinkey_pair_list_[i].right_join_attr_ =
+            right_dataflow.attribute_list_[j];
+      }
+    }
+  }
+
   PlanContext ret;
   DecideJoinPolicy(left_dataflow, right_dataflow);
   const Attribute left_partition_key =
@@ -264,6 +303,15 @@ PlanContext LogicalEqualJoin::GetPlanContext() {
     }
   }
 
+  LogicInitCnxt licnxt;
+  GetColumnToId(left_dataflow.attribute_list_, licnxt.column_id0_);
+  GetColumnToId(right_dataflow.attribute_list_, licnxt.column_id1_);
+  licnxt.schema0_ = left_dataflow.GetSchema();
+  licnxt.schema1_ = right_dataflow.GetSchema();
+  for (int i = 0; i < join_condi_.size(); ++i) {
+    licnxt.return_type_ = join_condi_[i]->actual_type_;
+    join_condi_[i]->InitExprAtLogicalPlan(licnxt);
+  }
   plan_context_ = new PlanContext();
   *plan_context_ = ret;
   lock_->release();
@@ -312,9 +360,8 @@ LogicalEqualJoin::JoinPolicy LogicalEqualJoin::DecideLeftOrRightRepartition(
 
 PhysicalOperatorBase* LogicalEqualJoin::GetPhysicalPlan(
     const unsigned& block_size) {
-  if (NULL == plan_context_) {
-    GetPlanContext();
-  }
+  //  if (NULL == plan_context_)
+  { GetPlanContext(); }
   PhysicalHashJoin* join_iterator;
   PhysicalOperatorBase* child_iterator_left =
       left_child_->GetPhysicalPlan(block_size);
@@ -345,9 +392,7 @@ PhysicalOperatorBase* LogicalEqualJoin::GetPhysicalPlan(
 
   state.join_index_left_ = GetLeftJoinKeyIds();
   state.join_index_right_ = GetRightJoinKeyIds();
-
-  state.payload_left_ = GetLeftPayloadIds();
-  state.payload_right_ = GetRightPayloadIds();
+  state.join_condi_ = join_condi_;
   switch (join_policy_) {
     case kNoRepartition: {
       state.child_left_ = child_iterator_left;
@@ -562,41 +607,7 @@ std::vector<unsigned> LogicalEqualJoin::GetRightJoinKeyIds() const {
   }
   return ret;
 }
-std::vector<unsigned> LogicalEqualJoin::GetLeftPayloadIds() const {
-  std::vector<unsigned> ret;
-  const PlanContext dataflow = left_child_->GetPlanContext();
-  const std::vector<unsigned> left_join_key_index_list = GetLeftJoinKeyIds();
 
-  for (unsigned i = 0; i < dataflow.attribute_list_.size(); i++) {
-    bool found_equal = false;
-    for (unsigned j = 0; j < left_join_key_index_list.size(); j++) {
-      if (i == left_join_key_index_list[j]) {
-        found_equal = true;
-        break;
-      }
-    }
-    if (!found_equal) {
-      ret.push_back(i);
-    }
-  }
-  return ret;
-}
-
-std::vector<unsigned> LogicalEqualJoin::GetRightPayloadIds() const {
-  std::vector<unsigned> ret;
-  const PlanContext dataflow = right_child_->GetPlanContext();
-  const std::vector<unsigned> right_join_key_index_list = GetRightJoinKeyIds();
-
-  for (unsigned i = 0; i < dataflow.attribute_list_.size(); i++) {
-    for (unsigned j = 0; j < right_join_key_index_list.size(); j++) {
-      if (i == right_join_key_index_list[j]) {
-        break;
-      }
-    }
-    ret.push_back(i);
-  }
-  return ret;
-}
 int LogicalEqualJoin::GetIdInLeftJoinKeys(const Attribute& attribute) const {
   for (unsigned i = 0; i < joinkey_pair_list_.size(); i++) {
     if (joinkey_pair_list_[i].left_join_attr_ == attribute) {
@@ -783,6 +794,21 @@ double LogicalEqualJoin::PredictEqualJoinSelectivity(
   }
   return ret;
 }
+
+void LogicalEqualJoin::PruneProj(set<string>& above_attrs) {
+  set<string> above_attrs_copy = above_attrs;
+
+  for (int i = 0, size = join_condi_.size(); i < size; ++i) {
+    join_condi_[i]->GetUniqueAttr(above_attrs_copy);
+  }
+  set<string> above_attrs_right = above_attrs_copy;
+  left_child_->PruneProj(above_attrs_copy);
+  left_child_ = DecideAndCreateProject(above_attrs_copy, left_child_);
+
+  right_child_->PruneProj(above_attrs_right);
+  right_child_ = DecideAndCreateProject(above_attrs_right, right_child_);
+}
+
 double LogicalEqualJoin::PredictEqualJoinSelectivityOnSingleJoinAttributePair(
     const Attribute& attr_left, const Attribute& attr_right) const {
   double ret;

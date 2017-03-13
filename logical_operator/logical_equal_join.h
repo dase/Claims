@@ -74,6 +74,9 @@ class LogicalEqualJoin : public LogicalOperator {
    */
   LogicalEqualJoin(std::vector<JoinPair>, LogicalOperator* left_input,
                    LogicalOperator* right_input);
+  LogicalEqualJoin(std::vector<JoinPair> joinpair_list,
+                   LogicalOperator* left_input, LogicalOperator* right_input,
+                   vector<ExprNode*> join_condi);
   virtual ~LogicalEqualJoin();
   /**
    * @brief Method description: Get the child information.
@@ -103,12 +106,11 @@ class LogicalEqualJoin : public LogicalOperator {
   bool GetOptimalPhysicalPlan(Requirement requirement,
                               PhysicalPlanDescriptor& physical_plan_descriptor,
                               const unsigned& block_size = 4096 * 1024);
+  void PruneProj(set<string>& above_attrs);
 
  private:
   std::vector<unsigned> GetLeftJoinKeyIds() const;
   std::vector<unsigned> GetRightJoinKeyIds() const;
-  std::vector<unsigned> GetLeftPayloadIds() const;
-  std::vector<unsigned> GetRightPayloadIds() const;
   int GetIdInLeftJoinKeys(const Attribute&) const;
   int GetIdInLeftJoinKeys(
       const Attribute&,
@@ -177,6 +179,7 @@ class LogicalEqualJoin : public LogicalOperator {
       const Attribute& attr_left, const Attribute& attr_right) const;
 
  private:
+  std::vector<ExprNode*> join_condi_;
   std::vector<JoinPair> joinkey_pair_list_;
   std::vector<Attribute> left_join_key_list_;
   std::vector<Attribute> right_join_key_list_;

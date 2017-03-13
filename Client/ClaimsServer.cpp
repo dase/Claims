@@ -71,6 +71,7 @@ int ClientListener::receiveRequest(const int fd, const char *cmd) {
   remote_command rcmd;
   rcmd.socket_fd = fd;
   //	rcmd.cmd.append(cmd);
+  cout << cmd << endl;
   rcmd.cmd = std::string(cmd);
 
   Daemon::getInstance()->addRemoteCommand(rcmd);
@@ -266,11 +267,10 @@ void *ClientListener::receiveHandler(void *para) {
               server->removeClient(server->m_clientFds[i]);
               continue;
             }
-
-            //					cout<<"nread:"<<nread<<endl;
             memset(buf, 0, sizeof(buf));
             int read_count = read(server->m_clientFds[i], buf, nread);
-            buf[read_count] = '\0';      // fix a bug
+            buf[read_count] = '\0';  // fix a bug
+
             int sql_type = buf[0] - 48;  // '1' - 48 = 1
             ClientLogging::log("sql_type is %d", sql_type);
             if (sql_type <= 9 && sql_type >= 0) {
@@ -763,16 +763,20 @@ void *ClientListener::sendHandler(void *para) {
         } else if (client_type::c == server->client_type_) {
           // query return true
           cliRes.setOk("Yes Ok");
-          ClientListenerLogging::log(
-              "to send data response-- status:%d  length:%d  content:%s  fd:%d",
-              cliRes.status, cliRes.length, cliRes.content.c_str(), result.fd_);
+          //          ClientListenerLogging::log(
+          //              "to send data response-- status:%d  length:%d
+          //              content:%s  fd:%d",
+          //              cliRes.status, cliRes.length, cliRes.content.c_str(),
+          //              result.fd_);
           server->write(result.fd_, cliRes);
           printf("send ok response packet ok\n");
 
           cliRes.setSchema(result.result_->schema_);
-          ClientListenerLogging::log(
-              "to send data response-- status:%d  length:%d  content:%s  fd:%d",
-              cliRes.status, cliRes.length, cliRes.content.c_str(), result.fd_);
+          //          ClientListenerLogging::log(
+          //              "to send data response-- status:%d  length:%d
+          //              content:%s  fd:%d",
+          //              cliRes.status, cliRes.length, cliRes.content.c_str(),
+          //              result.fd_);
           server->write(result.fd_, cliRes);
           printf("send schema response packet ok\n");
 
@@ -782,9 +786,11 @@ void *ClientListener::sendHandler(void *para) {
             header.add_header(list[i]);
           }
           cliRes.setAttributeName(header);
-          ClientListenerLogging::log(
-              "to send data response-- status:%d  length:%d  content:%s  fd:%d",
-              cliRes.status, cliRes.length, cliRes.content.c_str(), result.fd_);
+          //          ClientListenerLogging::log(
+          //              "to send data response-- status:%d  length:%d
+          //              content:%s  fd:%d",
+          //              cliRes.status, cliRes.length, cliRes.content.c_str(),
+          //              result.fd_);
           server->write(result.fd_, cliRes);
           printf("send head response packet ok\n");
 
@@ -797,11 +803,13 @@ void *ClientListener::sendHandler(void *para) {
           while (block = (BlockStreamBase *)it.atomicNextBlock()) {
             block->serialize(serialzed_block);
             cliRes.setDataBlock(serialzed_block);
-            ClientListenerLogging::log(
-                "to send data response-- status:%d  length:%d  content:%s  "
-                "fd:%d",
-                cliRes.status, cliRes.length, cliRes.content.c_str(),
-                result.fd_);
+            //            ClientListenerLogging::log(
+            //                "to send data response-- status:%d  length:%d
+            //                content:%s  "
+            //                "fd:%d",
+            //                cliRes.status, cliRes.length,
+            //                cliRes.content.c_str(),
+            //                result.fd_);
             server->write(result.fd_, cliRes);
           }
           printf("send data packet ok\n");
@@ -812,6 +820,11 @@ void *ClientListener::sendHandler(void *para) {
               cliRes.status, cliRes.length, cliRes.content.c_str());
           server->write(result.fd_, cliRes);
           printf("send end response packet ok\n");
+          if (NULL != result.result_) {
+            delete result.result_;
+            result.result_ = NULL;
+            //            cout << "delete result in memory" << endl;
+          }
         }
       }
     } else {
@@ -828,6 +841,11 @@ void *ClientListener::sendHandler(void *para) {
           result.warning_.c_str());
       server->write(result.fd_, cliRes);
       printf("send error packet ok\n");
+      if (NULL != result.result_) {
+        delete result.result_;
+        result.result_ = NULL;
+        cout << "delete result in memory" << endl;
+      }
     }
   }
   return NULL;
@@ -1035,8 +1053,9 @@ int ClientListener::write(const int fd, const ClientResponse &res) const {
 
   //	ret = ::write(fd, buffer, length);
   ret = send(fd, buffer, length, MSG_WAITALL);
-  LOG(INFO) << "Server: " << res.status << " bytes:" << ret << "\t"
-            << res.length << "\t" << res.content.c_str() << " is send!" << endl;
+  //  LOG(INFO) << "Server: " << res.status << " bytes:" << ret << "\t"
+  //            << res.length << "\t" << res.content.c_str() << " is send!" <<
+  //            endl;
   //	ret = ::write(fd,buffer,length);
   //	if (ret < 0) {
   //		ClientLogging::elog("when send to fd %d, send buffer failed.%s",

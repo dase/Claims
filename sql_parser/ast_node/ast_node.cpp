@@ -56,6 +56,10 @@ void AstNode::Print(int level) const {
   cout << setw(level * 8) << " "
        << "This is an AST_NODE!" << endl;
 }
+
+RetCode AstNode::SetScanAttrList(const SemanticContext &sem_cnxt) {
+  return rSuccess;
+}
 RetCode AstNode::SemanticAnalisys(SemanticContext* sem_cnxt) {
   LOG(WARNING) << "This is AstNode's semantic analysis" << endl;
   return rSuccess;
@@ -123,13 +127,31 @@ RetCode AstNode::GetEqualJoinPair(
   }
   return rSuccess;
 }
+RetCode AstNode::GetJoinCondition(vector<ExprNode*>& condition,
+                                  const vector<AstNode*>& join_condition,
+                                  LogicalOperator* left_lplan,
+                                  LogicalOperator* right_lplan) {
+  RetCode ret = rSuccess;
+  ExprNode* expr_node = NULL;
+  for (auto it = join_condition.begin(); it != join_condition.end(); ++it) {
+    ret = (*it)->GetLogicalPlan(expr_node, left_lplan, right_lplan);
+    if (rSuccess != ret) {
+      LOG(ERROR) << "get join condition upon from list, due to [err: " << ret
+                 << " ] !" << endl;
+      return ret;
+    }
+    assert(NULL != expr_node);
+    condition.push_back(expr_node);
+  }
+  return rSuccess;
+}
 RetCode AstNode::GetFilterCondition(vector<ExprNode*>& condition,
                                     const vector<AstNode*>& normal_condition,
                                     LogicalOperator* logic_plan) {
   RetCode ret = rSuccess;
   ExprNode* expr_node = NULL;
   for (auto it = normal_condition.begin(); it != normal_condition.end(); ++it) {
-    ret = (*it)->GetLogicalPlan(expr_node, logic_plan);
+    ret = (*it)->GetLogicalPlan(expr_node, logic_plan, NULL);
     if (rSuccess != ret) {
       LOG(ERROR) << "get normal condition upon from list, due to [err: " << ret
                  << " ] !" << endl;
@@ -159,6 +181,7 @@ AstNode* AstNode::GetAndExpr(const set<AstNode*>& expression) {
   }
   return NULL;
 }
+
 void AstStmtList::Print(int level) const {
   cout << setw(level * 8) << " "
        << "|stmt list|" << endl;
@@ -169,6 +192,17 @@ void AstStmtList::Print(int level) const {
     next_->Print(level++);
   }
 }
+
+RetCode AstStmtList::SetScanAttrList(const SemanticContext &sem_cnxt) {
+  if (stmt_ != NULL) {
+    stmt_->SetScanAttrList(sem_cnxt);
+  }
+  if (next_ != NULL) {
+    next_->SetScanAttrList(sem_cnxt);
+  }
+  return rSuccess;
+}
+
 RetCode AstStmtList::SemanticAnalisys(SemanticContext* sem_cnxt) {
   RetCode ret = rSuccess;
   if (NULL != stmt_) {
@@ -185,7 +219,7 @@ RetCode AstStmtList::SemanticAnalisys(SemanticContext* sem_cnxt) {
   }
   return rSuccess;
 }
-RetCode AstStmtList::PushDownCondition(PushDownConditionContext* pdccnxt) {
+RetCode AstStmtList::PushDownCondition(PushDownConditionContext& pdccnxt) {
   if (NULL != stmt_) {
     stmt_->PushDownCondition(pdccnxt);
   }
@@ -207,6 +241,7 @@ SemanticContext::SemanticContext() {
   clause_type_ = kNone;
   have_agg = false;
   select_expr_have_agg = false;
+  is_all = false;
 }
 
 SemanticContext::~SemanticContext() {}
@@ -499,7 +534,10 @@ void SemanticContext::PrintContext(string flag) {
   cout << "---------------------\n" << endl;
 }
 
-PushDownConditionContext::PushDownConditionContext() { from_tables_.clear(); }
+PushDownConditionContext::PushDownConditionContext() {
+  from_tables_.clear();
+  sub_expr_info_.clear();
+}
 bool PushDownConditionContext::IsTableSubSet(set<string>& expr_tables,
                                              set<string>& from_tables) {
   for (auto it = expr_tables.begin(); it != expr_tables.end(); ++it) {

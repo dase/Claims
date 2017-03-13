@@ -56,6 +56,7 @@ using claims::common::ExprUnary;
 using claims::common::OperType;
 using claims::common::ExprConst;
 using claims::common::ExprColumn;
+using claims::common::LogicInitCnxt;
 
 using claims::physical_operator::PhysicalAggregation;
 namespace claims {
@@ -121,24 +122,25 @@ void LogicalAggregation::ChangeAggAttrsForAVG() {
 PlanContext LogicalAggregation::GetPlanContext() {
   lock_->acquire();
   if (NULL != plan_context_) {
-    lock_->release();
-    return *plan_context_;
+    delete plan_context_;
+    plan_context_ = NULL;
   }
   PlanContext ret;
   const PlanContext child_context = child_->GetPlanContext();
 
   ChangeAggAttrsForAVG();
   // initialize expression of group_by_attrs and aggregation_attrs
-  Schema* input_schema = GetSchema(child_context.attribute_list_);
-  map<string, int> column_to_id;
-  GetColumnToId(child_context.attribute_list_, column_to_id);
+  LogicInitCnxt licnxt;
+  licnxt.schema0_ = child_context.GetSchema();
+  GetColumnToId(child_context.attribute_list_, licnxt.column_id0_);
+
   for (int i = 0; i < group_by_attrs_.size(); ++i) {
-    group_by_attrs_[i]->InitExprAtLogicalPlan(group_by_attrs_[i]->actual_type_,
-                                              column_to_id, input_schema);
+    licnxt.return_type_ = group_by_attrs_[i]->actual_type_;
+    group_by_attrs_[i]->InitExprAtLogicalPlan(licnxt);
   }
   for (int i = 0; i < aggregation_attrs_.size(); ++i) {
-    aggregation_attrs_[i]->InitExprAtLogicalPlan(
-        aggregation_attrs_[i]->actual_type_, column_to_id, input_schema);
+    licnxt.return_type_ = aggregation_attrs_[i]->actual_type_;
+    aggregation_attrs_[i]->InitExprAtLogicalPlan(licnxt);
   }
 
   if (CanOmitHashRepartition(child_context)) {
@@ -198,7 +200,8 @@ PlanContext LogicalAggregation::GetPlanContext() {
         ret.plan_partitioner_.set_partition_key(
             group_by_attrs_[0]->ExprNodeToAttr(0));
       }
-
+      /// set location of this coordinator, should invoke
+      /// coordinator.get_location()
       NodeID location = 0;
       int64_t data_cardinality = EstimateGroupByCardinality(child_context);
       PartitionOffset offset = 0;
@@ -247,14 +250,15 @@ void LogicalAggregation::SetGroupbyAndAggAttrsForGlobalAgg(
     Schema* input_schema) {
   ExprNode* group_by_node = NULL;
   ExprUnary* agg_node = NULL;
-  map<string, int> column_to_id;
+  LogicInitCnxt licnxt;
+  licnxt.schema0_ = input_schema;
   int group_by_size = group_by_attrs_.size();
   // map column name to id
   for (int i = 0; i < group_by_size; ++i) {
-    column_to_id["NULL_MID." + group_by_attrs_[i]->alias_] = i;
+    licnxt.column_id0_["NULL_MID." + group_by_attrs_[i]->alias_] = i;
   }
   for (int i = 0; i < aggregation_attrs_.size(); ++i) {
-    column_to_id["NULL_MID." + aggregation_attrs_[i]->alias_] =
+    licnxt.column_id0_["NULL_MID." + aggregation_attrs_[i]->alias_] =
         i + group_by_size;
   }
   // reconstruct group by attributes and initialize them
@@ -262,8 +266,8 @@ void LogicalAggregation::SetGroupbyAndAggAttrsForGlobalAgg(
     group_by_node = new ExprColumn(
         ExprNodeType::t_qcolcumns, group_by_attrs_[i]->actual_type_,
         group_by_attrs_[i]->alias_, "NULL_MID", group_by_attrs_[i]->alias_);
-    group_by_node->InitExprAtLogicalPlan(group_by_node->actual_type_,
-                                         column_to_id, input_schema);
+    licnxt.return_type_ = group_by_node->actual_type_;
+    group_by_node->InitExprAtLogicalPlan(licnxt);
     group_by_attrs.push_back(group_by_node);
   }
   // reconstruct aggregation attributes and initialize them
@@ -275,8 +279,8 @@ void LogicalAggregation::SetGroupbyAndAggAttrsForGlobalAgg(
                        aggregation_attrs_[i]->actual_type_,
                        aggregation_attrs_[i]->alias_, "NULL_MID",
                        aggregation_attrs_[i]->alias_));
-    agg_node->InitExprAtLogicalPlan(agg_node->actual_type_, column_to_id,
-                                    input_schema);
+    licnxt.return_type_ = agg_node->actual_type_;
+    agg_node->InitExprAtLogicalPlan(licnxt);
     aggregation_attrs.push_back(agg_node);
   }
 }
@@ -324,7 +328,6 @@ PhysicalOperatorBase* LogicalAggregation::GetPhysicalPlan(
       expander_state.child_ = local_aggregation;
       expander_state.schema_ = local_agg_state.hash_schema_->duplicateSchema();
       PhysicalOperatorBase* expander_lower = new Expander(expander_state);
-
       ExchangeMerger::State exchange_state;
       exchange_state.block_size_ = block_size;
       exchange_state.child_ = expander_lower;
@@ -358,9 +361,9 @@ PhysicalOperatorBase* LogicalAggregation::GetPhysicalPlan(
       global_agg_state.num_of_buckets_ = local_agg_state.num_of_buckets_;
       global_agg_state.avg_index_ = avg_id_in_agg_;
       global_agg_state.count_column_id_ = count_column_id_;
-      PhysicalOperatorBase* global_aggregation =
-          new PhysicalAggregation(global_agg_state);
-      ret = global_aggregation;
+      //      PhysicalOperatorBase* global_aggregation =
+      //          new PhysicalAggregation(global_agg_state);
+      ret = new PhysicalAggregation(global_agg_state);
       break;
     }
     case kReparGlobalAgg: {
@@ -477,6 +480,17 @@ void LogicalAggregation::Print(int level) const {
   }
   --level;
   child_->Print(level);
+}
+void LogicalAggregation::PruneProj(set<string>& above_attrs) {
+  set<string> above_attrs_copy = above_attrs;
+  for (int i = 0, size = group_by_attrs_.size(); i < size; ++i) {
+    group_by_attrs_[i]->GetUniqueAttr(above_attrs_copy);
+  }
+  for (int i = 0, size = aggregation_attrs_.size(); i < size; ++i) {
+    aggregation_attrs_[i]->GetUniqueAttr(above_attrs_copy);
+  }
+  child_->PruneProj(above_attrs_copy);
+  child_ = DecideAndCreateProject(above_attrs_copy, child_);
 }
 }  // namespace logical_operator
 }  // namespace claims

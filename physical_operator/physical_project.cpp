@@ -28,17 +28,35 @@
 
 #include "../physical_operator/physical_project.h"
 
+#include <stack>
 #include <vector>
 using claims::common::ExprNode;
 
 #include "../common/expression/expr_node.h"
 namespace claims {
 namespace physical_operator {
-PhysicalProject::PhysicalProject() { InitExpandedStatus(); }
+PhysicalProject::PhysicalProject() {
+  set_phy_oper_type(kPhysicalProject);
+  InitExpandedStatus();
+}
 
-PhysicalProject::~PhysicalProject() {}
+PhysicalProject::~PhysicalProject() {
+  if (NULL != state_.schema_output_) {
+    delete state_.schema_output_;
+    state_.schema_output_ = NULL;
+  }
+  if (NULL != state_.schema_input_) {
+    delete state_.schema_input_;
+    state_.schema_input_ = NULL;
+  }
+  if (NULL != state_.child_) {
+    delete state_.child_;
+    state_.child_ = NULL;
+  }
+}
 
 PhysicalProject::PhysicalProject(State state) : state_(state) {
+  set_phy_oper_type(kPhysicalProject);
   InitExpandedStatus();
 }
 
@@ -65,11 +83,14 @@ PhysicalProject::State::State(Schema* schema_input, Schema* schema_output,
  * Call back child Open().
  */
 
-bool PhysicalProject::Open(const PartitionOffset& kPartitionOffset) {
+bool PhysicalProject::Open(SegmentExecStatus* const exec_status,
+                           const PartitionOffset& kPartitionOffset) {
+  RETURN_IF_CANCELLED(exec_status);
+
   RegisterExpandedThreadToAllBarriers();
   ProjectThreadContext* ptc = reinterpret_cast<ProjectThreadContext*>(
       CreateOrReuseContext(crm_core_sensitive));
-  bool ret = state_.child_->Open(kPartitionOffset);
+  bool ret = state_.child_->Open(exec_status, kPartitionOffset);
   SetReturnStatus(ret);
   BarrierArrive();  //  Synchronization point
   return GetReturnStatus();
@@ -82,7 +103,10 @@ bool PhysicalProject::Open(const PartitionOffset& kPartitionOffset) {
  * case(2): block_for_asking_ is exhausted (should fetch a new block from
  * child and continue to process)
  */
-bool PhysicalProject::Next(BlockStreamBase* block) {
+bool PhysicalProject::Next(SegmentExecStatus* const exec_status,
+                           BlockStreamBase* block) {
+  RETURN_IF_CANCELLED(exec_status);
+
   unsigned total_length_ = state_.schema_output_->getTupleMaxSize();
 
   void* tuple_from_child;
@@ -90,10 +114,12 @@ bool PhysicalProject::Next(BlockStreamBase* block) {
   ProjectThreadContext* tc =
       reinterpret_cast<ProjectThreadContext*>(GetContext());
   while (true) {
+    RETURN_IF_CANCELLED(exec_status);
+
     if (tc->block_stream_iterator_->currentTuple() == 0) {
       /* mark the block as processed by setting it empty*/
       tc->block_for_asking_->setEmpty();
-      if (state_.child_->Next(tc->block_for_asking_)) {
+      if (state_.child_->Next(exec_status, tc->block_for_asking_)) {
         delete tc->block_stream_iterator_;
         tc->block_stream_iterator_ = tc->block_for_asking_->createIterator();
       } else {
@@ -109,12 +135,13 @@ bool PhysicalProject::Next(BlockStreamBase* block) {
       // for case (1)
       return true;
   }
+  return false;
 }
 
-bool PhysicalProject::Close() {
+bool PhysicalProject::Close(SegmentExecStatus* const exec_status) {
   InitExpandedStatus();
   DestoryAllContext();
-  return state_.child_->Close();
+  return state_.child_->Close(exec_status);
 }
 
 bool PhysicalProject::CopyNewValue(void* tuple, void* result, int length) {
@@ -152,9 +179,9 @@ void PhysicalProject::ProcessInLogic(BlockStreamBase* block,
         void* result = tc->thread_qual_[i]->FuncId(
             tc->thread_qual_[i], tuple_from_child, state_.schema_input_);
 #else
+      tc->expr_eval_cnxt_.tuple[0] = tuple_from_child;
       for (int i = 0; i < tc->thread_expr_.size(); ++i) {
-        void* result = tc->thread_expr_[i]->ExprEvaluate(tuple_from_child,
-                                                         state_.schema_input_);
+        void* result = tc->thread_expr_[i]->ExprEvaluate(tc->expr_eval_cnxt_);
 
 #endif
         CopyNewValue(tuple, result,
@@ -182,6 +209,8 @@ ThreadContext* PhysicalProject::CreateContext() {
   ptc->temp_block_ =
       BlockStreamBase::createBlock(state_.schema_output_, state_.block_size_);
   ptc->block_stream_iterator_ = ptc->block_for_asking_->createIterator();
+
+  ptc->expr_eval_cnxt_.schema[0] = state_.schema_input_;
 #ifdef NEWCONDI
   ptc->thread_qual_ = state_.expr_tree_;
   for (int i = 0; i < state_.expr_tree_.size(); i++) {
@@ -197,6 +226,12 @@ ThreadContext* PhysicalProject::CreateContext() {
 #endif
   return ptc;
 }
-
+RetCode PhysicalProject::GetAllSegments(stack<Segment*>* all_segments) {
+  RetCode ret = rSuccess;
+  if (NULL != state_.child_) {
+    ret = state_.child_->GetAllSegments(all_segments);
+  }
+  return ret;
+}
 }  // namespace physical_operator
 }  // namespace claims

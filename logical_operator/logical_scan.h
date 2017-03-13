@@ -31,10 +31,13 @@
 
 #include <iosfwd>
 #include <vector>
+#include <set>
+
 #include "../common/ids.h"
 #include "../catalog/attribute.h"
 #include "../catalog/table.h"
 #include "../logical_operator/logical_operator.h"
+#include "../logical_operator/plan_context.h"
 #include "../physical_operator/physical_operator_base.h"
 
 namespace claims {
@@ -50,9 +53,11 @@ namespace logical_operator {
 class LogicalScan : public LogicalOperator {
  public:
   LogicalScan(std::vector<Attribute> attribute_list);
+  LogicalScan(set<string> columns, string table_name,
+              string table_alias, bool is_all);
   LogicalScan(const TableID&);
   LogicalScan(ProjectionDescriptor* projection, const float sample_rate_ = 1);
-  LogicalScan(ProjectionDescriptor* projection, const string table_alias,
+  LogicalScan(ProjectionDescriptor* const projection, string table_alias,
               const float sample_rate_ = 1);
 
   LogicalScan(const TableID&,
@@ -64,7 +69,6 @@ class LogicalScan : public LogicalOperator {
                               PhysicalPlanDescriptor& physical_plan_descriptor,
                               const unsigned& kBlock_size = 4096 * 1024);
   void ChangeAliasAttr();
-
  private:
   /**check whether all the involved attributes are in the same projection.*/
   bool IsInASingleProjection() const;
@@ -75,7 +79,10 @@ class LogicalScan : public LogicalOperator {
   ProjectionDescriptor* target_projection_;
   PlanContext* plan_context_;
   string table_alias_;
+  string table_name_;
   float sample_rate_;
+  set<string> columns_;
+  bool is_all_;
 };
 
 }  // namespace logical_operator

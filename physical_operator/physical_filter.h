@@ -28,6 +28,9 @@
 
 #ifndef PHYSICAL_OPERATOR_PHYSICAL_FILTER_H_
 #define PHYSICAL_OPERATOR_PHYSICAL_FILTER_H_
+#include <stack>
+
+#include "../common/error_define.h"
 
 #define GLOG_NO_ABBREVIATED_SEVERITIES
 #include <boost/serialization/map.hpp>
@@ -51,7 +54,9 @@
 #include "../codegen/ExpressionGenerator.h"
 #include "../common/error_no.h"
 #include "../common/expression/expr_node.h"
+using claims::common::ExprEvalCnxt;
 using claims::common::ExprNode;
+
 namespace claims {
 namespace physical_operator {
 /**
@@ -67,6 +72,7 @@ class PhysicalFilter : public PhysicalOperator {
     BlockStreamBase::BlockStreamTraverseIterator* block_stream_iterator_;
     vector<QNode*> thread_qual_;
     vector<ExprNode*> thread_condi_;
+    ExprEvalCnxt expr_eval_cnxt_;
     ~FilterThreadContext();
   };
 
@@ -119,18 +125,20 @@ class PhysicalFilter : public PhysicalOperator {
   /**
    * @brief: choose which way to generate filter function
    */
-  bool Open(const PartitionOffset& kPartitionOffset);
+  bool Open(SegmentExecStatus* const exec_status,
+            const PartitionOffset& kPartitionOffset);
 
   /**
    * @brief: fetch a block from child and execute ProcessInLogic
    */
-  bool Next(BlockStreamBase* block);
+  bool Next(SegmentExecStatus* const exec_status, BlockStreamBase* block);
 
   /**
    * @brief: revoke resource
    */
-  bool Close();
+  bool Close(SegmentExecStatus* const exec_status);
   void Print();
+  RetCode GetAllSegments(stack<Segment*>* all_segments);
 
  private:
   /**

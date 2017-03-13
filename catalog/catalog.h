@@ -39,8 +39,16 @@
 #include "../common/error_define.h"
 #include "../common/Logging.h"
 #include "../utility/lock.h"
+
 namespace claims {
+
+namespace loader {
+class SingleFileConnector;
+};
+
 namespace catalog {
+using loader::SingleFileConnector;
+class SingleFileConnector;
 
 struct TableIDAllocator {
   TableIDAllocator() { table_id_curosr = 0; }
@@ -76,6 +84,7 @@ class Catalog {
   TableDescriptor* getTable(const TableID&) const;
   TableDescriptor* getTable(const std::string& table_name) const;
   void GetAllTables(ostringstream& ostr) const;
+  vector<TableID> GetAllTablesID()const;
   ProjectionDescriptor* getProjection(const ProjectionID&) const;
   ProjectionBinding* getBindingModele() const;
 
@@ -110,8 +119,10 @@ class Catalog {
   Logging* logging;
   ProjectionBinding* binding_;
   static Catalog* instance_;
+  SingleFileConnector* write_connector_ = NULL;
+  SingleFileConnector* read_connector_ = NULL;
+  //  Lock write_lock_;
 
-  // 2014-3-20---add serialize function---by Yu
   friend class boost::serialization::access;
   template <class Archive>
   void serialize(Archive& ar, const unsigned int version) {

@@ -35,12 +35,14 @@
 #include "../catalog/stat/StatManager.h"
 #include "../IDsGenerator.h"
 #include "../common/AttributeComparator.h"
+#include "../common/expression/expr_node.h"
 #include "../common/TypePromotionMap.h"
 #include "../common/TypeCast.h"
 #include "../common/Expression/initquery.h"
 #include "../physical_operator/exchange_merger.h"
 #include "../physical_operator/physical_filter.h"
 
+using claims::common::LogicInitCnxt;
 using claims::physical_operator::ExchangeMerger;
 using claims::physical_operator::PhysicalFilter;
 namespace claims {
@@ -69,8 +71,8 @@ PlanContext LogicalFilter::GetPlanContext() {
    */
   lock_->acquire();
   if (NULL != plan_context_) {
-    lock_->release();
-    return *plan_context_;
+    delete plan_context_;
+    plan_context_ = NULL;
   }
   PlanContext plan_context = child_->GetPlanContext();
   if (plan_context.IsHashPartitioned()) {
@@ -86,6 +88,7 @@ PlanContext LogicalFilter::GetPlanContext() {
                  *               of the input data, which may be maintained in the
                  *               catalog module.
                  */
+
         const unsigned before_filter_cardinality =
             plan_context.plan_partitioner_.GetPartition(i)->get_cardinality();
         const unsigned after_filter_cardinality =
@@ -95,23 +98,29 @@ PlanContext LogicalFilter::GetPlanContext() {
       }
     }
   }
-  std::map<std::string, int> column_to_id;
-  GetColumnToId(plan_context.attribute_list_, column_to_id);
-  Schema* input_schema = GetSchema(plan_context.attribute_list_);
+//  std::map<std::string, int> column_to_id;
+//  GetColumnToId(plan_context.attribute_list_, column_to_id);
+//  Schema* input_schema = GetSchema(plan_context.attribute_list_);
 #ifdef NEWCONDI
   for (int i = 0; i < condi_.size(); ++i) {
     // Initialize expression of logical execution plan.
     InitExprAtLogicalPlan(condi_[i], t_boolean, column_to_id, input_schema);
   }
 #else
+  LogicInitCnxt licnxt;
+  GetColumnToId(plan_context.attribute_list_, licnxt.column_id0_);
+  licnxt.schema0_ = plan_context.GetSchema();
   for (int i = 0; i < condition_.size(); ++i) {
-    condition_[i]->InitExprAtLogicalPlan(t_boolean, column_to_id, input_schema);
+    licnxt.return_type_ = t_boolean;
+    condition_[i]->InitExprAtLogicalPlan(licnxt);
   }
 #endif
   plan_context_ = new PlanContext();
   *plan_context_ = plan_context;
+  plan_context_->attribute_list_.assign(plan_context.attribute_list_.begin(),
+                                        plan_context.attribute_list_.end());
   lock_->release();
-  return plan_context;
+  return *plan_context_;
 }
 
 PhysicalOperatorBase* LogicalFilter::GetPhysicalPlan(
@@ -377,6 +386,14 @@ void LogicalFilter::Print(int level) const {
 #endif
 
   child_->Print(level);
+}
+void LogicalFilter::PruneProj(set<string>& above_attrs) {
+  set<string> above_attrs_copy = above_attrs;
+  for (int i = 0, size = condition_.size(); i < size; ++i) {
+    condition_[i]->GetUniqueAttr(above_attrs_copy);
+  }
+  child_->PruneProj(above_attrs_copy);
+  child_ = DecideAndCreateProject(above_attrs_copy, child_);
 }
 
 }  // namespace logical_operator

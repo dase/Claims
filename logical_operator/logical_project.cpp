@@ -45,6 +45,7 @@
 
 using claims::common::ExprColumn;
 using claims::common::ExprNode;
+using claims::common::LogicInitCnxt;
 using claims::physical_operator::PhysicalProject;
 namespace claims {
 namespace logical_operator {
@@ -73,10 +74,7 @@ LogicalProject::~LogicalProject() {
 // construct a PlanContext from child
 PlanContext LogicalProject::GetPlanContext() {
   lock_->acquire();
-  if (NULL != plan_context_) {
-    lock_->release();
-    return *plan_context_;
-  }
+
   PlanContext ret;
   // get the PlanContext of child
   const PlanContext child_plan_context = child_->GetPlanContext();
@@ -117,12 +115,12 @@ PlanContext LogicalProject::GetPlanContext() {
    */
   for (int i = 0; i < expression_tree_.size(); ++i) {
     column_type* column = NULL;
-    if (t_string == expression_tree_[i]->return_type ||
-        t_decimal == expression_tree_[i]->return_type) {
-      column = new column_type(expression_tree_[i]->return_type,
+    if (t_string == expression_tree_[i]->return_type_ ||
+        t_decimal == expression_tree_[i]->return_type_) {
+      column = new column_type(expression_tree_[i]->return_type_,
                                expression_tree_[i]->length);
     } else {
-      column = new column_type(expression_tree_[i]->return_type);
+      column = new column_type(expression_tree_[i]->return_type_);
     }
     // set TableID
     const unsigned kTableID = INTERMEIDATE_TABLEID;
@@ -134,12 +132,20 @@ PlanContext LogicalProject::GetPlanContext() {
   }
 #else
   ret_attrs.clear();
-  map<string, int> column_to_id;
-  int mid_table_id = MIDINADE_TABLE_ID++;
-  GetColumnToId(child_plan_context.attribute_list_, column_to_id);
+  LogicInitCnxt licnxt;
+  licnxt.schema0_ = input_schema;
+  int mid_table_id = 0;
+  if (plan_context_ == NULL) {
+    mid_table_id = MIDINADE_TABLE_ID++;
+  } else {
+    mid_table_id =
+        plan_context_->attribute_list_[0].table_id_;
+    DELETE_PTR(plan_context_);
+  }
+  GetColumnToId(child_plan_context.attribute_list_, licnxt.column_id0_);
   for (int i = 0; i < expr_list_.size(); ++i) {
-    expr_list_[i]->InitExprAtLogicalPlan(expr_list_[i]->actual_type_,
-                                         column_to_id, input_schema);
+    licnxt.return_type_ = expr_list_[i]->actual_type_;
+    expr_list_[i]->InitExprAtLogicalPlan(licnxt);
     ret_attrs.push_back(expr_list_[i]->ExprNodeToAttr(i, mid_table_id));
 
     // update partition key
@@ -151,7 +157,6 @@ PlanContext LogicalProject::GetPlanContext() {
       }
     }
   }
-
 #endif
   // set the attribute list of the PlanContext to be returned
   ret.attribute_list_ = ret_attrs;
@@ -183,6 +188,7 @@ PhysicalOperatorBase* LogicalProject::GetPhysicalPlan(
 // construct a schema from attribute list of PlanContext
 Schema* LogicalProject::GetOutputSchema() {
   Schema* schema = GetSchema(plan_context_->attribute_list_);
+
   return schema;
 }
 
@@ -213,6 +219,12 @@ void LogicalProject::Print(int level) const {
   --level;
 #endif
   child_->Print(level);
+}
+void LogicalProject::PruneProj(set<string>& above_attrs) {
+  for (int i = 0, size = expr_list_.size(); i < size; ++i) {
+    expr_list_[i]->GetUniqueAttr(above_attrs);
+  }
+  child_->PruneProj(above_attrs);
 }
 
 }  // namespace logical_operator

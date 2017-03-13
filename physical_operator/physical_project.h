@@ -33,6 +33,7 @@
 #include <vector>
 #include <map>
 #include <list>
+#include <stack>
 
 #include "../common/expression/expr_node.h"
 #include "../common/Mapping.h"
@@ -42,6 +43,7 @@
 #include "../common/Expression/execfunc.h"
 #include "../physical_operator/physical_operator_base.h"
 #include "../physical_operator/physical_operator.h"
+using claims::common::ExprEvalCnxt;
 using claims::common::ExprNode;
 namespace claims {
 namespace physical_operator {
@@ -60,6 +62,7 @@ class PhysicalProject : public PhysicalOperator {
     BlockStreamBase::BlockStreamTraverseIterator *block_stream_iterator_;
     vector<QNode *> thread_qual_;
     vector<ExprNode *> thread_expr_;
+    ExprEvalCnxt expr_eval_cnxt_;
 
     ~ProjectThreadContext() {
       if (NULL != block_for_asking_) {
@@ -132,18 +135,20 @@ class PhysicalProject : public PhysicalOperator {
   /**
    * @brief: construct iterator of project operator
    */
-  bool Open(const PartitionOffset &kPartitionOffset = 0);
+  bool Open(SegmentExecStatus *const exec_status,
+            const PartitionOffset &kPartitionOffset = 0);
 
   /**
    * @brief: fetch a block from child and ProcessInLogic().
    */
-  bool Next(BlockStreamBase *block);
+  bool Next(SegmentExecStatus *const exec_status, BlockStreamBase *block);
 
   /**
    * @brief: revoke resource.
    */
-  bool Close();
+  bool Close(SegmentExecStatus *const exec_status);
   void Print();
+  RetCode GetAllSegments(stack<Segment *> *all_segments);
 
  private:
   /**
