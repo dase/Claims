@@ -53,7 +53,7 @@ class AstSelectList : public AstNode {
   void ReplaceAggregation(AstNode*& agg_column, set<AstNode*>& agg_node,
                           bool need_collect);
   RetCode GetLogicalPlan(LogicalOperator*& logic_plan);
-
+  RetCode SetScanAttrList(const SemanticContext &sem_cnxt);
   bool is_all_;
   AstNode* args_;
   AstNode* next_;
@@ -70,6 +70,7 @@ class AstSelectExpr : public AstNode {
   void RecoverExprName(string& name);
   void ReplaceAggregation(AstNode*& agg_column, set<AstNode*>& agg_node,
                           bool need_collect);
+  RetCode SetScanAttrList(const SemanticContext &sem_cnxt);
   string expr_alias_;
   AstNode* expr_;
   bool have_agg_func_;
@@ -87,7 +88,7 @@ class AstFromList : public AstNode {
   RetCode SemanticAnalisys(SemanticContext* sem_cnxt);
   RetCode PushDownCondition(PushDownConditionContext& pdccnxt);
   RetCode GetLogicalPlan(LogicalOperator*& logic_plan);
-
+  RetCode SetScanAttrList(const SemanticContext &sem_cnxt);
   map<string, AstNode*> table_joined_root;
   AstNode* args_;
   AstNode* next_;
@@ -109,13 +110,15 @@ class AstTable : public AstNode {
   RetCode SemanticAnalisys(SemanticContext* sem_cnxt);
   RetCode PushDownCondition(PushDownConditionContext& pdccnxt);
   RetCode GetLogicalPlan(LogicalOperator*& logic_plan);
-
+  RetCode SetScanAttrList(const SemanticContext &sem_cnxt);
   vector<AstNode*> equal_join_condition_;
   vector<AstNode*> normal_condition_;
   string db_name_;
   string table_name_;
   string table_alias_;
+  set<string> columns_;
   int table_id_;
+  bool is_all_;
   // AstNode* condition_; //
 };
 /**
@@ -132,7 +135,7 @@ class AstSubquery : public AstNode {
   RetCode SemanticAnalisys(SemanticContext* sem_cnxt);
   RetCode PushDownCondition(PushDownConditionContext& pdccnxt);
   RetCode GetLogicalPlan(LogicalOperator*& logic_plan);
-
+  RetCode SetScanAttrList(const SemanticContext &sem_cnxt);
   string subquery_alias_;
   AstNode* subquery_;
   vector<AstNode*> equal_join_condition_;
@@ -148,6 +151,7 @@ class AstJoinCondition : public AstNode {
   ~AstJoinCondition();
   void Print(int level = 0) const;
   RetCode SemanticAnalisys(SemanticContext* sem_cnxt);
+  RetCode SetScanAttrList(const SemanticContext &sem_cnxt);
   string join_condition_type_;
   AstNode* condition_;
 };
@@ -166,7 +170,7 @@ class AstJoin : public AstNode {
   RetCode PushDownCondition(PushDownConditionContext& pdccnxt);
   RetCode GetLogicalPlan(LogicalOperator*& logic_plan);
   RetCode GetFilterLogicalPlan(LogicalOperator*& logic_plan);
-
+  RetCode SetScanAttrList(const SemanticContext &sem_cnxt);
   string join_type_;
   AstNode* left_table_;
   AstNode* right_table_;
@@ -184,6 +188,7 @@ class AstWhereClause : public AstNode {
   void Print(int level = 0) const;
   RetCode SemanticAnalisys(SemanticContext* sem_cnxt);
   void RecoverExprName(string& name);
+  RetCode SetScanAttrList(const SemanticContext &sem_cnxt);
   AstNode* expr_;
 };
 /**
@@ -199,7 +204,7 @@ class AstGroupByList : public AstNode {
   RetCode SemanticAnalisys(SemanticContext* sem_cnxt);
   void RecoverExprName(string& name);
   RetCode SolveSelectAlias(SelectAliasSolver* const select_alias_solver);
-
+  RetCode SetScanAttrList(const SemanticContext &sem_cnxt);
   AstNode* expr_;
   AstNode* next_;
 };
@@ -215,6 +220,7 @@ class AstGroupByClause : public AstNode {
   RetCode SemanticAnalisys(SemanticContext* sem_cnxt);
   void RecoverExprName(string& name);
   RetCode SolveSelectAlias(SelectAliasSolver* const select_alias_solver);
+  RetCode SetScanAttrList(const SemanticContext &sem_cnxt);
   AstGroupByList* groupby_list_;
   bool with_roolup_;
 };
@@ -232,6 +238,7 @@ class AstOrderByList : public AstNode {
   void ReplaceAggregation(AstNode*& agg_column, set<AstNode*>& agg_node,
                           bool need_collect);
   RetCode SolveSelectAlias(SelectAliasSolver* const select_alias_solver);
+  RetCode SetScanAttrList(const SemanticContext &sem_cnxt);
   AstNode* expr_;
   string orderby_direction_;
   AstNode* next_;
@@ -250,6 +257,7 @@ class AstOrderByClause : public AstNode {
                           bool need_collect);
   RetCode GetLogicalPlan(LogicalOperator*& logic_plan);
   RetCode SolveSelectAlias(SelectAliasSolver* const select_alias_solver);
+  RetCode SetScanAttrList(const SemanticContext &sem_cnxt);
   AstOrderByList* orderby_list_;
 };
 /**
@@ -266,6 +274,7 @@ class AstHavingClause : public AstNode {
                           bool need_collect);
   RetCode GetLogicalPlan(LogicalOperator*& logic_plan);
   RetCode SolveSelectAlias(SelectAliasSolver* const select_alias_solver);
+  RetCode SetScanAttrList(const SemanticContext &sem_cnxt);
   AstNode* expr_;
 };
 /**
@@ -279,6 +288,7 @@ class AstLimitClause : public AstNode {
   void Print(int level = 0) const;
   RetCode SemanticAnalisys(SemanticContext* sem_cnxt);
   RetCode GetLogicalPlan(LogicalOperator*& logic_plan);
+  RetCode SetScanAttrList(const SemanticContext &sem_cnxt);
   AstNode* offset_;
   AstNode* row_count_;
 };
@@ -308,12 +318,12 @@ class AstColumn : public AstNode {
   RetCode SemanticAnalisys(SemanticContext* sem_cnxt);
   void RecoverExprName(string& name);
   void GetRefTable(set<string>& ref_table);
-
   RetCode GetLogicalPlan(ExprNode*& logic_expr,
                          LogicalOperator* const left_lplan,
                          LogicalOperator* const right_lplan);
   RetCode SolveSelectAlias(SelectAliasSolver* const select_alias_solver);
   AstNode* AstNodeCopy();
+  RetCode SetScanAttrList(const SemanticContext &sem_cnxt);
   string relation_name_;
   string column_name_;
   AstNode* next_;
@@ -345,7 +355,7 @@ class AstSelectStmt : public AstNode {
   RetCode GetLogicalPlan(LogicalOperator*& logic_plan);
   RetCode GetLogicalPlanOfAggeration(LogicalOperator*& logic_plan);
   RetCode GetLogicalPlanOfProject(LogicalOperator*& logic_plan);
-
+  RetCode SetScanAttrList(const SemanticContext &sem_cnxt);
   SelectOpts select_opts_;
   AstNode* select_list_;
   AstNode* from_list_;

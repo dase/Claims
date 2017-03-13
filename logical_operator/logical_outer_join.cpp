@@ -79,7 +79,12 @@ LogicalOuterJoin::LogicalOuterJoin(
       join_policy_(kNull),
       plan_context_(NULL),
       join_type_(join_type),
-      join_condi_(join_condi) {}
+      join_condi_(join_condi) {
+  for (unsigned i = 0; i < joinpair_list.size(); ++i) {
+    left_join_key_list_.push_back(joinpair_list[i].left_join_attr_);
+    right_join_key_list_.push_back(joinpair_list[i].right_join_attr_);
+  }
+}
 LogicalOuterJoin::~LogicalOuterJoin() {
   if (NULL != plan_context_) {
     delete plan_context_;
@@ -133,9 +138,8 @@ void LogicalOuterJoin::DecideJoinPolicy(const PlanContext& left_dataflow,
 PlanContext LogicalOuterJoin::GetPlanContext() {
   lock_->acquire();
   if (NULL != plan_context_) {
-    // the data flow has been computed*/
-    lock_->release();
-    return *plan_context_;
+    delete plan_context_;
+    plan_context_ = NULL;
   }
 
   /**
@@ -143,12 +147,35 @@ PlanContext LogicalOuterJoin::GetPlanContext() {
    */
   PlanContext left_dataflow = left_child_->GetPlanContext();
   PlanContext right_dataflow = right_child_->GetPlanContext();
+
+  for (int i = 0, size = left_join_key_list_.size(); i < size; ++i) {
+    for (int j = 0, jsize = left_dataflow.attribute_list_.size(); j < jsize;
+         ++j) {
+      if (left_join_key_list_[i].attrName ==
+          left_dataflow.attribute_list_[j].attrName) {
+        left_join_key_list_[i] = left_dataflow.attribute_list_[j];
+        joinkey_pair_list_[i].left_join_attr_ =
+            left_dataflow.attribute_list_[j];
+      }
+    }
+    for (int j = 0, jsize = right_dataflow.attribute_list_.size(); j < jsize;
+         ++j) {
+      if (right_join_key_list_[i].attrName ==
+          right_dataflow.attribute_list_[j].attrName) {
+        right_join_key_list_[i] = right_dataflow.attribute_list_[j];
+        joinkey_pair_list_[i].right_join_attr_ =
+            right_dataflow.attribute_list_[j];
+      }
+    }
+  }
   PlanContext ret;
   DecideJoinPolicy(left_dataflow, right_dataflow);
   const Attribute left_partition_key =
       left_dataflow.plan_partitioner_.get_partition_key();
   const Attribute right_partition_key =
       right_dataflow.plan_partitioner_.get_partition_key();
+
+
   ret.attribute_list_.insert(ret.attribute_list_.end(),
                              left_dataflow.attribute_list_.begin(),
                              left_dataflow.attribute_list_.end());
@@ -263,9 +290,17 @@ PlanContext LogicalOuterJoin::GetPlanContext() {
           left_dataflow.plan_partitioner_.GetAggregatedDataSize();
       ret.commu_cost_ +=
           right_dataflow.plan_partitioner_.GetAggregatedDataSize();
+      auto lt = left_dataflow.plan_partitioner_.get_partition_key();
+      auto rt = right_dataflow.plan_partitioner_.get_partition_key();
+
+//      cout<< "left :"<<  lt.attrName<<" index:" << lt.index << " table:" << lt.table_id_<<endl;
+//      cout<< "right :"<<  rt.attrName<<" index:" << rt.index << " table:" << rt.table_id_<<endl;
 
       ret.plan_partitioner_ = DecideOutputDataflowProperty(
           left_dataflow, right_dataflow, join_type_);
+      auto it = ret.plan_partitioner_.get_partition_key();
+      cout<< "name :"<< it.attrName << "  index:"
+          << it.index << "   tableid:" << it.table_id_<< endl;
       //
       // QueryOptimizationLogging::log("[Complete_repartition
       // hash join] is not implemented, because I'm very lazy. -_- \n");
@@ -308,7 +343,9 @@ bool LogicalOuterJoin::CanOmitHashRepartition(
     const PlanPartitioner& partitoiner) const {
   Attribute attribute = partitoiner.get_partition_key();
   for (unsigned i = 0; i < join_key_list.size(); i++) {
-    if (attribute == join_key_list[i]) return true;
+    if (attribute == join_key_list[i]) {
+      return true;
+    }
   }
   return false;
 }
@@ -508,6 +545,7 @@ PhysicalOperatorBase* LogicalOuterJoin::GetPhysicalPlan(
 
       const Attribute left_partition_key =
           plan_context_->plan_partitioner_.get_partition_key();
+
       l_exchange_state.partition_schema_ =
           partition_schema::set_hash_partition(GetIdInAttributeList(
               dataflow_left.attribute_list_, left_partition_key));
@@ -698,7 +736,13 @@ int LogicalOuterJoin::GetIdInRightJoinKeys(
 int LogicalOuterJoin::GetIdInAttributeList(
     const std::vector<Attribute>& attributes,
     const Attribute& attribute) const {
+//  std::cout<< "!!!!!!outer join!!!!!!!!!!!!!"
+//      << attribute.attrName << "     "<< attribute.table_id_
+//      << "     "<< attribute.index <<endl;
   for (unsigned i = 0; i < attributes.size(); i++) {
+    std::cout<< "In attribute list !!!" <<attributes[i].attrName
+        << "     "<< attributes[i].table_id_
+    << "     " <<attributes[i].index <<endl;
     if (attributes[i] == attribute) {
       return i;
     }
@@ -810,6 +854,21 @@ double LogicalOuterJoin::PredictEqualJoinSelectivity(
   }
   return ret;
 }
+
+void LogicalOuterJoin::PruneProj(set<string>& above_attrs) {
+  set<string> above_attrs_copy = above_attrs;
+
+  for (int i = 0, size = join_condi_.size(); i < size; ++i) {
+    join_condi_[i]->GetUniqueAttr(above_attrs_copy);
+  }
+  set<string> above_attrs_right = above_attrs_copy;
+  left_child_->PruneProj(above_attrs_copy);
+  left_child_ = DecideAndCreateProject(above_attrs_copy, left_child_);
+
+  right_child_->PruneProj(above_attrs_right);
+  right_child_ = DecideAndCreateProject(above_attrs_right, right_child_);
+}
+
 double LogicalOuterJoin::PredictEqualJoinSelectivityOnSingleJoinAttributePair(
     const Attribute& attr_left, const Attribute& attr_right) const {
   double ret;
