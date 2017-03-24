@@ -36,6 +36,8 @@
 #include <vector>
 #include <string>
 #include <utility>
+#include <set>
+#include <unordered_map>
 
 #include "../common/error_define.h"
 #include "../common/ids.h"
@@ -143,6 +145,7 @@ RetCode SelectExec::Execute() {
     LOG(ERROR) << "semantic analysis error result= : " << ret;
     return ret;
   }
+
 #ifdef PRINTCONTEXT
   select_ast_->Print();
   cout << "--------------begin push down condition ------------" << endl;
@@ -157,10 +160,18 @@ RetCode SelectExec::Execute() {
     cout << stmt_exec_status_->get_exec_info();
     return ret;
   }
-#ifndef PRINTCONTEXT
-  select_ast_->Print();
+//#ifndef PRINTCONTEXT
+  ret = select_ast_->SetScanAttrList(&sem_cnxt);
+  if (rSuccess != ret) {
+     stmt_exec_status_->set_exec_info("semantic analysis error \n" +
+                                      sem_cnxt.error_msg_);
+     stmt_exec_status_->set_exec_status(StmtExecStatus::ExecStatus::kError);
+     LOG(ERROR) << " Set Scan Attribute list error result= : " << ret;
+     return ret;
+  }
+//  select_ast_->Print();
   cout << "--------------begin logical plan -------------------" << endl;
-#endif
+//#endif
 
   LogicalOperator* logic_plan = NULL;
   ret = select_ast_->GetLogicalPlan(logic_plan);
@@ -175,6 +186,12 @@ RetCode SelectExec::Execute() {
   }
   logic_plan = new LogicalQueryPlanRoot(0, logic_plan, raw_sql_,
                                         LogicalQueryPlanRoot::kResultCollector);
+  logic_plan->GetPlanContext();
+
+  if (Config::enable_prune_column) {
+    set<string> attrs;
+    logic_plan->PruneProj(attrs);
+  }
   logic_plan->GetPlanContext();
 #ifndef PRINTCONTEXT
   logic_plan->Print();

@@ -111,6 +111,17 @@ void AstSelectList::Print(int level) const {
     next_->Print(level);
   }
 }
+
+RetCode AstSelectList::SetScanAttrList(SemanticContext* sem_cnxt) {
+  if (args_ != NULL) {
+    args_->SetScanAttrList(sem_cnxt);
+  }
+  if (next_ != NULL) {
+    next_->SetScanAttrList(sem_cnxt);
+    return rSuccess;
+  }
+}
+
 RetCode AstSelectList::SemanticAnalisys(SemanticContext* sem_cnxt) {
   RetCode ret = rSuccess;
   if (NULL != args_) {
@@ -166,6 +177,9 @@ AstSelectExpr::AstSelectExpr(AstNodeType ast_node_type, std::string expr_alias,
 
 AstSelectExpr::~AstSelectExpr() { delete expr_; }
 
+
+
+
 void AstSelectExpr::Print(int level) const {
   cout << setw(level * TAB_SIZE) << " "
        << "|select expr|" << endl;
@@ -175,6 +189,14 @@ void AstSelectExpr::Print(int level) const {
   cout << setw(level * TAB_SIZE) << " "
        << "expr alias: " << expr_alias_ << endl;
 }
+
+RetCode AstSelectExpr::SetScanAttrList(SemanticContext* sem_cnxt) {
+  if (expr_ != NULL) {
+     expr_->SetScanAttrList(sem_cnxt);
+  }
+  return rSuccess;
+}
+
 // there is no need to eliminate alias conflict in top select, but in sub query,
 // the alias conflict will be checked by Ast.
 RetCode AstSelectExpr::SemanticAnalisys(SemanticContext* sem_cnxt) {
@@ -260,6 +282,24 @@ void AstFromList::Print(int level) const {
     --level;
     next_->Print(level);
   }
+}
+
+RetCode AstFromList::SetScanAttrList(SemanticContext* sem_cnxt) {
+  for (auto it = equal_join_condition_.begin();
+       it != equal_join_condition_.end(); ++it) {
+    (*it)->SetScanAttrList(sem_cnxt);
+  }
+  for (auto it = normal_condition_.begin(); it != normal_condition_.end();
+       ++it) {
+    (*it)->SetScanAttrList(sem_cnxt);
+  }
+  if (args_ != NULL) {
+    args_->SetScanAttrList(sem_cnxt);
+  }
+  if (next_ != NULL) {
+    next_->SetScanAttrList(sem_cnxt);
+  }
+  return rSuccess;
 }
 RetCode AstFromList::SemanticAnalisys(SemanticContext* sem_cnxt) {
   sem_cnxt->clause_type_ = SemanticContext::kFromClause;
@@ -402,6 +442,30 @@ void AstTable::Print(int level) const {
   cout << setw(level * TAB_SIZE) << " "
        << "table_alias: " << table_alias_ << endl;
 }
+
+RetCode AstTable::SetScanAttrList(SemanticContext* sem_cnxt) {
+  for (auto it = equal_join_condition_.begin();
+       it != equal_join_condition_.end(); ++it) {
+    (*it)->SetScanAttrList(sem_cnxt);
+  }
+  for (auto it = normal_condition_.begin(); it != normal_condition_.end();
+       ++it) {
+    (*it)->SetScanAttrList(sem_cnxt);
+  }
+  // if sql is not  select *
+  if (sem_cnxt->is_all != true) {
+    is_all_ = false;
+    if (sem_cnxt->table_to_column.find(table_name_) !=
+        sem_cnxt->table_to_column.end()) {
+        columns_ = sem_cnxt->table_to_column[table_name_];
+        return rSuccess;
+    } else {
+      return rTableNotExisted;
+    }
+  } else {
+    is_all_ = true;
+  }
+}
 RetCode AstTable::SemanticAnalisys(SemanticContext* sem_cnxt) {
   RetCode ret = rSuccess;
   TableDescriptor* tbl =
@@ -442,19 +506,12 @@ RetCode AstTable::GetLogicalPlan(LogicalOperator*& logic_plan) {
           ->getCatalog()
           ->getTable(table_name_)
           ->HasDeletedTuples()) {
-    LogicalOperator* base_table = new LogicalScan(Environment::getInstance()
-                                                      ->getCatalog()
-                                                      ->getTable(table_name_)
-                                                      ->getProjectoin(0),
-                                                  table_alias_);
+    LogicalOperator* base_table = new LogicalScan(table_alias_, columns_, table_name_, is_all_);
+
     Attribute filter_base =
         base_table->GetPlanContext().plan_partitioner_.get_partition_key();
     LogicalOperator* del_table =
-        new LogicalScan(Environment::getInstance()
-                            ->getCatalog()
-                            ->getTable(table_name_ + "_DEL")
-                            ->getProjectoin(0),
-                        table_alias_ + "_DEL");
+        new LogicalScan(table_alias_ + "_DEL", columns_, table_name_ , is_all_);
     Attribute filter_del =
         del_table->GetPlanContext().plan_partitioner_.get_partition_key();
 
@@ -466,11 +523,7 @@ RetCode AstTable::GetLogicalPlan(LogicalOperator*& logic_plan) {
     logic_plan = new LogicalDeleteFilter(filter_pair, del_table, base_table);
 
   } else {
-    logic_plan = new LogicalScan(Environment::getInstance()
-                                     ->getCatalog()
-                                     ->getTable(table_name_)
-                                     ->getProjectoin(0),
-                                 table_alias_);
+    logic_plan = new LogicalScan(table_alias_, columns_, table_name_, is_all_);
   }
   if (equal_join_condition_.size() > 0) {
     LOG(ERROR) << "equal join condition shouldn't occur in a single table!"
@@ -528,6 +581,22 @@ void AstSubquery::Print(int level) const {
     subquery_->Print(level);
   }
 }
+
+RetCode AstSubquery::SetScanAttrList(SemanticContext* sem_cnxt) {
+  for (auto it = equal_join_condition_.begin();
+       it != equal_join_condition_.end(); ++it) {
+    (*it)->SetScanAttrList(sem_cnxt);
+  }
+  for (auto it = normal_condition_.begin(); it != normal_condition_.end();
+      ++it) {
+    (*it)->SetScanAttrList(sem_cnxt);
+  }
+  if (subquery_ != NULL) {
+    subquery_->SetScanAttrList(sem_cnxt);
+  }
+  return rSuccess;
+}
+
 RetCode AstSubquery::SemanticAnalisys(SemanticContext* sem_cnxt) {
   SemanticContext sub_sem_cnxt;
   //  // subquery_alias_ == existed_table?
@@ -610,6 +679,14 @@ AstJoinCondition::AstJoinCondition(AstNodeType ast_node_type,
       condition_(condition) {}
 
 AstJoinCondition::~AstJoinCondition() { delete condition_; }
+
+RetCode AstJoinCondition::SetScanAttrList(SemanticContext* sem_cnxt) {
+  if (condition_ != NULL) {
+     condition_->SetScanAttrList(sem_cnxt);
+  }
+  return rSuccess;
+}
+
 void AstJoinCondition::Print(int level) const {
   cout << setw(level * TAB_SIZE) << " "
        << "|join condition| " << join_condition_type_ << endl;
@@ -620,6 +697,7 @@ void AstJoinCondition::Print(int level) const {
          << "null" << endl;
   }
 }
+
 RetCode AstJoinCondition::SemanticAnalisys(SemanticContext* sem_cnxt) {
   if (NULL != condition_) {
     return condition_->SemanticAnalisys(sem_cnxt);
@@ -670,6 +748,20 @@ AstJoin::~AstJoin() {
   delete left_table_;
   delete right_table_;
   delete join_condition_;
+}
+RetCode AstJoin::SetScanAttrList(SemanticContext* sem_cnxt) {
+  for (auto it = equal_join_condition_.begin();
+       it != equal_join_condition_.end(); ++it) {
+    (*it)->SetScanAttrList(sem_cnxt);
+  }
+  for (auto it = normal_condition_.begin(); it != normal_condition_.end();
+       ++it) {
+    (*it)->SetScanAttrList(sem_cnxt);
+  }
+  if (left_table_ != NULL) left_table_->SetScanAttrList(sem_cnxt);
+  if (right_table_ != NULL) right_table_->SetScanAttrList(sem_cnxt);
+  if (join_condition_ != NULL) join_condition_->SetScanAttrList(sem_cnxt);
+  return rSuccess;
 }
 
 void AstJoin::Print(int level) const {
@@ -880,6 +972,12 @@ AstWhereClause::AstWhereClause(AstNodeType ast_node_type, AstNode* expr)
 
 AstWhereClause::~AstWhereClause() { delete expr_; }
 
+
+RetCode AstWhereClause::SetScanAttrList(SemanticContext* sem_cnxt) {
+  if (expr_ != NULL) expr_->SetScanAttrList(sem_cnxt);
+  return rSuccess;
+}
+
 void AstWhereClause::Print(int level) const {
   cout << setw(level * TAB_SIZE) << " "
        << "|where clause| " << endl;
@@ -908,6 +1006,16 @@ AstGroupByList::AstGroupByList(AstNodeType ast_node_type, AstNode* expr,
 AstGroupByList::~AstGroupByList() {
   delete expr_;
   delete next_;
+}
+
+RetCode AstGroupByList::SetScanAttrList(SemanticContext* sem_cnxt) {
+  if (expr_ != NULL) {
+    expr_->SetScanAttrList(sem_cnxt);
+  }
+  if (next_ != NULL) {
+    next_->SetScanAttrList(sem_cnxt);
+  }
+  return rSuccess;
 }
 
 void AstGroupByList::Print(int level) const {
@@ -989,6 +1097,10 @@ AstGroupByClause::AstGroupByClause(AstNodeType ast_node_type,
 
 AstGroupByClause::~AstGroupByClause() { delete groupby_list_; }
 
+RetCode AstGroupByClause::SetScanAttrList(SemanticContext* sem_cnxt) {
+  groupby_list_->SetScanAttrList(sem_cnxt);
+  return rSuccess;
+}
 void AstGroupByClause::Print(int level) const {
   cout << setw(level * TAB_SIZE) << " "
        << "|groupby clause| "
@@ -1037,6 +1149,11 @@ AstOrderByList::~AstOrderByList() {
   delete next_;
 }
 
+RetCode AstOrderByList::SetScanAttrList(SemanticContext* sem_cnxt) {
+  if (expr_ != NULL) expr_->SetScanAttrList(sem_cnxt);
+  if (next_ != NULL) next_->SetScanAttrList(sem_cnxt);
+  return rSuccess;
+}
 void AstOrderByList::Print(int level) const {
   cout << setw(level * TAB_SIZE) << " "
        << "|orderby list| " << endl;
@@ -1108,6 +1225,11 @@ AstOrderByClause::AstOrderByClause(AstNodeType ast_node_type,
 
 AstOrderByClause::~AstOrderByClause() { delete orderby_list_; }
 
+RetCode AstOrderByClause::SetScanAttrList(SemanticContext *sem_cnxt) {
+  if (orderby_list_ != NULL) orderby_list_->SetScanAttrList(sem_cnxt);
+  return rSuccess;
+}
+
 void AstOrderByClause::Print(int level) const {
   cout << setw(level * TAB_SIZE) << " "
        << "|orderby clause| " << endl;
@@ -1166,6 +1288,10 @@ AstHavingClause::AstHavingClause(AstNodeType ast_node_type, AstNode* expr)
 
 AstHavingClause::~AstHavingClause() { delete expr_; }
 
+RetCode AstHavingClause::SetScanAttrList(SemanticContext* sem_cnxt) {
+  if (expr_ != NULL) expr_->SetScanAttrList(sem_cnxt);
+  return rSuccess;
+}
 void AstHavingClause::Print(int level) const {
   cout << setw(level * TAB_SIZE) << " "
        << "|having clause| " << endl;
@@ -1223,6 +1349,11 @@ AstLimitClause::~AstLimitClause() {
   delete row_count_;
 }
 
+RetCode AstLimitClause::SetScanAttrList(SemanticContext* sem_cnxt) {
+  if (offset_ != NULL) offset_->SetScanAttrList(sem_cnxt);
+  if (row_count_ != NULL) row_count_->SetScanAttrList(sem_cnxt);
+  return rSuccess;
+}
 void AstLimitClause::Print(int level) const {
   cout << setw(level * TAB_SIZE) << " "
        << "|limit clause| " << endl;
@@ -1311,6 +1442,10 @@ AstColumn::AstColumn(AstColumn* node)
 }
 AstColumn::~AstColumn() { delete next_; }
 
+RetCode AstColumn::SetScanAttrList(SemanticContext* sem_cnxt) {
+//  next_->SetScanAttrList(sem_cnxt);
+  return rSuccess;
+}
 void AstColumn::Print(int level) const {
   cout << setw(level * TAB_SIZE) << " "
        << "|column| " << expr_str_ << endl;
@@ -1328,6 +1463,7 @@ RetCode AstColumn::SemanticAnalisys(SemanticContext* sem_cnxt) {
   RetCode ret = rSuccess;
   if (AST_COLUMN_ALL_ALL == ast_node_type_) {
     if (SemanticContext::kSelectClause == sem_cnxt->clause_type_) {
+      sem_cnxt->is_all = true;
       return rSuccess;
     } else {
       return rColumnAllShouldNotInOtherClause;
@@ -1342,6 +1478,9 @@ RetCode AstColumn::SemanticAnalisys(SemanticContext* sem_cnxt) {
     } else {
       return rColumnAllShouldNotInOtherClause;
     }
+    // insert * means all column in relation
+    sem_cnxt->is_all = false;
+    sem_cnxt->table_to_column[relation_name_].insert("*");
     return rSuccess;
   }
   ret = sem_cnxt->IsColumnExist(relation_name_, column_name_);
@@ -1352,6 +1491,8 @@ RetCode AstColumn::SemanticAnalisys(SemanticContext* sem_cnxt) {
         "column: '\e[1m" + column_name_ + "\e[0m' is invalid";
     return ret;
   }
+  sem_cnxt->is_all = false;
+  sem_cnxt->table_to_column[relation_name_].insert(column_name_);
   if (NULL != next_) {
     return next_->SemanticAnalisys(sem_cnxt);
   }
@@ -1394,6 +1535,7 @@ RetCode AstColumn::GetLogicalPlan(ExprNode*& logic_expr,
                                   LogicalOperator* const right_lplan) {
   Attribute ret_lattr = left_lplan->GetPlanContext().GetAttribute(
       string(relation_name_ + "." + column_name_));
+
   if (NULL != right_lplan) {
     Attribute ret_rattr = right_lplan->GetPlanContext().GetAttribute(
         string(relation_name_ + "." + column_name_));
@@ -1477,6 +1619,18 @@ AstSelectStmt::~AstSelectStmt() {
   delete select_into_clause_;
 }
 
+RetCode AstSelectStmt::SetScanAttrList(SemanticContext* sem_cnxt) {
+  select_list_->SetScanAttrList(sem_cnxt);
+  if (from_list_ != NULL) from_list_->SetScanAttrList(sem_cnxt);
+  if (where_clause_ != NULL) where_clause_->SetScanAttrList(sem_cnxt);
+  if (groupby_clause_ != NULL) groupby_clause_->SetScanAttrList(sem_cnxt);
+  if (having_clause_ != NULL) having_clause_->SetScanAttrList(sem_cnxt);
+  if (orderby_clause_ != NULL) orderby_clause_->SetScanAttrList(sem_cnxt);
+  if (limit_clause_ != NULL) limit_clause_->SetScanAttrList(sem_cnxt);
+  if (select_into_clause_ != NULL)
+    select_into_clause_->SetScanAttrList(sem_cnxt);
+  return rSuccess;
+}
 void AstSelectStmt::Print(int level) const {
   cout << setw(level * TAB_SIZE) << " "
        << "|select statement| " << endl;

@@ -32,6 +32,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <set>
 
 #include "../catalog/catalog.h"
 #include "../IDsGenerator.h"
@@ -46,6 +47,7 @@ using claims::physical_operator::ExchangeMerger;
 using claims::physical_operator::PhysicalProjectionScan;
 namespace claims {
 namespace logical_operator {
+ProjectionOffset get_Max_projection(TableDescriptor* table);
 LogicalScan::LogicalScan(std::vector<Attribute> attribute_list)
     : LogicalOperator(kLogicalScan),
       scan_attribute_list_(attribute_list),
@@ -70,15 +72,16 @@ LogicalScan::LogicalScan(ProjectionDescriptor* projection,
   scan_attribute_list_ = projection->getAttributeList();
   target_projection_ = projection;
 }
-LogicalScan::LogicalScan(ProjectionDescriptor* const projection,
-                         string table_alias, const float sample_rate)
-    : LogicalOperator(kLogicalScan),
+LogicalScan::LogicalScan(string table_alias, set<string> columns,
+                         string table_name, bool is_all,
+                         const float sample_rate)
+    : columns_(columns),
+      table_name_(table_name),
+      LogicalOperator(kLogicalScan),
       table_alias_(table_alias),
+      is_all_(is_all),
       sample_rate_(sample_rate),
       plan_context_(NULL) {
-  scan_attribute_list_ = projection->getAttributeList();
-  ChangeAliasAttr();
-  target_projection_ = projection;
 }
 LogicalScan::LogicalScan(
     const TableID& table_id,
@@ -124,74 +127,85 @@ void LogicalScan::ChangeAliasAttr() {
 PlanContext LogicalScan::GetPlanContext() {
   lock_->acquire();
   if (NULL != plan_context_) {
-    lock_->release();
-    return *plan_context_;
+    delete plan_context_;
+    plan_context_ = NULL;
   }
   plan_context_ = new PlanContext();
-
-  TableID table_id = scan_attribute_list_[0].table_id_;
-  TableDescriptor* table = Catalog::getInstance()->getTable(table_id);
-
-  if (NULL == target_projection_) {
-    ProjectionOffset target_projection_off = -1;
-    unsigned int min_projection_cost = -1;
-    // TODO(KaiYu): get real need column as scan_attribute_list_, otherwise,
-    // optimization don't work
-    for (ProjectionOffset projection_off = 0;
-         projection_off < table->getNumberOfProjection(); projection_off++) {
-      ProjectionDescriptor* projection = table->getProjectoin(projection_off);
-      bool fail = false;
-      for (std::vector<Attribute>::iterator it = scan_attribute_list_.begin();
-           it != scan_attribute_list_.end(); it++) {
-        if (!projection->hasAttribute(*it)) {
-          /*the attribute *it is not in the projection*/
-          fail = true;
-          break;
+  TableDescriptor* table = Catalog::getInstance()->getTable(table_name_);
+  ProjectionOffset target_projection_off = -1;
+  unsigned int min_projection_cost = 65535;
+  if (is_all_ != true) {
+    if (columns_.find("*") != columns_.end()) {
+      // if is all, select tableA.* from tableA, give largest projection;
+      target_projection_off = get_Max_projection(table);
+    } else {
+        for (ProjectionOffset projection_off = 0;
+            projection_off < table->getNumberOfProjection();
+            projection_off++) {
+              ProjectionDescriptor* projection =
+                  table->getProjectoin(projection_off);
+              bool fail = false;
+              for (set<string>::const_iterator it = columns_.begin();
+                  it != columns_.end(); it++) {
+                if (!projection->isExist1(table_name_+"."+*it)) {
+                  /*the attribute *it is not in the projection*/
+                  fail = true;
+                  break;
+                }
+              }
+              if (fail == true) {
+                continue;
+              }
+              unsigned int projection_cost = projection->getProjectionCost();
+              if ( projection_off == 0 ) {
+                min_projection_cost = projection_cost;
+                target_projection_off = 0;
+              }
+              if (min_projection_cost > projection_cost) {
+                target_projection_off = projection_off;
+                min_projection_cost = projection_cost;
+              }
         }
-      }
-      if (fail == true) {
-        continue;
-      }
-      unsigned int projection_cost = projection->getProjectionCost();
-      // get the projection with minimum cost
-      if (min_projection_cost > projection_cost) {
-        target_projection_off = projection_off;
-        min_projection_cost = projection_cost;
-        cout << "in " << table->getNumberOfProjection() << " projections, "
-                                                           "projection "
-             << projection_off << " has less cost:" << projection_cost << endl;
-      }
+        if (target_projection_off != -1) {
+          target_projection_ = table->getProjectoin(target_projection_off);
+        }
     }
-    if (target_projection_off == -1) {
-      // fail to find a projection that contains all the scan attribute
-      LOG(ERROR) << "The current implementation does not support the scanning "
-                    "that involves more than one projection." << std::endl;
-      assert(false);
-    }
+  } else {
+    // if is all, select * from tableA, give largest projection;
+    target_projection_off = get_Max_projection(table);
     target_projection_ = table->getProjectoin(target_projection_off);
-    cout << "in " << table->getNumberOfProjection() << " projections, "
-                                                       "projection "
-         << target_projection_off << " has min cost:" << min_projection_cost
-         << endl;
   }
-
   if (!target_projection_->AllPartitionBound()) {
     Catalog::getInstance()->getBindingModele()->BindingEntireProjection(
         target_projection_->getPartitioner(), DESIRIABLE_STORAGE_LEVEL);
   }
-
-  /**
-   * @brief build the PlanContext
-   */
-
-  plan_context_->attribute_list_ = scan_attribute_list_;  // attribute_list_
-
+  plan_context_->attribute_list_ = target_projection_->getAttributeList();
+  for (auto &it : plan_context_->attribute_list_) {
+    it.attrName = table_alias_ + it.attrName.substr(it.attrName.find('.'));
+  }
   Partitioner* par = target_projection_->getPartitioner();
   plan_context_->plan_partitioner_ = PlanPartitioner(*par);
   plan_context_->plan_partitioner_.UpdateTableNameOfPartitionKey(table_alias_);
   plan_context_->commu_cost_ = 0;
+
   lock_->release();
   return *plan_context_;
+}
+ProjectionOffset get_Max_projection(TableDescriptor* table) {
+  unsigned int max_projection_cost = 0;
+  ProjectionOffset target_projection_off = -1;
+  for (ProjectionOffset projection_off = 0;
+       projection_off < table->getNumberOfProjection(); projection_off++) {
+    ProjectionDescriptor* projection =
+        table->getProjectoin(projection_off);
+    unsigned int projection_cost = projection->getProjectionCost();
+    // get the projection with maximum cost
+    if (max_projection_cost < projection_cost) {
+      target_projection_off = projection_off;
+      max_projection_cost = projection_cost;
+    }
+  }
+  return target_projection_off;
 }
 
 /**
