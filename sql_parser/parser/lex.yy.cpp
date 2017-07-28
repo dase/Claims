@@ -362,8 +362,8 @@ static void yy_fatal_error (yyconst char msg[] ,yyscan_t yyscanner );
 	*yy_cp = '\0'; \
 	yyg->yy_c_buf_p = yy_cp;
 
-#define YY_NUM_RULES 292
-#define YY_END_OF_BUFFER 293
+#define YY_NUM_RULES 293
+#define YY_END_OF_BUFFER 294
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -373,141 +373,141 @@ struct yy_trans_info
 	};
 static yyconst flex_int16_t yy_accept[1227] =
     {   0,
-        0,    0,    0,    0,    0,    0,  293,  291,  290,  290,
-      248,  291,  285,  248,  248,  291,  248,  248,  248,  248,
-      231,  231,  291,  251,  255,  252,  291,  274,  274,  274,
-      274,  274,  274,  274,  274,  274,  274,  274,  274,  274,
-      274,  274,  274,  274,  274,  274,  274,  274,  274,  274,
-      274,  274,  274,  291,  248,  289,  289,  274,  253,    0,
-      243,  241,    0,  285,  249,    0,  242,  240,    0,    0,
-      231,    0,  233,    0,  287,  232,    0,    0,    0,  284,
-      259,  256,  254,  257,  260,    0,  277,    0,    0,  274,
-      274,  274,  274,  274,    9,  274,  274,    0,  274,  274,
+        0,    0,    0,    0,    0,    0,  294,  292,  291,  291,
+      249,  292,  286,  249,  249,  292,  249,  249,  249,  249,
+      232,  232,  292,  252,  256,  253,  292,  275,  275,  275,
+      275,  275,  275,  275,  275,  275,  275,  275,  275,  275,
+      275,  275,  275,  275,  275,  275,  275,  275,  275,  275,
+      275,  275,  275,  292,  249,  290,  290,  275,  254,    0,
+      244,  242,    0,  286,  250,    0,  243,  241,    0,    0,
+      232,    0,  234,    0,  288,  233,    0,    0,    0,  285,
+      260,  257,  255,  258,  261,    0,  278,    0,    0,  275,
+      275,  275,  275,  275,    9,  275,  275,    0,  275,  275,
 
-      274,  274,  274,   20,  274,  274,  274,  274,  274,  274,
-      274,  274,  274,  274,  274,  274,  274,  274,  274,  274,
-      274,  274,  274,  274,  274,  274,  274,  274,  274,  274,
-       88,  274,   90,   99,  274,  274,  274,  274,  274,  274,
-      274,  274,  274,  274,  274,  274,  274,  274,  134,  274,
-      139,  274,  274,  274,  274,  274,  274,  274,  274,  274,
-      274,  274,  274,  274,  274,  274,  274,  274,  274,  274,
-      274,  274,  274,  274,  274,  201,  274,  274,  274,  274,
-      274,  274,  274,  274,  274,  274,    0,  274,  274,  274,
-        0,  276,    0,  250,  288,  274,    0,    0,  241,    0,
+      275,  275,  275,   20,  275,  275,  275,  275,  275,  275,
+      275,  275,  275,  275,  275,  275,  275,  275,  275,  275,
+      275,  275,  275,  275,  275,  275,  275,  275,  275,  275,
+       89,  275,   91,  100,  275,  275,  275,  275,  275,  275,
+      275,  275,  275,  275,  275,  275,  275,  275,  135,  275,
+      140,  275,  275,  275,  275,  275,  275,  275,  275,  275,
+      275,  275,  275,  275,  275,  275,  275,  275,  275,  275,
+      275,  275,  275,  275,  275,  202,  275,  275,  275,  275,
+      275,  275,  275,  275,  275,  275,    0,  275,  275,  275,
+        0,  277,    0,  251,  289,  275,    0,    0,  242,    0,
 
-        0,    0,  240,    0,  286,    0,  236,  232,    0,  246,
-        0,  234,  245,  258,    0,  281,    0,  283,    0,  282,
-        1,    2,  274,  274,    6,    7,  274,   10,  274,  271,
-        0,  274,  274,  274,  274,  274,   16,  274,  274,  274,
-      274,  274,  274,  274,  274,  274,  274,  274,  274,  274,
-      274,  274,  274,   43,   50,  274,  274,  274,  274,  274,
-       60,  274,  274,  274,  274,  274,  274,   67,  274,  274,
-      274,  274,  274,  274,  274,   75,  274,  274,  274,  274,
-      274,  274,  274,  274,  274,  274,  274,  274,  274,  274,
-       96,  274,  274,  103,  274,  274,  274,  274,  274,  274,
+        0,    0,  241,    0,  287,    0,  237,  233,    0,  247,
+        0,  235,  246,  259,    0,  282,    0,  284,    0,  283,
+        1,    2,  275,  275,    6,    7,  275,   10,  275,  272,
+        0,  275,  275,  275,  275,  275,   16,  275,  275,  275,
+      275,  275,  275,  275,  275,  275,  275,  275,  275,  275,
+      275,  275,  275,   43,   50,  275,  275,  275,  275,  275,
+       60,  275,  275,  275,  275,  275,  275,   67,  275,  275,
+      275,  275,  275,  275,  275,   75,  275,  275,  275,  275,
+      275,  275,  275,  275,  275,  275,  275,  275,  275,  275,
+       97,  275,  275,  104,  275,  275,  275,  275,  275,  275,
 
-      274,  274,  274,  274,  274,  274,  273,  274,  274,  274,
-      272,  127,  274,  274,  130,  274,  274,  274,  274,  274,
-      141,  274,  274,  274,  274,  274,  274,  274,  274,  274,
-      274,  274,  274,  274,  274,  274,  274,  274,  274,  274,
-      274,  274,  274,  274,  274,  274,  274,  174,  274,  274,
-      274,  274,  274,  274,  181,  188,  274,  274,  274,  270,
-      274,  274,  274,  274,  274,  274,  274,  274,  274,  274,
-      274,  274,  274,  274,  274,  274,  274,  274,  211,  274,
-      274,  274,  274,  274,  274,  274,  274,  274,    0,  226,
-      274,  274,  275,    5,    0,  241,    0,  240,  286,    0,
+      275,  275,  275,  275,  275,  275,  274,  275,  275,  275,
+      273,  128,  275,  275,  131,  275,  275,  275,  275,  275,
+      142,  275,  275,  275,  275,  275,  275,  275,  275,  275,
+      275,  275,  275,  275,  275,  275,  275,  275,  275,  275,
+      275,  275,  275,  275,  275,  275,  275,  175,  275,  275,
+      275,  275,  275,  275,  182,  189,  275,  275,  275,  271,
+      275,  275,  275,  275,  275,  275,  275,  275,  275,  275,
+      275,  275,  275,  275,  275,  275,  275,  275,  212,  275,
+      275,  275,  275,  275,  275,  275,  275,  275,    0,  227,
+      275,  275,  276,    5,    0,  242,    0,  241,  287,    0,
 
-      235,  278,  280,  279,  274,  274,  274,  274,  247,  274,
-      274,  274,  274,  274,   17,   18,  274,   21,  274,   23,
-      274,  274,   25,  274,  274,  274,  274,  274,  274,  274,
-      274,  274,  274,  274,  274,  274,  274,  274,   44,  274,
-      274,  274,  274,  274,   55,  274,  274,  274,   62,   63,
-      274,   64,   65,   68,  274,  274,   71,  274,  274,  274,
-      274,  274,  274,   78,  274,  274,  274,   82,  274,  274,
-       46,  274,  274,  274,  274,  274,  274,  199,  176,   96,
-       14,  274,   98,  274,  101,  104,  105,  274,  274,  108,
-      109,  274,  274,  112,  274,  115,  116,  119,  274,  274,
+      236,  279,  281,  280,  275,  275,  275,  275,  248,  275,
+      275,  275,  275,  275,   17,   18,  275,   21,  275,   23,
+      275,  275,   25,  275,  275,  275,  275,  275,  275,  275,
+      275,  275,  275,  275,  275,  275,  275,  275,   44,  275,
+      275,  275,  275,  275,   55,  275,  275,  275,   62,   63,
+      275,   64,   65,   68,  275,  275,   71,  275,  275,  275,
+      275,  275,  275,   78,   79,  275,  275,   83,  275,  275,
+       46,  275,  275,  275,  275,  275,  275,  200,  177,   97,
+       14,  275,   99,  275,  102,  105,  106,  275,  275,  109,
+      110,  275,  275,  113,  275,  116,  117,  120,  275,  275,
 
-      274,  274,  274,  274,  274,  274,  274,  274,  132,  274,
-      274,  274,  274,  274,  274,  274,  274,  274,  274,  274,
-      274,  274,  274,  152,  154,  274,  274,  274,  274,  274,
-      274,  274,  274,  274,  274,  274,  274,  274,  274,  274,
-      274,  274,  274,  274,  175,  274,  177,  274,  274,  274,
-      274,  274,  274,  274,  274,  274,  274,  274,  274,  274,
-      195,  196,  197,  274,  274,  274,  274,  237,  204,  274,
-      274,  274,  274,  274,  274,  274,  274,  274,  274,  274,
-      274,  274,  274,  222,  220,  274,  274,  224,  274,  244,
-      227,  274,    0,    0,    0,    0,    3,  274,  274,  274,
+      275,  275,  275,  275,  275,  275,  275,  275,  133,  275,
+      275,  275,  275,  275,  275,  275,  275,  275,  275,  275,
+      275,  275,  275,  153,  155,  275,  275,  275,  275,  275,
+      275,  275,  275,  275,  275,  275,  275,  275,  275,  275,
+      275,  275,  275,  275,  176,  275,  178,  275,  275,  275,
+      275,  275,  275,  275,  275,  275,  275,  275,  275,  275,
+      196,  197,  198,  275,  275,  275,  275,  238,  205,  275,
+      275,  275,  275,  275,  275,  275,  275,  275,  275,  275,
+      275,  275,  275,  223,  221,  275,  275,  225,  275,  245,
+      228,  275,    0,    0,    0,    0,    3,  275,  275,  275,
 
-      274,  230,  274,  274,  274,   19,  274,  267,  274,  274,
-       26,  274,  274,  274,  274,  274,  274,  274,  274,  269,
-      274,   35,  274,  274,  274,  274,  274,  274,  274,  274,
-      274,  274,  274,  274,  274,  274,  274,  274,  274,  274,
-      274,  239,   73,   74,   76,  274,  274,   80,   81,  274,
-      274,  274,  274,  102,  274,   92,   93,  274,  274,  274,
-      274,  274,  274,  107,  110,  111,  274,  274,  274,  274,
-      121,  274,  274,  274,  274,  274,  228,  274,  274,  274,
-      274,  274,  274,  140,  142,  274,  274,  274,  274,  274,
-      274,  149,  274,  150,  153,  274,  274,  274,  274,  274,
+      275,  231,  275,  275,  275,   19,  275,  268,  275,  275,
+       26,  275,  275,  275,  275,  275,  275,  275,  275,  270,
+      275,   35,  275,  275,  275,  275,  275,  275,  275,  275,
+      275,  275,  275,  275,  275,  275,  275,  275,  275,  275,
+      275,  240,   73,   74,   76,  275,  275,   81,   82,  275,
+      275,  275,  275,  103,  275,   93,   94,  275,  275,  275,
+      275,  275,  275,  108,  111,  112,  275,  275,  275,  275,
+      122,  275,  275,  275,  275,  275,  229,  275,  275,  275,
+      275,  275,  275,  141,  143,  275,  275,  275,  275,  275,
+      275,  150,  275,  151,  154,  275,  275,  275,  275,  275,
 
-      274,  274,  274,  274,  274,  165,  156,  274,  274,  274,
-      274,  274,  274,  274,  274,  274,  274,  274,  274,  274,
-      274,  274,  274,  274,  274,  274,  274,  191,  274,  274,
-      274,  274,  274,  274,  274,  262,  205,  274,  274,  274,
-      274,  274,  274,  210,  212,  274,  274,  216,  274,  274,
-      274,  221,  223,  225,  274,  274,    8,  274,   12,  274,
-       15,  274,   24,  274,  274,  274,   28,  274,  274,  274,
-      274,  274,   34,  274,   40,  274,  274,  274,  274,  274,
-      274,  274,  274,   54,  274,  274,  274,   61,  274,   66,
-      274,   70,  274,   74,  274,  274,   83,  274,  274,  274,
+      275,  275,  275,  275,  275,  166,  157,  275,  275,  275,
+      275,  275,  275,  275,  275,  275,  275,  275,  275,  275,
+      275,  275,  275,  275,  275,  275,  275,  192,  275,  275,
+      275,  275,  275,  275,  275,  263,  206,  275,  275,  275,
+      275,  275,  275,  211,  213,  275,  275,  217,  275,  275,
+      275,  222,  224,  226,  275,  275,    8,  275,   12,  275,
+       15,  275,   24,  275,  275,  275,   28,  275,  275,  275,
+      275,  275,   34,  275,   40,  275,  275,  275,  275,  275,
+      275,  275,  275,   54,  275,  275,  275,   61,  275,   66,
+      275,   70,  275,   74,  275,  275,   84,  275,  275,  275,
 
-       89,   91,  274,   95,  274,  274,  274,  274,  274,  274,
-      274,  274,  274,  274,  274,   48,  274,  274,  274,  133,
-      274,  274,  137,  274,  274,  274,  274,  274,  274,  274,
-      274,  156,  274,  158,  159,  274,  274,  274,  163,  164,
-      166,  167,  168,   49,  171,  274,  274,  274,  178,  274,
-      274,  274,  274,  274,  274,  274,  274,  274,  274,  274,
-      192,  274,  274,  274,  274,  274,  274,  274,  206,  274,
-      207,  274,  209,  265,  274,  274,  216,  274,  274,  274,
-      274,    4,  274,   13,   22,  274,  274,   27,   29,  274,
-      274,  274,   33,  274,  274,  274,  274,  274,   50,   51,
+       90,   92,  275,   96,  275,  275,  275,  275,  275,  275,
+      275,  275,  275,  275,  275,   48,  275,  275,  275,  134,
+      275,  275,  138,  275,  275,  275,  275,  275,  275,  275,
+      275,  157,  275,  159,  160,  275,  275,  275,  164,  165,
+      167,  168,  169,   49,  172,  275,  275,  275,  179,  275,
+      275,  275,  275,  275,  275,  275,  275,  275,  275,  275,
+      193,  275,  275,  275,  275,  275,  275,  275,  207,  275,
+      208,  275,  210,  266,  275,  275,  217,  275,  275,  275,
+      275,    4,  275,   13,   22,  275,  275,   27,   29,  275,
+      275,  275,   33,  275,  275,  275,  275,  275,   50,   51,
 
-       52,   53,  274,  274,  274,  274,   69,   72,   77,  274,
-      274,  274,  274,  274,   96,  274,  100,  106,  274,  274,
-      274,  274,  274,  274,  274,  274,  274,  274,  274,  129,
-      274,   50,  274,  274,  143,  274,  274,  146,  274,  274,
-      151,  274,  157,  160,  161,  274,  169,  274,  274,  274,
-      274,  179,  274,  274,  274,  274,  274,  274,  274,  274,
-      274,  261,  274,  274,  274,  274,  274,  274,  203,  238,
-      274,  274,  274,  274,  218,  219,  274,  274,  274,  274,
-      274,  274,   32,  268,  274,   41,   45,  274,  274,   56,
-      274,   58,  274,   79,  274,  274,  274,  274,  274,   97,
+       52,   53,  275,  275,  275,  275,   69,   72,   77,  275,
+      275,  275,  275,  275,   97,  275,  101,  107,  275,  275,
+      275,  275,  275,  275,  275,  275,  275,  275,  275,  130,
+      275,   50,  275,  275,  144,  275,  275,  147,  275,  275,
+      152,  275,  158,  161,  162,  275,  170,  275,  275,  275,
+      275,  180,  275,  275,  275,  275,  275,  275,  275,  275,
+      275,  262,  275,  275,  275,  275,  275,  275,  204,  239,
+      275,  275,  275,  275,  219,  220,  275,  275,  275,  275,
+      275,  275,   32,  269,  275,   41,   45,  275,  275,   56,
+      275,   58,  275,   80,  275,  275,  275,  275,  275,   98,
 
-      274,  117,  118,  274,  274,  274,  274,  274,  274,  274,
-      274,  128,  274,  136,  274,  274,  274,  274,  274,  274,
-      162,  274,  274,  274,  180,  274,  183,  274,  274,  274,
-      274,  189,  274,  274,  274,  274,  274,  200,  202,  208,
-      213,  214,  274,  274,  229,  274,   25,  266,   30,  274,
-      274,  274,  274,   42,  263,  264,  274,  274,  135,  274,
-      274,  274,  274,  274,  113,  274,  274,  123,  274,  274,
-      123,  274,  274,  274,  274,  274,  145,  147,  274,  274,
-      274,  172,  173,  274,  274,  274,  274,  274,  274,  274,
-      193,  274,  198,  274,  217,  274,  274,   31,  274,  274,
+      275,  118,  119,  275,  275,  275,  275,  275,  275,  275,
+      275,  129,  275,  137,  275,  275,  275,  275,  275,  275,
+      163,  275,  275,  275,  181,  275,  184,  275,  275,  275,
+      275,  190,  275,  275,  275,  275,  275,  201,  203,  209,
+      214,  215,  275,  275,  230,  275,   25,  267,   30,  275,
+      275,  275,  275,   42,  264,  265,  275,  275,  136,  275,
+      275,  275,  275,  275,  114,  275,  275,  124,  275,  275,
+      124,  275,  275,  275,  275,  275,  146,  148,  275,  275,
+      275,  173,  174,  275,  275,  275,  275,  275,  275,  275,
+      194,  275,  199,  275,  218,  275,  275,   31,  275,  275,
 
-      274,  274,  274,  274,  274,  274,  274,  274,  274,  274,
-      122,  124,  274,  274,  274,  274,  138,  274,  148,  155,
-      274,  274,  184,  274,  274,  274,  274,  194,  274,  274,
-      274,  274,  274,  274,  274,   59,  274,  274,   86,   87,
-       94,  274,  274,   47,  274,  274,  274,  144,  274,  274,
-      274,  274,  274,  274,  274,  274,  274,   36,   37,   39,
-      274,  274,  274,  274,  120,  274,  274,  274,  274,  182,
-      274,  274,  274,  274,  274,  218,  274,  274,   57,   84,
-      274,  274,  274,  126,  274,  274,  274,  274,  274,  190,
-      215,   11,  274,  274,  114,  274,  274,  274,  185,  274,
+      275,  275,  275,  275,  275,  275,  275,  275,  275,  275,
+      123,  125,  275,  275,  275,  275,  139,  275,  149,  156,
+      275,  275,  185,  275,  275,  275,  275,  195,  275,  275,
+      275,  275,  275,  275,  275,   59,  275,  275,   87,   88,
+       95,  275,  275,   47,  275,  275,  275,  145,  275,  275,
+      275,  275,  275,  275,  275,  275,  275,   36,   37,   39,
+      275,  275,  275,  275,  121,  275,  275,  275,  275,  183,
+      275,  275,  275,  275,  275,  219,  275,  275,   57,   85,
+      275,  275,  275,  127,  275,  275,  275,  275,  275,  191,
+      216,   11,  275,  275,  115,  275,  275,  275,  186,  275,
 
-      274,  274,  274,  274,  274,  274,  274,  274,  274,   85,
-      274,  274,  274,  274,  187,   38,  274,  274,  274,  274,
-      125,  131,  170,  274,  186,    0
+      275,  275,  275,  275,  275,  275,  275,  275,  275,   86,
+      275,  275,  275,  275,  188,   38,  275,  275,  275,  275,
+      126,  132,  171,  275,  187,    0
     } ;
 
 static yyconst flex_int32_t yy_ec[256] =
@@ -1452,7 +1452,7 @@ static yyconst flex_int16_t yy_chk[2760] =
     } ;
 
 /* Table of booleans, true if rule could match eol. */
-static yyconst flex_int32_t yy_rule_can_match_eol[293] =
+static yyconst flex_int32_t yy_rule_can_match_eol[294] =
     {   0,
 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
@@ -1468,7 +1468,7 @@ static yyconst flex_int32_t yy_rule_can_match_eol[293] =
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0,     };
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0,     };
 
 /* The intent behind this definition is that it'll catch
  * any uses of REJECT which flex missed.
@@ -2234,771 +2234,774 @@ YY_RULE_SETUP
 case 79:
 YY_RULE_SETUP
 #line 113 "sql.l"
-{ return FULLTEXT; }
+{ return FULL; }
 	YY_BREAK
 case 80:
 YY_RULE_SETUP
 #line 114 "sql.l"
-{ return GRANT; }
+{ return FULLTEXT; }
 	YY_BREAK
 case 81:
 YY_RULE_SETUP
 #line 115 "sql.l"
-{ return GROUP; }
+{ return GRANT; }
 	YY_BREAK
 case 82:
 YY_RULE_SETUP
 #line 116 "sql.l"
-{ return HASH; }	
+{ return GROUP; }
 	YY_BREAK
 case 83:
 YY_RULE_SETUP
 #line 117 "sql.l"
-{ return HAVING; }
+{ return HASH; }	
 	YY_BREAK
 case 84:
 YY_RULE_SETUP
 #line 118 "sql.l"
-{ return HIGH_PRIORITY; }
+{ return HAVING; }
 	YY_BREAK
 case 85:
 YY_RULE_SETUP
 #line 119 "sql.l"
-{ return HOUR_MICROSECOND; }
+{ return HIGH_PRIORITY; }
 	YY_BREAK
 case 86:
 YY_RULE_SETUP
 #line 120 "sql.l"
-{ return HOUR_MINUTE; }
+{ return HOUR_MICROSECOND; }
 	YY_BREAK
 case 87:
 YY_RULE_SETUP
 #line 121 "sql.l"
-{ return HOUR_SECOND; }
+{ return HOUR_MINUTE; }
 	YY_BREAK
 case 88:
 YY_RULE_SETUP
 #line 122 "sql.l"
-{ return IF; }
+{ return HOUR_SECOND; }
 	YY_BREAK
 case 89:
 YY_RULE_SETUP
 #line 123 "sql.l"
-{ return IGNORE; }
+{ return IF; }
 	YY_BREAK
 case 90:
 YY_RULE_SETUP
 #line 124 "sql.l"
-{ return IN; }
+{ return IGNORE; }
 	YY_BREAK
 case 91:
 YY_RULE_SETUP
 #line 125 "sql.l"
-{ return INFILE; }
+{ return IN; }
 	YY_BREAK
 case 92:
 YY_RULE_SETUP
 #line 126 "sql.l"
-{ return INNER; }
+{ return INFILE; }
 	YY_BREAK
 case 93:
 YY_RULE_SETUP
 #line 127 "sql.l"
-{ return INOUT; }
+{ return INNER; }
 	YY_BREAK
 case 94:
 YY_RULE_SETUP
 #line 128 "sql.l"
-{ return INSENSITIVE; }
+{ return INOUT; }
 	YY_BREAK
 case 95:
 YY_RULE_SETUP
 #line 129 "sql.l"
-{ return INSERT; }
+{ return INSENSITIVE; }
 	YY_BREAK
 case 96:
 YY_RULE_SETUP
 #line 130 "sql.l"
-{ return INTEGER; }
+{ return INSERT; }
 	YY_BREAK
 case 97:
 YY_RULE_SETUP
 #line 131 "sql.l"
-{ return INTERVAL; }
+{ return INTEGER; }
 	YY_BREAK
 case 98:
 YY_RULE_SETUP
 #line 132 "sql.l"
-{ return INTO; }
+{ return INTERVAL; }
 	YY_BREAK
 case 99:
 YY_RULE_SETUP
 #line 133 "sql.l"
-{ return IS; }
+{ return INTO; }
 	YY_BREAK
 case 100:
 YY_RULE_SETUP
 #line 134 "sql.l"
-{ return ITERATE; }
+{ return IS; }
 	YY_BREAK
 case 101:
 YY_RULE_SETUP
 #line 135 "sql.l"
-{ return JOIN; }
+{ return ITERATE; }
 	YY_BREAK
 case 102:
 YY_RULE_SETUP
 #line 136 "sql.l"
-{ return INDEX; }	
+{ return JOIN; }
 	YY_BREAK
 case 103:
 YY_RULE_SETUP
 #line 137 "sql.l"
-{ return KEY; }
+{ return INDEX; }	
 	YY_BREAK
 case 104:
 YY_RULE_SETUP
 #line 138 "sql.l"
-{ return KEYS; }
+{ return KEY; }
 	YY_BREAK
 case 105:
 YY_RULE_SETUP
 #line 139 "sql.l"
-{ return KILL; }
+{ return KEYS; }
 	YY_BREAK
 case 106:
 YY_RULE_SETUP
 #line 140 "sql.l"
-{ return LEADING; }
+{ return KILL; }
 	YY_BREAK
 case 107:
 YY_RULE_SETUP
 #line 141 "sql.l"
-{ return LEAVE; }
+{ return LEADING; }
 	YY_BREAK
 case 108:
 YY_RULE_SETUP
 #line 142 "sql.l"
-{ return LEFT; }
+{ return LEAVE; }
 	YY_BREAK
 case 109:
 YY_RULE_SETUP
 #line 143 "sql.l"
-{ return LIKE; }
+{ return LEFT; }
 	YY_BREAK
 case 110:
 YY_RULE_SETUP
 #line 144 "sql.l"
-{ return LIMIT; }
+{ return LIKE; }
 	YY_BREAK
 case 111:
 YY_RULE_SETUP
 #line 145 "sql.l"
-{ return LINES; }
+{ return LIMIT; }
 	YY_BREAK
 case 112:
 YY_RULE_SETUP
 #line 146 "sql.l"
-{ return LOAD; }
+{ return LINES; }
 	YY_BREAK
 case 113:
 YY_RULE_SETUP
 #line 147 "sql.l"
-{ return LOCALTIME; }
+{ return LOAD; }
 	YY_BREAK
 case 114:
 YY_RULE_SETUP
 #line 148 "sql.l"
-{ return LOCALTIMESTAMP; }
+{ return LOCALTIME; }
 	YY_BREAK
 case 115:
 YY_RULE_SETUP
 #line 149 "sql.l"
-{ return LOCK; }
+{ return LOCALTIMESTAMP; }
 	YY_BREAK
 case 116:
 YY_RULE_SETUP
 #line 150 "sql.l"
-{ return LONG; }
+{ return LOCK; }
 	YY_BREAK
 case 117:
 YY_RULE_SETUP
 #line 151 "sql.l"
-{ return LONGBLOB; }
+{ return LONG; }
 	YY_BREAK
 case 118:
 YY_RULE_SETUP
 #line 152 "sql.l"
-{ return LONGTEXT; }
+{ return LONGBLOB; }
 	YY_BREAK
 case 119:
 YY_RULE_SETUP
 #line 153 "sql.l"
-{ return LOOP; }
+{ return LONGTEXT; }
 	YY_BREAK
 case 120:
 YY_RULE_SETUP
 #line 154 "sql.l"
-{ return LOW_PRIORITY; }
+{ return LOOP; }
 	YY_BREAK
 case 121:
 YY_RULE_SETUP
 #line 155 "sql.l"
-{ return MATCH; }
+{ return LOW_PRIORITY; }
 	YY_BREAK
 case 122:
 YY_RULE_SETUP
 #line 156 "sql.l"
-{ return MEDIUMBLOB; }
+{ return MATCH; }
 	YY_BREAK
 case 123:
 YY_RULE_SETUP
 #line 157 "sql.l"
-{ return MEDIUMINT; }
+{ return MEDIUMBLOB; }
 	YY_BREAK
 case 124:
 YY_RULE_SETUP
 #line 158 "sql.l"
-{ return MEDIUMTEXT; }
+{ return MEDIUMINT; }
 	YY_BREAK
 case 125:
 YY_RULE_SETUP
 #line 159 "sql.l"
-{ return MINUTE_MICROSECOND; }
+{ return MEDIUMTEXT; }
 	YY_BREAK
 case 126:
 YY_RULE_SETUP
 #line 160 "sql.l"
-{ return MINUTE_SECOND; }
+{ return MINUTE_MICROSECOND; }
 	YY_BREAK
 case 127:
 YY_RULE_SETUP
 #line 161 "sql.l"
-{ return MOD; }
+{ return MINUTE_SECOND; }
 	YY_BREAK
 case 128:
 YY_RULE_SETUP
 #line 162 "sql.l"
-{ return MODIFIES; }
+{ return MOD; }
 	YY_BREAK
 case 129:
 YY_RULE_SETUP
 #line 163 "sql.l"
-{ return NATURAL; }
+{ return MODIFIES; }
 	YY_BREAK
 case 130:
 YY_RULE_SETUP
 #line 164 "sql.l"
-{ return NOT; }
+{ return NATURAL; }
 	YY_BREAK
 case 131:
 YY_RULE_SETUP
 #line 165 "sql.l"
-{ return NO_WRITE_TO_BINLOG; }
+{ return NOT; }
 	YY_BREAK
 case 132:
 YY_RULE_SETUP
 #line 166 "sql.l"
-{ return NULLX; }
+{ return NO_WRITE_TO_BINLOG; }
 	YY_BREAK
 case 133:
 YY_RULE_SETUP
 #line 167 "sql.l"
-{ return NUMBER; }
+{ return NULLX; }
 	YY_BREAK
 case 134:
 YY_RULE_SETUP
 #line 168 "sql.l"
-{ return ON; }
+{ return NUMBER; }
 	YY_BREAK
 case 135:
 YY_RULE_SETUP
 #line 169 "sql.l"
-{ return DUPLICATE; }
+{ return ON; }
 	YY_BREAK
 case 136:
 YY_RULE_SETUP
 #line 170 "sql.l"
-{ return OPTIMIZE; }
+{ return DUPLICATE; }
 	YY_BREAK
 case 137:
 YY_RULE_SETUP
 #line 171 "sql.l"
-{ return OPTION; }
+{ return OPTIMIZE; }
 	YY_BREAK
 case 138:
 YY_RULE_SETUP
 #line 172 "sql.l"
-{ return OPTIONALLY; }
+{ return OPTION; }
 	YY_BREAK
 case 139:
 YY_RULE_SETUP
 #line 173 "sql.l"
-{ return OR; }
+{ return OPTIONALLY; }
 	YY_BREAK
 case 140:
 YY_RULE_SETUP
 #line 174 "sql.l"
-{ return ORDER; }
+{ return OR; }
 	YY_BREAK
 case 141:
 YY_RULE_SETUP
 #line 175 "sql.l"
-{ return OUT; }
+{ return ORDER; }
 	YY_BREAK
 case 142:
 YY_RULE_SETUP
 #line 176 "sql.l"
-{ return OUTER; }
+{ return OUT; }
 	YY_BREAK
 case 143:
 YY_RULE_SETUP
 #line 177 "sql.l"
-{ return OUTFILE; }
+{ return OUTER; }
 	YY_BREAK
 case 144:
 YY_RULE_SETUP
 #line 178 "sql.l"
-{ return PARTITIONED; }	
+{ return OUTFILE; }
 	YY_BREAK
 case 145:
 YY_RULE_SETUP
 #line 179 "sql.l"
-{ return PRECISION; }
+{ return PARTITIONED; }	
 	YY_BREAK
 case 146:
 YY_RULE_SETUP
 #line 180 "sql.l"
-{ return PRIMARY; }
+{ return PRECISION; }
 	YY_BREAK
 case 147:
 YY_RULE_SETUP
 #line 181 "sql.l"
-{ return PROCEDURE; }
+{ return PRIMARY; }
 	YY_BREAK
 case 148:
 YY_RULE_SETUP
 #line 182 "sql.l"
-{ return PROJECTION; }	
+{ return PROCEDURE; }
 	YY_BREAK
 case 149:
 YY_RULE_SETUP
 #line 183 "sql.l"
-{ return PURGE; }
+{ return PROJECTION; }	
 	YY_BREAK
 case 150:
 YY_RULE_SETUP
 #line 184 "sql.l"
-{ return QUICK; }
+{ return PURGE; }
 	YY_BREAK
 case 151:
 YY_RULE_SETUP
 #line 185 "sql.l"
-{ return QUARTER;}
+{ return QUICK; }
 	YY_BREAK
 case 152:
 YY_RULE_SETUP
 #line 186 "sql.l"
-{ return READ; }
+{ return QUARTER;}
 	YY_BREAK
 case 153:
 YY_RULE_SETUP
 #line 187 "sql.l"
-{ return READS; }
+{ return READ; }
 	YY_BREAK
 case 154:
 YY_RULE_SETUP
 #line 188 "sql.l"
-{ return REAL; }
+{ return READS; }
 	YY_BREAK
 case 155:
 YY_RULE_SETUP
 #line 189 "sql.l"
-{ return REFERENCES; }
+{ return REAL; }
 	YY_BREAK
 case 156:
 YY_RULE_SETUP
 #line 190 "sql.l"
-{ return REGEXP; }
+{ return REFERENCES; }
 	YY_BREAK
 case 157:
 YY_RULE_SETUP
 #line 191 "sql.l"
-{ return RELEASE; }
+{ return REGEXP; }
 	YY_BREAK
 case 158:
 YY_RULE_SETUP
 #line 192 "sql.l"
-{ return RENAME; }
+{ return RELEASE; }
 	YY_BREAK
 case 159:
 YY_RULE_SETUP
 #line 193 "sql.l"
-{ return REPEAT; }
+{ return RENAME; }
 	YY_BREAK
 case 160:
 YY_RULE_SETUP
 #line 194 "sql.l"
-{ return REPLACE; }
+{ return REPEAT; }
 	YY_BREAK
 case 161:
 YY_RULE_SETUP
 #line 195 "sql.l"
-{ return REQUIRE; }
+{ return REPLACE; }
 	YY_BREAK
 case 162:
 YY_RULE_SETUP
 #line 196 "sql.l"
-{ return RESTRICT; }
+{ return REQUIRE; }
 	YY_BREAK
 case 163:
 YY_RULE_SETUP
 #line 197 "sql.l"
-{ return RETURN; }
+{ return RESTRICT; }
 	YY_BREAK
 case 164:
 YY_RULE_SETUP
 #line 198 "sql.l"
-{ return REVOKE; }
+{ return RETURN; }
 	YY_BREAK
 case 165:
 YY_RULE_SETUP
 #line 199 "sql.l"
-{ return RIGHT; }
+{ return REVOKE; }
 	YY_BREAK
 case 166:
 YY_RULE_SETUP
 #line 200 "sql.l"
-{ return ROLLUP; }
+{ return RIGHT; }
 	YY_BREAK
 case 167:
 YY_RULE_SETUP
 #line 201 "sql.l"
-{ return SAMPLE; }
+{ return ROLLUP; }
 	YY_BREAK
 case 168:
 YY_RULE_SETUP
 #line 202 "sql.l"
-{ return SCHEMA; }
+{ return SAMPLE; }
 	YY_BREAK
 case 169:
 YY_RULE_SETUP
 #line 203 "sql.l"
-{ return SCHEMAS; }
+{ return SCHEMA; }
 	YY_BREAK
 case 170:
 YY_RULE_SETUP
 #line 204 "sql.l"
-{ return SECOND_MICROSECOND; }
+{ return SCHEMAS; }
 	YY_BREAK
 case 171:
 YY_RULE_SETUP
 #line 205 "sql.l"
-{ return SELECT; }
+{ return SECOND_MICROSECOND; }
 	YY_BREAK
 case 172:
 YY_RULE_SETUP
 #line 206 "sql.l"
-{ return SENSITIVE; }
+{ return SELECT; }
 	YY_BREAK
 case 173:
 YY_RULE_SETUP
 #line 207 "sql.l"
-{ return SEPARATOR; }
+{ return SENSITIVE; }
 	YY_BREAK
 case 174:
 YY_RULE_SETUP
 #line 208 "sql.l"
-{ return SET; }
+{ return SEPARATOR; }
 	YY_BREAK
 case 175:
 YY_RULE_SETUP
 #line 209 "sql.l"
-{ return SHOW; }
+{ return SET; }
 	YY_BREAK
 case 176:
 YY_RULE_SETUP
 #line 210 "sql.l"
-{ return SMALLINT; }
+{ return SHOW; }
 	YY_BREAK
 case 177:
 YY_RULE_SETUP
 #line 211 "sql.l"
-{ return SOME; }
+{ return SMALLINT; }
 	YY_BREAK
 case 178:
 YY_RULE_SETUP
 #line 212 "sql.l"
-{ return SONAME; }
+{ return SOME; }
 	YY_BREAK
 case 179:
 YY_RULE_SETUP
 #line 213 "sql.l"
-{ return SPATIAL; }
+{ return SONAME; }
 	YY_BREAK
 case 180:
 YY_RULE_SETUP
 #line 214 "sql.l"
-{ return SPECIFIC; }
+{ return SPATIAL; }
 	YY_BREAK
 case 181:
 YY_RULE_SETUP
 #line 215 "sql.l"
-{ return SQL; }
+{ return SPECIFIC; }
 	YY_BREAK
 case 182:
 YY_RULE_SETUP
 #line 216 "sql.l"
-{ return SQLEXCEPTION; }
+{ return SQL; }
 	YY_BREAK
 case 183:
 YY_RULE_SETUP
 #line 217 "sql.l"
-{ return SQLSTATE; }
+{ return SQLEXCEPTION; }
 	YY_BREAK
 case 184:
 YY_RULE_SETUP
 #line 218 "sql.l"
-{ return SQLWARNING; }
+{ return SQLSTATE; }
 	YY_BREAK
 case 185:
 YY_RULE_SETUP
 #line 219 "sql.l"
-{ return SQL_BIG_RESULT; }
+{ return SQLWARNING; }
 	YY_BREAK
 case 186:
 YY_RULE_SETUP
 #line 220 "sql.l"
-{ return SQL_CALC_FOUND_ROWS; }
+{ return SQL_BIG_RESULT; }
 	YY_BREAK
 case 187:
 YY_RULE_SETUP
 #line 221 "sql.l"
-{ return SQL_SMALL_RESULT; }
+{ return SQL_CALC_FOUND_ROWS; }
 	YY_BREAK
 case 188:
 YY_RULE_SETUP
 #line 222 "sql.l"
-{ return SSL; }
+{ return SQL_SMALL_RESULT; }
 	YY_BREAK
 case 189:
 YY_RULE_SETUP
 #line 223 "sql.l"
-{ return STARTING; }
+{ return SSL; }
 	YY_BREAK
 case 190:
 YY_RULE_SETUP
 #line 224 "sql.l"
-{ return STRAIGHT_JOIN; }
+{ return STARTING; }
 	YY_BREAK
 case 191:
 YY_RULE_SETUP
 #line 225 "sql.l"
-{ return TABLE; }
+{ return STRAIGHT_JOIN; }
 	YY_BREAK
 case 192:
 YY_RULE_SETUP
 #line 226 "sql.l"
-{ return TABLES; }
+{ return TABLE; }
 	YY_BREAK
 case 193:
 YY_RULE_SETUP
 #line 227 "sql.l"
-{ return TEMPORARY; }
+{ return TABLES; }
 	YY_BREAK
 case 194:
 YY_RULE_SETUP
 #line 228 "sql.l"
-{ return TERMINATED; }
+{ return TEMPORARY; }
 	YY_BREAK
 case 195:
 YY_RULE_SETUP
 #line 229 "sql.l"
-{ return TEXT; }
+{ return TERMINATED; }
 	YY_BREAK
 case 196:
 YY_RULE_SETUP
 #line 230 "sql.l"
-{ return THEN; }
+{ return TEXT; }
 	YY_BREAK
 case 197:
 YY_RULE_SETUP
 #line 231 "sql.l"
-{ return TIME; }
+{ return THEN; }
 	YY_BREAK
 case 198:
 YY_RULE_SETUP
 #line 232 "sql.l"
-{ return TIMESTAMP; }
+{ return TIME; }
 	YY_BREAK
 case 199:
 YY_RULE_SETUP
 #line 233 "sql.l"
-{ return TINYINT; }
+{ return TIMESTAMP; }
 	YY_BREAK
 case 200:
 YY_RULE_SETUP
 #line 234 "sql.l"
-{ return TINYTEXT; }
+{ return TINYINT; }
 	YY_BREAK
 case 201:
 YY_RULE_SETUP
 #line 235 "sql.l"
-{ return TO; }
+{ return TINYTEXT; }
 	YY_BREAK
 case 202:
 YY_RULE_SETUP
 #line 236 "sql.l"
-{ return TRAILING; }
+{ return TO; }
 	YY_BREAK
 case 203:
 YY_RULE_SETUP
 #line 237 "sql.l"
-{ return TRIGGER; }
+{ return TRAILING; }
 	YY_BREAK
 case 204:
 YY_RULE_SETUP
 #line 238 "sql.l"
-{ return UNDO; }
+{ return TRIGGER; }
 	YY_BREAK
 case 205:
 YY_RULE_SETUP
 #line 239 "sql.l"
-{ return UNION; }
+{ return UNDO; }
 	YY_BREAK
 case 206:
 YY_RULE_SETUP
 #line 240 "sql.l"
-{ return UNIQUE; }
+{ return UNION; }
 	YY_BREAK
 case 207:
 YY_RULE_SETUP
 #line 241 "sql.l"
-{ return UNLOCK; }
+{ return UNIQUE; }
 	YY_BREAK
 case 208:
 YY_RULE_SETUP
 #line 242 "sql.l"
-{ return UNSIGNED; }
+{ return UNLOCK; }
 	YY_BREAK
 case 209:
 YY_RULE_SETUP
 #line 243 "sql.l"
-{ return UPDATE; }
+{ return UNSIGNED; }
 	YY_BREAK
 case 210:
 YY_RULE_SETUP
 #line 244 "sql.l"
-{ return USAGE; }
+{ return UPDATE; }
 	YY_BREAK
 case 211:
 YY_RULE_SETUP
 #line 245 "sql.l"
-{ return USE; }
+{ return USAGE; }
 	YY_BREAK
 case 212:
 YY_RULE_SETUP
 #line 246 "sql.l"
-{ return USING; }
+{ return USE; }
 	YY_BREAK
 case 213:
 YY_RULE_SETUP
 #line 247 "sql.l"
-{ return UTC_DATE; }
+{ return USING; }
 	YY_BREAK
 case 214:
 YY_RULE_SETUP
 #line 248 "sql.l"
-{ return UTC_TIME; }
+{ return UTC_DATE; }
 	YY_BREAK
 case 215:
 YY_RULE_SETUP
 #line 249 "sql.l"
-{ return UTC_TIMESTAMP; }
+{ return UTC_TIME; }
 	YY_BREAK
 case 216:
 YY_RULE_SETUP
 #line 250 "sql.l"
-{ return VALUES; }
+{ return UTC_TIMESTAMP; }
 	YY_BREAK
 case 217:
 YY_RULE_SETUP
 #line 251 "sql.l"
-{ return VARBINARY; }
+{ return VALUES; }
 	YY_BREAK
 case 218:
 YY_RULE_SETUP
 #line 252 "sql.l"
-{ return VARCHAR; }
+{ return VARBINARY; }
 	YY_BREAK
 case 219:
 YY_RULE_SETUP
 #line 253 "sql.l"
-{ return VARYING; }
+{ return VARCHAR; }
 	YY_BREAK
 case 220:
 YY_RULE_SETUP
 #line 254 "sql.l"
-{ return WHEN; }
+{ return VARYING; }
 	YY_BREAK
 case 221:
 YY_RULE_SETUP
 #line 255 "sql.l"
-{ return WHERE; }
+{ return WHEN; }
 	YY_BREAK
 case 222:
 YY_RULE_SETUP
 #line 256 "sql.l"
-{ return WEEK;}
+{ return WHERE; }
 	YY_BREAK
 case 223:
 YY_RULE_SETUP
 #line 257 "sql.l"
-{ return WHILE; }
+{ return WEEK;}
 	YY_BREAK
 case 224:
 YY_RULE_SETUP
 #line 258 "sql.l"
-{ return WITH; }
+{ return WHILE; }
 	YY_BREAK
 case 225:
 YY_RULE_SETUP
 #line 259 "sql.l"
-{ return WRITE; }
+{ return WITH; }
 	YY_BREAK
 case 226:
 YY_RULE_SETUP
 #line 260 "sql.l"
-{ return XOR; }
+{ return WRITE; }
 	YY_BREAK
 case 227:
 YY_RULE_SETUP
 #line 261 "sql.l"
-{ return YEAR; }
+{ return XOR; }
 	YY_BREAK
 case 228:
 YY_RULE_SETUP
 #line 262 "sql.l"
-{ return YEAR_MONTH; }
+{ return YEAR; }
 	YY_BREAK
 case 229:
 YY_RULE_SETUP
 #line 263 "sql.l"
-{ return ZEROFILL; }
+{ return YEAR_MONTH; }
 	YY_BREAK
 case 230:
 YY_RULE_SETUP
 #line 264 "sql.l"
+{ return ZEROFILL; }
+	YY_BREAK
+case 231:
+YY_RULE_SETUP
+#line 265 "sql.l"
 { return BEGINT; }
 	YY_BREAK
 /* numbers */
-case 231:
+case 232:
 YY_RULE_SETUP
-#line 269 "sql.l"
+#line 270 "sql.l"
 { yylval->strval = strdup(yytext); return INTNUM; } 	// 2014-4-14---save int value in string type
 	YY_BREAK
-case 232:
-#line 273 "sql.l"
 case 233:
 #line 274 "sql.l"
 case 234:
@@ -3006,32 +3009,34 @@ case 234:
 case 235:
 #line 276 "sql.l"
 case 236:
-YY_RULE_SETUP
 #line 277 "sql.l"
+case 237:
+YY_RULE_SETUP
+#line 278 "sql.l"
 { yylval->strval = strdup(yytext); return APPROXNUM; }	// 2014-4-14---save double value in string type
 	YY_BREAK
 /* booleans */	// 2014-4-14---save bool value in string type
-case 237:
-YY_RULE_SETUP
-#line 281 "sql.l"
-{ yylval->strval = "1"; return BOOL; }
-	YY_BREAK
 case 238:
 YY_RULE_SETUP
 #line 282 "sql.l"
-{ yylval->strval = "-1"; return BOOL; }	// 2014-4-14---not supported now---Yu
+{ yylval->strval = "1"; return BOOL; }
 	YY_BREAK
 case 239:
 YY_RULE_SETUP
 #line 283 "sql.l"
+{ yylval->strval = "-1"; return BOOL; }	// 2014-4-14---not supported now---Yu
+	YY_BREAK
+case 240:
+YY_RULE_SETUP
+#line 284 "sql.l"
 { yylval->strval = "0"; return BOOL; }
 	YY_BREAK
 /* strings */
-case 240:
-#line 289 "sql.l"
 case 241:
+#line 290 "sql.l"
+case 242:
 YY_RULE_SETUP
-#line 289 "sql.l"
+#line 290 "sql.l"
 {
 	char *temp = strdup(yytext); 
 	yylval->strval = strdup(yytext);
@@ -3041,14 +3046,6 @@ YY_RULE_SETUP
 	return STRING;
 }
 	YY_BREAK
-case 242:
-*yy_cp = yyg->yy_hold_char; /* undo effects of setting up yytext */
-yyg->yy_c_buf_p = yy_cp -= 1;
-YY_DO_BEFORE_ACTION; /* set up yytext again */
-YY_RULE_SETUP
-#line 298 "sql.l"
-{ yyerror(pp,"Unterminated string %s", yytext); }
-	YY_BREAK
 case 243:
 *yy_cp = yyg->yy_hold_char; /* undo effects of setting up yytext */
 yyg->yy_c_buf_p = yy_cp -= 1;
@@ -3057,109 +3054,109 @@ YY_RULE_SETUP
 #line 299 "sql.l"
 { yyerror(pp,"Unterminated string %s", yytext); }
 	YY_BREAK
-/* hex strings */
 case 244:
-#line 303 "sql.l"
-case 245:
-YY_RULE_SETUP
-#line 303 "sql.l"
-{ yylval->strval = strdup(yytext); return STRING; }
-	YY_BREAK
-/* bit strings */
-case 246:
-#line 308 "sql.l"
-case 247:
-YY_RULE_SETUP
-#line 308 "sql.l"
-{ yylval->strval = strdup(yytext); return STRING; }
-	YY_BREAK
-/* operators */
-case 248:
-YY_RULE_SETUP
-#line 312 "sql.l"
-{ return yytext[0]; }
-	YY_BREAK
-case 249:
-YY_RULE_SETUP
-#line 314 "sql.l"
-{ return ANDOP; }
-	YY_BREAK
-case 250:
-YY_RULE_SETUP
-#line 315 "sql.l"
-{ return OR; }
-	YY_BREAK
-case 251:
-YY_RULE_SETUP
-#line 317 "sql.l"
-{ yylval->subtok = 1; return COMPARISON; }
-	YY_BREAK
-case 252:
-YY_RULE_SETUP
-#line 318 "sql.l"
-{ yylval->subtok = 2; return COMPARISON; }
-	YY_BREAK
-case 253:
-#line 320 "sql.l"
-case 254:
-YY_RULE_SETUP
-#line 320 "sql.l"
-{ yylval->subtok = 3; return COMPARISON; }
-	YY_BREAK
-case 255:
-YY_RULE_SETUP
-#line 321 "sql.l"
-{ yylval->subtok = 4; return COMPARISON; }
-	YY_BREAK
-case 256:
-YY_RULE_SETUP
-#line 322 "sql.l"
-{ yylval->subtok = 5; return COMPARISON; }
-	YY_BREAK
-case 257:
-YY_RULE_SETUP
-#line 323 "sql.l"
-{ yylval->subtok = 6; return COMPARISON; }
-	YY_BREAK
-case 258:
-YY_RULE_SETUP
-#line 324 "sql.l"
-{ yylval->subtok = 12; return COMPARISON; }
-	YY_BREAK
-case 259:
-YY_RULE_SETUP
-#line 326 "sql.l"
-{ yylval->subtok = 1; return SHIFT; }
-	YY_BREAK
-case 260:
-YY_RULE_SETUP
-#line 327 "sql.l"
-{ yylval->subtok = 2; return SHIFT; }
-	YY_BREAK
-/* functions */
-case 261:
 *yy_cp = yyg->yy_hold_char; /* undo effects of setting up yytext */
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 331 "sql.l"
+#line 300 "sql.l"
+{ yyerror(pp,"Unterminated string %s", yytext); }
+	YY_BREAK
+/* hex strings */
+case 245:
+#line 304 "sql.l"
+case 246:
+YY_RULE_SETUP
+#line 304 "sql.l"
+{ yylval->strval = strdup(yytext); return STRING; }
+	YY_BREAK
+/* bit strings */
+case 247:
+#line 309 "sql.l"
+case 248:
+YY_RULE_SETUP
+#line 309 "sql.l"
+{ yylval->strval = strdup(yytext); return STRING; }
+	YY_BREAK
+/* operators */
+case 249:
+YY_RULE_SETUP
+#line 313 "sql.l"
+{ return yytext[0]; }
+	YY_BREAK
+case 250:
+YY_RULE_SETUP
+#line 315 "sql.l"
+{ return ANDOP; }
+	YY_BREAK
+case 251:
+YY_RULE_SETUP
+#line 316 "sql.l"
+{ return OR; }
+	YY_BREAK
+case 252:
+YY_RULE_SETUP
+#line 318 "sql.l"
+{ yylval->subtok = 1; return COMPARISON; }
+	YY_BREAK
+case 253:
+YY_RULE_SETUP
+#line 319 "sql.l"
+{ yylval->subtok = 2; return COMPARISON; }
+	YY_BREAK
+case 254:
+#line 321 "sql.l"
+case 255:
+YY_RULE_SETUP
+#line 321 "sql.l"
+{ yylval->subtok = 3; return COMPARISON; }
+	YY_BREAK
+case 256:
+YY_RULE_SETUP
+#line 322 "sql.l"
+{ yylval->subtok = 4; return COMPARISON; }
+	YY_BREAK
+case 257:
+YY_RULE_SETUP
+#line 323 "sql.l"
+{ yylval->subtok = 5; return COMPARISON; }
+	YY_BREAK
+case 258:
+YY_RULE_SETUP
+#line 324 "sql.l"
+{ yylval->subtok = 6; return COMPARISON; }
+	YY_BREAK
+case 259:
+YY_RULE_SETUP
+#line 325 "sql.l"
+{ yylval->subtok = 12; return COMPARISON; }
+	YY_BREAK
+case 260:
+YY_RULE_SETUP
+#line 327 "sql.l"
+{ yylval->subtok = 1; return SHIFT; }
+	YY_BREAK
+case 261:
+YY_RULE_SETUP
+#line 328 "sql.l"
+{ yylval->subtok = 2; return SHIFT; }
+	YY_BREAK
+/* functions */
+case 262:
+*yy_cp = yyg->yy_hold_char; /* undo effects of setting up yytext */
+yyg->yy_c_buf_p = yy_cp -= 1;
+YY_DO_BEFORE_ACTION; /* set up yytext again */
+YY_RULE_SETUP
+#line 332 "sql.l"
 { return FSUBSTRING; }
 	YY_BREAK
-case 262:
+case 263:
 *yy_cp = yyg->yy_hold_char; /* undo effects of setting up yytext */
 yyg->yy_c_buf_p = yy_cp = yy_bp + 4;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 332 "sql.l"
-{ return FTRIM; }
-	YY_BREAK
-case 263:
-*yy_cp = yyg->yy_hold_char; /* undo effects of setting up yytext */
-yyg->yy_c_buf_p = yy_cp = yy_bp + 8;
-YY_DO_BEFORE_ACTION; /* set up yytext again */
-YY_RULE_SETUP
 #line 333 "sql.l"
-{ return FDATE_ADD; }
+{ return FTRIM; }
 	YY_BREAK
 case 264:
 *yy_cp = yyg->yy_hold_char; /* undo effects of setting up yytext */
@@ -3167,38 +3164,46 @@ yyg->yy_c_buf_p = yy_cp = yy_bp + 8;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
 #line 334 "sql.l"
-{ return FDATE_SUB; }
+{ return FDATE_ADD; }
 	YY_BREAK
 case 265:
-*yy_cp = yyg->yy_hold_char; /* undo effects of setting up yytext */
-yyg->yy_c_buf_p = yy_cp = yy_bp + 5;
-YY_DO_BEFORE_ACTION; /* set up yytext again */
-YY_RULE_SETUP
-#line 335 "sql.l"
-{ return FUPPER; }//---3.25fzh---
-	YY_BREAK
-case 266:
 *yy_cp = yyg->yy_hold_char; /* undo effects of setting up yytext */
 yyg->yy_c_buf_p = yy_cp = yy_bp + 8;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
+#line 335 "sql.l"
+{ return FDATE_SUB; }
+	YY_BREAK
+case 266:
+*yy_cp = yyg->yy_hold_char; /* undo effects of setting up yytext */
+yyg->yy_c_buf_p = yy_cp = yy_bp + 5;
+YY_DO_BEFORE_ACTION; /* set up yytext again */
+YY_RULE_SETUP
 #line 336 "sql.l"
-{ return FCOALESCE; }
+{ return FUPPER; }//---3.25fzh---
 	YY_BREAK
 case 267:
+*yy_cp = yyg->yy_hold_char; /* undo effects of setting up yytext */
+yyg->yy_c_buf_p = yy_cp = yy_bp + 8;
+YY_DO_BEFORE_ACTION; /* set up yytext again */
+YY_RULE_SETUP
+#line 337 "sql.l"
+{ return FCOALESCE; }
+	YY_BREAK
+case 268:
 *yy_cp = yyg->yy_hold_char; /* undo effects of setting up yytext */
 yyg->yy_c_buf_p = yy_cp = yy_bp + 4;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 337 "sql.l"
+#line 338 "sql.l"
 { return FCAST; }
 	YY_BREAK
-case 268:
+case 269:
 *yy_cp = yyg->yy_hold_char; /* undo effects of setting up yytext */
 yyg->yy_c_buf_p = yy_cp = yy_bp + 7;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 338 "sql.l"
+#line 339 "sql.l"
 { return FCONVERT; }
 	YY_BREAK
 /* 
@@ -3207,86 +3212,78 @@ YY_RULE_SETUP
 /* 
         ---2.18add aggrection functions
          */
-case 269:
+case 270:
 YY_RULE_SETUP
-#line 345 "sql.l"
+#line 346 "sql.l"
 { int c = yyinput(pp->yyscan_info_); unput(c);
            if(c == '(') return FCOUNT;
            yylval->strval = strdup(yytext);
            return NAME; }
 	YY_BREAK
-case 270:
+case 271:
 YY_RULE_SETUP
-#line 349 "sql.l"
+#line 350 "sql.l"
 { int c = yyinput(pp->yyscan_info_); unput(c);
            if(c == '(') return FSUM;
            yylval->strval = strdup(yytext);
            return NAME; }           
 	YY_BREAK
-case 271:
+case 272:
 YY_RULE_SETUP
-#line 353 "sql.l"
+#line 354 "sql.l"
 { int c = yyinput(pp->yyscan_info_); unput(c);
            if(c == '(') return FAVG;
            yylval->strval = strdup(yytext);
            return NAME; }
 	YY_BREAK
-case 272:
+case 273:
 YY_RULE_SETUP
-#line 357 "sql.l"
+#line 358 "sql.l"
 { int c = yyinput(pp->yyscan_info_); unput(c);
            if(c == '(') return FMIN;
            yylval->strval = strdup(yytext);
            return NAME; }
 	YY_BREAK
-case 273:
+case 274:
 YY_RULE_SETUP
-#line 361 "sql.l"
+#line 362 "sql.l"
 { int c = yyinput(pp->yyscan_info_); unput(c);
            if(c == '(') return FMAX;
            yylval->strval = strdup(yytext);
            return NAME; } 
 	YY_BREAK
-case 274:
+case 275:
 YY_RULE_SETUP
-#line 366 "sql.l"
+#line 367 "sql.l"
 { yylval->strval = strdup(yytext);
                           return NAME; }
 	YY_BREAK
-case 275:
+case 276:
 YY_RULE_SETUP
-#line 368 "sql.l"
+#line 369 "sql.l"
 { yylval->strval = strdup(yytext+1);
                           yylval->strval[yyleng-2] = 0;
                           return NAME; }
 	YY_BREAK
-case 276:
+case 277:
 *yy_cp = yyg->yy_hold_char; /* undo effects of setting up yytext */
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 372 "sql.l"
+#line 373 "sql.l"
 { yyerror(pp,"unterminated quoted name %s", yytext); }
 	YY_BREAK
 /* user variables */
-case 277:
-#line 376 "sql.l"
 case 278:
 #line 377 "sql.l"
 case 279:
 #line 378 "sql.l"
 case 280:
-YY_RULE_SETUP
-#line 378 "sql.l"
-{ yylval->strval = strdup(yytext+1); return USERVAR; }
-	YY_BREAK
+#line 379 "sql.l"
 case 281:
-*yy_cp = yyg->yy_hold_char; /* undo effects of setting up yytext */
-yyg->yy_c_buf_p = yy_cp -= 1;
-YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 380 "sql.l"
-{ yyerror(pp,"unterminated quoted user variable %s", yytext); }
+#line 379 "sql.l"
+{ yylval->strval = strdup(yytext+1); return USERVAR; }
 	YY_BREAK
 case 282:
 *yy_cp = yyg->yy_hold_char; /* undo effects of setting up yytext */
@@ -3305,16 +3302,19 @@ YY_RULE_SETUP
 { yyerror(pp,"unterminated quoted user variable %s", yytext); }
 	YY_BREAK
 case 284:
+*yy_cp = yyg->yy_hold_char; /* undo effects of setting up yytext */
+yyg->yy_c_buf_p = yy_cp -= 1;
+YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 385 "sql.l"
+#line 383 "sql.l"
+{ yyerror(pp,"unterminated quoted user variable %s", yytext); }
+	YY_BREAK
+case 285:
+YY_RULE_SETUP
+#line 386 "sql.l"
 { return ASSIGN; }
 	YY_BREAK
 /* comments */   
-case 285:
-YY_RULE_SETUP
-#line 388 "sql.l"
-;
-	YY_BREAK
 case 286:
 YY_RULE_SETUP
 #line 389 "sql.l"
@@ -3322,42 +3322,47 @@ YY_RULE_SETUP
 	YY_BREAK
 case 287:
 YY_RULE_SETUP
-#line 391 "sql.l"
-{ oldstate = YY_START; BEGIN COMMENT; }
+#line 390 "sql.l"
+;
 	YY_BREAK
 case 288:
 YY_RULE_SETUP
 #line 392 "sql.l"
-{ BEGIN oldstate; }
+{ oldstate = YY_START; BEGIN COMMENT; }
 	YY_BREAK
 case 289:
-/* rule 289 can match eol */
 YY_RULE_SETUP
 #line 393 "sql.l"
-;
+{ BEGIN oldstate; }
 	YY_BREAK
-case YY_STATE_EOF(COMMENT):
-#line 394 "sql.l"
-{ yyerror(pp,"unclosed comment"); }
-	YY_BREAK
-/* everything else */
 case 290:
 /* rule 290 can match eol */
 YY_RULE_SETUP
-#line 397 "sql.l"
-/* white space */
+#line 394 "sql.l"
+;
 	YY_BREAK
+case YY_STATE_EOF(COMMENT):
+#line 395 "sql.l"
+{ yyerror(pp,"unclosed comment"); }
+	YY_BREAK
+/* everything else */
 case 291:
+/* rule 291 can match eol */
 YY_RULE_SETUP
 #line 398 "sql.l"
-{ yyerror(pp,"mystery character '%c'", *yytext); }
+/* white space */ {yylineno++;}
 	YY_BREAK
 case 292:
 YY_RULE_SETUP
-#line 400 "sql.l"
+#line 399 "sql.l"
+{ yyerror(pp,"mystery character '%c'", *yytext); }
+	YY_BREAK
+case 293:
+YY_RULE_SETUP
+#line 401 "sql.l"
 YY_FATAL_ERROR( "flex scanner jammed" );
 	YY_BREAK
-#line 3361 "lex.yy.c"
+#line 3366 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(BTWMODE):
 	yyterminate();
@@ -4533,7 +4538,7 @@ void yyfree (void * ptr , yyscan_t yyscanner)
 
 #define YYTABLES_NAME "yytables"
 
-#line 400 "sql.l"
+#line 401 "sql.l"
 
 
 void GetCorrectString(char *dest, const char *src)

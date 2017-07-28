@@ -49,7 +49,6 @@ using claims::common::rSuccess;
 // namespace claims {
 // namespace sql_parser {
 
-typedef int RetCode;
 enum AstNodeType {
   AST_NODE,
   AST_STMT_LIST,
@@ -120,7 +119,11 @@ enum AstNodeType {
   AST_STRINGVAL,
   AST_BOOL,
   AST_SHOW_STMT,
-  AST_DELETE_STMT
+  AST_DELETE_STMT,
+  AST_DESC_STMT,
+  AST_UPDATE_STMT,
+  AST_UPDATE_SET_LIST
+  
 };
 // the order should be keep
 enum SubExprType {
@@ -205,6 +208,10 @@ class PushDownConditionContext {
           is_set(false) {}
   };
   PushDownConditionContext();
+  ~PushDownConditionContext() {
+    from_tables_.clear();
+    sub_expr_info_.clear();
+  }
   void GetSubExprInfo(AstNode* expr);
   SubExprType GetSubExprType(AstNode* sub_expr, int ref_table_num);
   bool IsEqualJoinCondition(AstNode* sub_expr);
@@ -213,6 +220,7 @@ class PushDownConditionContext {
                     vector<AstNode*>& normal_condi);
   std::vector<SubExprInfo*> sub_expr_info_;
   set<string> from_tables_;
+  bool is_outer_{false};
 };
 class SelectAliasSolver {
  public:
@@ -254,20 +262,26 @@ class AstNode {
   virtual void GetSubExpr(vector<AstNode*>& sub_expr, bool is_top_and);
   virtual void GetRefTable(set<string>& ref_table);
 
-  virtual RetCode PushDownCondition(PushDownConditionContext* pdccnxt) {
+  virtual RetCode PushDownCondition(PushDownConditionContext& pdccnxt) {
     return rSuccess;
   }
   virtual RetCode GetLogicalPlan(LogicalOperator*& logic_plan) {
     return rSuccess;
   }
+
   virtual RetCode GetLogicalPlan(ExprNode*& logic_expr,
-                                 LogicalOperator* child_logic_plan) {
+                                 LogicalOperator* const left_lplan,
+                                 LogicalOperator* const right_lplan) {
     return rSuccess;
   }
   RetCode GetEqualJoinPair(vector<LogicalEqualJoin::JoinPair>& join_pair,
                            LogicalOperator* args_lplan,
                            LogicalOperator* next_lplan,
                            const vector<AstNode*>& equal_join_condition);
+  RetCode GetJoinCondition(vector<ExprNode*>& condition,
+                           const vector<AstNode*>& normal_condition,
+                           LogicalOperator* left_lplan,
+                           LogicalOperator* right_lplan);
   RetCode GetFilterCondition(vector<ExprNode*>& condition,
                              const vector<AstNode*>& normal_condition,
                              LogicalOperator* logic_plan);
@@ -284,6 +298,7 @@ struct ParseResult {
   AstNode* ast;
   const char* sql_clause;
   int error_number;
+  string error_info_;
 };
 
 /**
@@ -297,7 +312,7 @@ class AstStmtList : public AstNode {
   ~AstStmtList();
   void Print(int level = 0) const;
   RetCode SemanticAnalisys(SemanticContext* sem_cnxt);
-  RetCode PushDownCondition(PushDownConditionContext* pdccnxt);
+  RetCode PushDownCondition(PushDownConditionContext& pdccnxt);
   RetCode GetLogicalPlan(LogicalOperator*& logic_plan);
   AstNode* stmt_;
   AstNode* next_;

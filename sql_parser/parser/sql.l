@@ -110,6 +110,7 @@ FOR	{ return FOR; }
 FORCE	{ return FORCE; }
 FOREIGN	{ return FOREIGN; }
 FROM	{ return FROM; }
+FULL    { return FULL; }
 FULLTEXT	{ return FULLTEXT; }
 GRANT	{ return GRANT; }
 GROUP	{ return GROUP; }
@@ -394,7 +395,7 @@ MAX    { int c = yyinput(pp->yyscan_info_); unput(c);
 <COMMENT><<EOF>> { yyerror(pp,"unclosed comment"); }
 
 	/* everything else */
-[ \t\n]         /* white space */
+[ \t\n]         /* white space */ {yylineno++;}
 .               { yyerror(pp,"mystery character '%c'", *yytext); }
 
 %%

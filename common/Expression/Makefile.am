@@ -1,8 +1,7 @@
 AM_CPPFLAGS= -fPIC -fpermissive -DTHERON_XS\
--I${THERON_HOME}/Include \
 -I${BOOST_HOME} \
 -I${BOOST_HOME}/boost/serialization \
--I${HADOOP_HOME}/src/c++/libhdfs\
+-I${HADOOP_HOME}/include\
 -I${JAVA_HOME}/include\
 -I${JAVA_HOME}/include/linux
 
@@ -17,7 +16,6 @@ LDADD = 	../../catalog/libcatalog.a \
 		../../common/libcommon.a \
 		../../common/Schema/libschema.a \
 		../../utility/libutility.a \
-		${THERON_HOME}/Lib/libtherond.a \
 		${BOOST_HOME}/stage/lib/libboost_serialization.a \
 		${BOOST_HOME}/stage/lib/libboost_system.a \
 		${BOOST_HOME}/stage/lib/libboost_serialization.so \

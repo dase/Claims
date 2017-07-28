@@ -43,7 +43,50 @@ class ElasticIteratorModelTest : public ::testing::Test {
 
 std::string ElasticIteratorModelTest::ip_;
 int ElasticIteratorModelTest::port_;
+/*
+TEST_F(ElasticIteratorModelTest, LoadFromHdfs){
+	  EXPECT_TRUE(client_.connected());
+	  ResultSet rs;
+	  std::string command ;
+	  command = "load table PART from ";
+	  command += '"';
+	  command +="HDFS:/test/claims/part.tbl";
+	  command +='"';
+	  command +=" with '|','\\n';";
+	  std::string message;
+	  client_.submit(command, message, rs);
+	  message = message.substr(0,22);
+	  EXPECT_STREQ("load data successfully", message.c_str());
+}*/
 
+TEST_F(ElasticIteratorModelTest, LoadFromHdfs_part){
+	  EXPECT_TRUE(client_.connected());
+	  ResultSet rs;
+	  std::string command;
+	  command = "load table PART from ";
+	  command += '"';
+	  command +="HDFS:/test/claims/part.tbl";
+	  command +='"';
+	  command +=" with '|','\\n';";
+	  std::string message;
+	  client_.submit(command, message, rs);
+	  message = message.substr(0,22);
+	  EXPECT_STREQ("load data successfully", message.c_str());
+}
+TEST_F(ElasticIteratorModelTest, LoadFromHdfs_customer){
+	  EXPECT_TRUE(client_.connected());
+	  ResultSet rs;
+	  std::string command;
+	  command = "load table CUSTOMER from ";
+	  command += '"';
+	  command +="HDFS:/test/claims/customer.tbl";
+	  command +='"';
+	  command +=" with '|','\\n';";
+	  std::string message;
+	  client_.submit(command, message, rs);
+	  message = message.substr(0,22);
+	  EXPECT_STREQ("load data successfully", message.c_str());
+}
 TEST_F(ElasticIteratorModelTest, Scan) {
   EXPECT_TRUE(client_.connected());
   ResultSet rs;
@@ -98,8 +141,8 @@ TEST_F(ElasticIteratorModelTest, ScalaAggregation) {
   BlockStreamBase::BlockStreamTraverseIterator *b_it =
       it.nextBlock()->createIterator();
   EXPECT_EQ(6001215, *(long *)b_it->currentTuple());
-  //NValue v;
-  //v.createDecimalFromString("153078795.0000");
+  // NValue v;
+  // v.createDecimalFromString("153078795.0000");
   Decimal v(65, 30, "153078795.0000");
   EXPECT_TRUE(
       v.op_equals(*(Decimal *)((char *)b_it->currentTuple() + sizeof(long))));
@@ -124,7 +167,7 @@ TEST_F(ElasticIteratorModelTest, AggregationSmallGroups) {
                  message, rs);
   EXPECT_EQ(3, rs.getNumberOftuples());
 }
-TEST_F(ElasticIteratorModelTest, Join) {
+TEST_F(ElasticIteratorModelTest, EqualJoin) {
   ResultSet rs;
   std::string message;
   client_.submit(
@@ -201,13 +244,27 @@ TEST_F(ElasticIteratorModelTest, FilteredJoin) {
   ResultSet rs;
   std::string message;
   client_.submit(
-      "select count(*) from PART,LINEITEM where PART.row_id%10=1 and "
+      "select count(*) from PART,LINEITEM where PART.row_id%10=1 and  "
       "LINEITEM.row_id % 10 =1 and PART.row_id = LINEITEM.row_id;",
       message, rs);
   DynamicBlockBuffer::Iterator it = rs.createIterator();
   BlockStreamBase::BlockStreamTraverseIterator *b_it =
       it.nextBlock()->createIterator();
   EXPECT_EQ(20000, *(long *)b_it->nextTuple());
+  delete b_it;
+}
+
+TEST_F(ElasticIteratorModelTest, OuterJoin) {
+  ResultSet rs;
+  std::string message;
+  client_.submit(
+      "SELECT COUNT(*) FROM CUSTOMER LEFT OUTER JOIN ORDERS ON "
+      "C_CUSTKEY = O_CUSTKEY AND O_COMMENT NOT LIKE '%unusual%deposits%';",
+      message, rs);
+  DynamicBlockBuffer::Iterator it = rs.createIterator();
+  BlockStreamBase::BlockStreamTraverseIterator *b_it =
+      it.nextBlock()->createIterator();
+  EXPECT_EQ(1533872, *(long *)b_it->nextTuple());
   delete b_it;
 }
 
@@ -326,6 +383,28 @@ TEST_F(ElasticIteratorModelTest, droptestdata) {
   EXPECT_EQ("drop table successfully!\n", message);
   cout << message << endl;
 }
+
+// TEST_F(ElasticIteratorModelTest, CreateTempTableForTableFileConnectorTest) {
+//  string table_name = "sfdfsf";
+//  string create_table_stmt =
+//      "create table " + table_name + " (a int , b varchar(12));";
+//  string create_prj_stmt1 = "create projection on " + table_name +
+//                            " (a  , b ) number = 2 partitioned on a ;";
+//  string create_prj_stmt2 = "create projection on " + table_name +
+//                            " (a ) number = 3 partitioned on a ;";
+//
+//  ResultSet rs;
+//  string message = "";
+//  client_.submit(create_table_stmt.c_str(), message, rs);
+//  EXPECT_EQ("create table successfully\n", message);
+//  cout << message << endl;
+//  client_.submit(create_prj_stmt1.c_str(), message, rs);
+//  EXPECT_EQ("create projection successfully\n", message);
+//  cout << message << endl;
+//  client_.submit(create_prj_stmt2.c_str(), message, rs);
+//  EXPECT_EQ("create projection successfully\n", message);
+//  cout << message << endl;
+//}
 
 // add by cswang 19 Oct, 2015
 

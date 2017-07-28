@@ -33,10 +33,11 @@
 #include <string>
 
 #include "../common/error_define.h"
-#include "../common/file_handle/file_handle_imp.h"
 #include "../common/hash.h"
 #include "../catalog/table.h"
 #include "./validity.h"
+#include "../common/file_handle/file_handle_imp.h"
+#include "hdfs_loader.h"
 
 using claims::common::FileOpenFlag;
 using claims::catalog::TableDescriptor;
@@ -51,8 +52,7 @@ class ExecutedResult;
 
 namespace claims {
 namespace loader {
-
-class FileConnector;
+class TableFileConnector;
 class DataInjector {
  public:
   struct LoadTask {
@@ -165,10 +165,11 @@ class DataInjector {
   static void* HandleTuple(void* ptr);
 
   RetCode SetTableState(FileOpenFlag open_flag, ExecutedResult* result);
-  RetCode CheckFiles(vector<string> input_file_names, ExecutedResult* result);
+  RetCode CheckFiles(vector<string> input_file_names, ExecutedResult* result
+		  	  	  	  	  	  	  	  	  	  	  , HdfsLoader * hdfsloader_);
   RetCode PrepareEverythingForLoading(vector<string> input_file_names,
                                       FileOpenFlag open_flag,
-                                      ExecutedResult* result);
+                                      ExecutedResult* result,HdfsLoader * hdfsloader_);
 
   RetCode FinishJobAfterLoading(FileOpenFlag open_flag);
   RetCode PrepareLocalPJBuffer(vector<vector<BlockStreamBase*>>& pj_buffer);
@@ -178,10 +179,12 @@ class DataInjector {
  public:
   static istream& GetTupleTerminatedBy(ifstream& ifs, string& res,
                                        const string& terminator);
+  static bool GetTupleTerminatedByFromHdfs(void*& buffer, HdfsLoader* hdfsloader_, string & file_name, string& res,
+		  	  	  	  	  	  	  	  	  	  	  const string& terminator, int & pos, int & read_num, const int & length);
 
  private:
   TableDescriptor* table_;
-  FileConnector* connector_;
+  TableFileConnector& connector_;
 
   Schema* table_schema_;
   vector<Schema*> projections_schema_;
@@ -199,7 +202,7 @@ class DataInjector {
 
   string col_separator_;
   string row_separator_;
-  uint64_t row_id_in_table_;
+  uint64_t& row_id_in_table_;
 
   // support multi-thread
   std::list<LoadTask>* task_lists_ = NULL;
@@ -215,6 +218,9 @@ class DataInjector {
   int all_tuple_read_ = 0;
   RetCode multi_thread_status_ = rSuccess;
   ExecutedResult* result_;
+  HdfsLoader* hdfsloader_;
+
+
   /******************debug********************/
  public:
   static uint64_t total_get_substr_time_;

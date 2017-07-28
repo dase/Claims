@@ -2,8 +2,8 @@
 AM_CPPFLAGS= -fPIC -fpermissive \
 -I${BOOST_HOME} \
 -I${BOOST_HOME}/boost/serialization \
--I${GTEST_HOME}/include
-
+-I${GTEST_HOME}/include \
+-I${HADOOP_HOME}/include
 AM_LDFLAGS=-lc -lm -lrt lboost_serialization -lxs
 
 if OPT_TCMALLOC

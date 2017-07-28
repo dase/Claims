@@ -85,7 +85,7 @@ class AstFromList : public AstNode {
   ~AstFromList();
   void Print(int level = 0) const;
   RetCode SemanticAnalisys(SemanticContext* sem_cnxt);
-  RetCode PushDownCondition(PushDownConditionContext* pdccnxt);
+  RetCode PushDownCondition(PushDownConditionContext& pdccnxt);
   RetCode GetLogicalPlan(LogicalOperator*& logic_plan);
 
   map<string, AstNode*> table_joined_root;
@@ -107,7 +107,7 @@ class AstTable : public AstNode {
   ~AstTable();
   void Print(int level = 0) const;
   RetCode SemanticAnalisys(SemanticContext* sem_cnxt);
-  RetCode PushDownCondition(PushDownConditionContext* pdccnxt);
+  RetCode PushDownCondition(PushDownConditionContext& pdccnxt);
   RetCode GetLogicalPlan(LogicalOperator*& logic_plan);
 
   vector<AstNode*> equal_join_condition_;
@@ -130,7 +130,7 @@ class AstSubquery : public AstNode {
   ~AstSubquery();
   void Print(int level = 0) const;
   RetCode SemanticAnalisys(SemanticContext* sem_cnxt);
-  RetCode PushDownCondition(PushDownConditionContext* pdccnxt);
+  RetCode PushDownCondition(PushDownConditionContext& pdccnxt);
   RetCode GetLogicalPlan(LogicalOperator*& logic_plan);
 
   string subquery_alias_;
@@ -163,8 +163,9 @@ class AstJoin : public AstNode {
   ~AstJoin();
   void Print(int level = 0) const;
   RetCode SemanticAnalisys(SemanticContext* sem_cnxt);
-  RetCode PushDownCondition(PushDownConditionContext* pdccnxt);
+  RetCode PushDownCondition(PushDownConditionContext& pdccnxt);
   RetCode GetLogicalPlan(LogicalOperator*& logic_plan);
+  RetCode GetFilterLogicalPlan(LogicalOperator*& logic_plan);
 
   string join_type_;
   AstNode* left_table_;
@@ -307,8 +308,10 @@ class AstColumn : public AstNode {
   RetCode SemanticAnalisys(SemanticContext* sem_cnxt);
   void RecoverExprName(string& name);
   void GetRefTable(set<string>& ref_table);
+
   RetCode GetLogicalPlan(ExprNode*& logic_expr,
-                         LogicalOperator* child_logic_plan);
+                         LogicalOperator* const left_lplan,
+                         LogicalOperator* const right_lplan);
   RetCode SolveSelectAlias(SelectAliasSolver* const select_alias_solver);
   AstNode* AstNodeCopy();
   string relation_name_;
@@ -338,7 +341,7 @@ class AstSelectStmt : public AstNode {
   ~AstSelectStmt();
   void Print(int level = 0) const;
   RetCode SemanticAnalisys(SemanticContext* sem_cnxt);
-  RetCode PushDownCondition(PushDownConditionContext* pdccnxt);
+  RetCode PushDownCondition(PushDownConditionContext& pdccnxt);
   RetCode GetLogicalPlan(LogicalOperator*& logic_plan);
   RetCode GetLogicalPlanOfAggeration(LogicalOperator*& logic_plan);
   RetCode GetLogicalPlanOfProject(LogicalOperator*& logic_plan);

@@ -30,6 +30,8 @@
 
 #include <assert.h>
 #include <limits>
+#include <stack>
+
 #include "../utility/warmup.h"
 #include "../utility/rdtsc.h"
 #include "../common/Expression/execfunc.h"
@@ -41,6 +43,7 @@
 #include "../codegen/ExpressionGenerator.h"
 #include "../common/error_no.h"
 #include "../common/expression/expr_node.h"
+#include "../common/memory_handle.h"
 
 using claims::common::rSuccess;
 using claims::common::rCodegenFailed;
@@ -53,6 +56,7 @@ PhysicalFilter::PhysicalFilter(State state)
       state_(state),
       generated_filter_function_(NULL),
       generated_filter_processing_fucntoin_(NULL) {
+  set_phy_oper_type(kPhysicalFilter);
   InitExpandedStatus();
 }
 
@@ -60,10 +64,14 @@ PhysicalFilter::PhysicalFilter()
     : PhysicalOperator(1, 1),
       generated_filter_function_(NULL),
       generated_filter_processing_fucntoin_(NULL) {
+  set_phy_oper_type(kPhysicalFilter);
   InitExpandedStatus();
 }
 
-PhysicalFilter::~PhysicalFilter() {}
+PhysicalFilter::~PhysicalFilter() {
+  DELETE_PTR(state_.child_);
+  DELETE_PTR(state_.schema_);
+}
 PhysicalFilter::State::State(Schema* schema, PhysicalOperatorBase* child,
                              vector<QNode*> qual, unsigned block_size)
     : schema_(schema), child_(child), qual_(qual), block_size_(block_size) {}
@@ -86,7 +94,10 @@ PhysicalFilter::State::State(Schema* schema, PhysicalOperatorBase* child,
  *computerFilterwithGeneratedCode.
  * 3)If it can't be optimized by llvm , we still choose computerFilter.
  */
-bool PhysicalFilter::Open(const PartitionOffset& kPartitiontOffset) {
+bool PhysicalFilter::Open(SegmentExecStatus* const exec_status,
+                          const PartitionOffset& kPartitiontOffset) {
+  RETURN_IF_CANCELLED(exec_status);
+
   // set a Synchronization point.
   RegisterExpandedThreadToAllBarriers();
   FilterThreadContext* ftc = reinterpret_cast<FilterThreadContext*>(
@@ -130,7 +141,9 @@ bool PhysicalFilter::Open(const PartitionOffset& kPartitiontOffset) {
 // should null
 #endif
   }
-  bool ret = state_.child_->Open(kPartitiontOffset);
+  RETURN_IF_CANCELLED(exec_status);
+
+  bool ret = state_.child_->Open(exec_status, kPartitiontOffset);
   SetReturnStatus(ret);
   BarrierArrive();
   return GetReturnStatus();
@@ -143,29 +156,38 @@ bool PhysicalFilter::Open(const PartitionOffset& kPartitiontOffset) {
  * (2) block_for_asking_ is exhausted (should fetch a new block from child
  * and continue to process)
  */
-bool PhysicalFilter::Next(BlockStreamBase* block) {
+bool PhysicalFilter::Next(SegmentExecStatus* const exec_status,
+                          BlockStreamBase* block) {
+  RETURN_IF_CANCELLED(exec_status);
+
   void* tuple_from_child;
   void* tuple_in_block;
   FilterThreadContext* tc =
       reinterpret_cast<FilterThreadContext*>(GetContext());
   while (true) {
+    RETURN_IF_CANCELLED(exec_status);
     if (NULL == (tc->block_stream_iterator_->currentTuple())) {
       /* mark the block as processed by setting it empty*/
       tc->block_for_asking_->setEmpty();
-      if (state_.child_->Next(tc->block_for_asking_)) {
+
+      if (state_.child_->Next(exec_status, tc->block_for_asking_)) {
+        RETURN_IF_CANCELLED(exec_status);
+
         delete tc->block_stream_iterator_;
         tc->block_stream_iterator_ = tc->block_for_asking_->createIterator();
       } else {
-        if (!block->Empty())
+        if (!block->Empty()) {
           return true;
-        else
+        } else {
           return false;
+        }
       }
     }
     ProcessInLogic(block, tc);
-    if (block->Full())
+    if (block->Full()) {
       // for case (1)
       return true;
+    }
   }
 }
 
@@ -210,8 +232,9 @@ void PhysicalFilter::ProcessInLogic(BlockStreamBase* block,
       }
 #endif
 #else
-      pass_filter = tc->thread_condi_[0]->MoreExprEvaluate(
-          tc->thread_condi_, tuple_from_child, state_.schema_);
+      tc->expr_eval_cnxt_.tuple[0] = tuple_from_child;
+      pass_filter = tc->thread_condi_[0]->MoreExprEvaluate(tc->thread_condi_,
+                                                           tc->expr_eval_cnxt_);
 #endif
       if (pass_filter) {
         const unsigned bytes =
@@ -232,10 +255,10 @@ void PhysicalFilter::ProcessInLogic(BlockStreamBase* block,
   }
 }
 
-bool PhysicalFilter::Close() {
+bool PhysicalFilter::Close(SegmentExecStatus* const exec_status) {
   InitExpandedStatus();
   DestoryAllContext();
-  state_.child_->Close();
+  state_.child_->Close(exec_status);
   return true;
 }
 
@@ -308,6 +331,7 @@ ThreadContext* PhysicalFilter::CreateContext() {
   ftc->temp_block_ =
       BlockStreamBase::createBlock(state_.schema_, state_.block_size_);
   ftc->block_stream_iterator_ = ftc->block_for_asking_->createIterator();
+  ftc->expr_eval_cnxt_.schema[0] = state_.schema_;
 #ifdef NEWCONDI
   ftc->thread_qual_ = state_.qual_;
   for (int i = 0; i < state_.qual_.size(); i++) {
@@ -336,6 +360,12 @@ int PhysicalFilter::DecideFilterFunction(
     return rCodegenFailed;
   }
 }
-
+RetCode PhysicalFilter::GetAllSegments(stack<Segment*>* all_segments) {
+  RetCode ret = rSuccess;
+  if (NULL != state_.child_) {
+    ret = state_.child_->GetAllSegments(all_segments);
+  }
+  return ret;
+}
 }  // namespace claims
 }  // namespace physical_operator

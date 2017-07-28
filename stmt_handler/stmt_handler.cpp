@@ -30,11 +30,19 @@
 #include <iostream>
 #include <string>
 #include "../stmt_handler/stmt_handler.h"
-
+#include "../common/memory_handle.h"
+#include <boost/algorithm/string.hpp>
 #include "../stmt_handler/create_projection_exec.h"
+#include "../stmt_handler/desc_exec.h"
 #include "../stmt_handler/drop_table_exec.h"
 #include "../stmt_handler/show_exec.h"
 #include "../utility/Timer.h"
+#include "../common/error_define.h"
+
+using boost::algorithm::to_lower;
+using boost::algorithm::trim;
+using claims::common::rUnknowStmtType;
+using claims::common::rSQLParserErr;
 namespace claims {
 namespace stmt_handler {
 
@@ -69,13 +77,14 @@ RetCode StmtHandler::GenerateStmtExec(AstNode* stmt_ast) {
     case AST_STMT_LIST: {
       AstStmtList* stmt_list = reinterpret_cast<AstStmtList*>(stmt_ast);
       GenerateStmtExec(stmt_list->stmt_);
-      if (NULL != stmt_list) {
-        LOG(WARNING) << "only support one sql statement!";
-      }
       break;
     }
     case AST_SHOW_STMT: {
       stmt_exec_ = new ShowExec(stmt_ast);
+      break;
+    }
+    case AST_DESC_STMT: {
+      stmt_exec_ = new DescExec(stmt_ast);
       break;
     }
     case AST_CREATE_TABLE_LIST:
@@ -97,6 +106,10 @@ RetCode StmtHandler::GenerateStmtExec(AstNode* stmt_ast) {
       stmt_exec_ = new DeleteStmtExec(stmt_ast);
       break;
     }
+    case AST_UPDATE_STMT: {
+      stmt_exec_ = new UpdateStmtExec(stmt_ast);
+      break;
+    }
     default: {
       LOG(ERROR) << "unknow statement type!" << std::endl;
       return rUnknowStmtType;
@@ -105,16 +118,17 @@ RetCode StmtHandler::GenerateStmtExec(AstNode* stmt_ast) {
   return rSuccess;
 }
 RetCode StmtHandler::Execute(ExecutedResult* exec_result) {
-  GETCURRENTTIME(start_time);
   RetCode ret = rSuccess;
-  sql_parser_ = new Parser(sql_stmt_);
+  trim(sql_stmt_);
+  sql_parser_ = new Parser(sql_stmt_, (exec_result->info_));
   AstNode* raw_ast = sql_parser_->GetRawAST();
   if (NULL == raw_ast) {
-    exec_result->error_info_ = "Parser Error";
+    exec_result->error_info_ = "Parser Error\n" + exec_result->info_;
     exec_result->status_ = false;
     exec_result->result_ = NULL;
-    return rParserError;
+    return rSQLParserErr;
   }
+  // print the raw ast if it's necessary.
   raw_ast->Print();
   ret = GenerateStmtExec(raw_ast);
   if (rSuccess != ret) {
@@ -124,11 +138,6 @@ RetCode StmtHandler::Execute(ExecutedResult* exec_result) {
   if (rSuccess != ret) {
     return ret;
   }
-  double exec_time_ms = GetElapsedTime(start_time);
-  if (NULL != exec_result->result_)
-    exec_result->result_->query_time_ = exec_time_ms / 1000.0;
-  cout << "execute time: " << exec_time_ms / 1000.0 << " sec" << endl;
-  return rSuccess;
 }
 
 }  // namespace stmt_handler

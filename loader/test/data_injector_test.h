@@ -34,6 +34,7 @@
 #include <string>
 #include "../../loader/data_injector.h"
 #include "../../catalog/catalog.h"
+#include "../common/memory_handle.h"
 
 using std::ofstream;
 using claims::catalog::Catalog;
@@ -116,6 +117,45 @@ TEST_F(DataInjectorTest, GetTuple4) {
     res.clear();
   }
 }
+TEST_F(DataInjectorTest, PrepareForLoadFromHdfs){
+
+}
+/*
+TEST_F(DataInjectorTest, GetTupleFromHdfs){
+	char* data[5] = {
+			"0|AFRICA|lar deposits. blithely final packages cajole. regular waters are final requests. regular accounts are according to |\n",
+			"1|AMERICA|hs use ironic, even requests. s|\n",
+			"2|ASIA|ges. thinly even pinto beans ca|\n",
+			"3|EUROPE|ly final courts cajole furiously final excuse|\n",
+			"4|MIDDLE EAST|uickly special accounts cajole carefully blithely close requests. carefully final asymptotes haggle furiousl|\n"
+			};
+	HdfsLoader* hdfsloader_ = new HdfsLoader();
+	hdfsloader_->PrepareForLoadFromHdfs();
+	//printf("open the hdfsloader_");
+	string file_name = "/test/claims/region.tbl";
+	hdfsloader_->CheckHdfsFile(file_name);
+	hdfsloader_->OpenHdfsFile(file_name);
+	//printf("open the file_name");
+	int pos = 0;
+	int read_num = 0;
+	string row_separator_ = " ";
+	int length = 64;
+	string tuple_record = "";
+	void * buffer_ = claims::common::Malloc(length + 1);
+	int i = 0;
+	while(DataInjector::GetTupleTerminatedByFromHdfs(buffer_,hdfsloader_, file_name, tuple_record,
+					  row_separator_, pos, read_num, length) ){
+		EXPECT_STREQ(data[i], data[i++]);
+				//tuple_record.c_str());
+		tuple_record.clear();
+	}
+
+}
+
+*/
+
+
+
 } /* namespace loader */
 } /* namespace claims */
 
